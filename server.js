@@ -28,8 +28,23 @@ app.get("/webhook", (req, res) => {
 
 
 app.post("/webhook", (req, res) => {
-  console.log("Webhook recebido:");
-  console.log(JSON.stringify(req.body, null, 2));
+  const entrada = req.body.entry?.[0];
+  const mudanca = entrada?.changes?.[0];
+  const valor = mudanca?.value;
+  const mensagem = valor?.messages?.[0];
+
+  if (mensagem) {
+    const numero = mensagem.from;
+    const tipo = mensagem.type;
+
+    console.log("Mensagem recebida:");
+    console.log("Número:", numero);
+    console.log("Tipo:", tipo);
+
+    if (tipo === "text") {
+      console.log("Texto:", mensagem.text?.body);
+    }
+  }
 
   res.sendStatus(200);
 });
