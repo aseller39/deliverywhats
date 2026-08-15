@@ -1,0 +1,13 @@
+{
+  "name": "deliverywhats",
+  "version": "1.0.0",
+  "description": "API do sistema de delivery via WhatsApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
