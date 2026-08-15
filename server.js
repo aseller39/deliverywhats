@@ -5,12 +5,22 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({
-    status: "online",
-    sistema: "Delivery WhatsApp"
-  });
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Delivery Facil</title>
+    </head>
+    <body>
+      <h1>Delivery Facil</h1>
+      <p>Pedidos rápidos e fáceis pelo WhatsApp.</p>
+      <p>Entre em contato conosco para fazer seu pedido.</p>
+    </body>
+    </html>
+  `);
 });
-
 
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
