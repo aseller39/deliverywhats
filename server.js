@@ -11,6 +11,7 @@ app.get("/", (req, res) => {
   });
 });
 
+
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
 
@@ -24,6 +25,15 @@ app.get("/webhook", (req, res) => {
 
   res.sendStatus(403);
 });
+
+
+app.post("/webhook", (req, res) => {
+  console.log("Webhook recebido:");
+  console.log(JSON.stringify(req.body, null, 2));
+
+  res.sendStatus(200);
+});
+
 
 const PORT = process.env.PORT || 3000;
 
