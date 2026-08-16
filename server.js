@@ -87,26 +87,32 @@ app.get("/webhook", (req, res) => {
 });
 
 
-app.post("/webhook", (req, res) => {
-  const entrada = req.body.entry?.[0];
-  const mudanca = entrada?.changes?.[0];
-  const valor = mudanca?.value;
-  const mensagem = valor?.messages?.[0];
+app.post("/webhook", async (req, res) => {
+  try {
+    const entrada = req.body.entry?.[0];
+    const mudanca = entrada?.changes?.[0];
+    const valor = mudanca?.value;
+    const mensagem = valor?.messages?.[0];
 
-  if (mensagem) {
-    const numero = mensagem.from;
-    const tipo = mensagem.type;
+    if (mensagem?.type === "text") {
+      const numero = mensagem.from;
+      const texto = mensagem.text?.body;
 
-    console.log("Mensagem recebida:");
-    console.log("Número:", numero);
-    console.log("Tipo:", tipo);
+      console.log("Mensagem recebida:");
+      console.log("Número:", numero);
+      console.log("Texto:", texto);
 
-    if (tipo === "text") {
-      console.log("Texto:", mensagem.text?.body);
+      await enviarMensagemWhatsApp(
+        numero,
+        "Olá! 👋 Bem-vindo ao Delivery Facil!"
+      );
     }
-  }
 
-  res.sendStatus(200);
+    res.sendStatus(200);
+  } catch (erro) {
+    console.error("Erro no webhook:", erro);
+    res.sendStatus(500);
+  }
 });
 
 
