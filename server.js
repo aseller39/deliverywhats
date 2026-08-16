@@ -54,6 +54,40 @@ app.get("/teste-whatsapp", async (req, res) => {
 
 
 
+app.get("/exclusao-dados", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Exclusão de Dados - Delivery Fácil</title>
+    </head>
+    <body>
+      <h1>Exclusão de Dados</h1>
+
+      <p>
+        O usuário pode solicitar a exclusão dos dados pessoais relacionados
+        ao uso do Delivery Fácil.
+      </p>
+
+      <p>
+        Para solicitar a exclusão dos dados, entre em contato com o
+        estabelecimento pelos canais oficiais e informe a solicitação.
+      </p>
+
+      <p>
+        Após a confirmação da solicitação, os dados serão tratados de acordo
+        com as obrigações legais aplicáveis e as necessidades legítimas de
+        funcionamento do serviço.
+      </p>
+    </body>
+    </html>
+  `);
+});
+
+
+
 app.get("/termos", (req, res) => {
   res.send(`
     <!DOCTYPE html>
