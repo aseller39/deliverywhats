@@ -38,6 +38,21 @@ async function enviarMensagemWhatsApp(numero, texto) {
 }
 
 
+app.get("/teste-whatsapp", async (req, res) => {
+  try {
+    const resultado = await enviarMensagemWhatsApp(
+      "5586988134359",
+      "Olá! Teste do Delivery Facil funcionando."
+    );
+
+    res.json(resultado);
+  } catch (erro) {
+    console.error("Erro ao enviar WhatsApp:", erro);
+    res.status(500).json({ erro: "Falha ao enviar mensagem" });
+  }
+});
+
+
 
 app.get("/", (req, res) => {
   res.send(`
