@@ -2,7 +2,42 @@ const express = require("express");
 
 const app = express();
 
+
 app.use(express.json());
+
+
+
+async function enviarMensagemWhatsApp(numero, texto) {
+  const token = process.env.WHATSAPP_ACCESS_TOKEN;
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  const resposta = await fetch(
+    `https://graph.facebook.com/v26.0/${phoneNumberId}/messages`,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: numero,
+        type: "text",
+        text: {
+          body: texto
+        }
+      })
+    }
+  );
+
+  const dados = await resposta.json();
+
+  console.log("Resposta da Meta:", JSON.stringify(dados, null, 2));
+
+  return dados;
+}
+
+
 
 app.get("/", (req, res) => {
   res.send(`
