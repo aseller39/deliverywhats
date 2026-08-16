@@ -54,6 +54,49 @@ app.get("/teste-whatsapp", async (req, res) => {
 
 
 
+app.get("/termos", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Termos de Serviço - Delivery Fácil</title>
+    </head>
+    <body>
+      <h1>Termos de Serviço</h1>
+
+      <p>
+        O Delivery Fácil oferece atendimento e processamento de pedidos
+        por meio do WhatsApp.
+      </p>
+
+      <p>
+        Ao utilizar o serviço, o usuário concorda em fornecer informações
+        corretas e necessárias para o processamento do pedido.
+      </p>
+
+      <p>
+        Os pedidos estão sujeitos à disponibilidade dos produtos,
+        confirmação do estabelecimento e condições informadas no momento
+        da compra.
+      </p>
+
+      <p>
+        O usuário é responsável pelas informações fornecidas durante o pedido.
+      </p>
+
+      <p>
+        Para dúvidas ou solicitações, entre em contato com o estabelecimento
+        pelos canais oficiais.
+      </p>
+    </body>
+    </html>
+  `);
+});
+
+
+
 app.get("/politica-privacidade", (req, res) => {
   res.send(`
     <!DOCTYPE html>
