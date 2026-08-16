@@ -104,7 +104,7 @@ app.post("/webhook", async (req, res) => {
 
       await enviarMensagemWhatsApp(
         numero,
-        "Olá! 👋 Bem-vindo ao Delivery Facil!"
+        "Olá! 👋 Bem-vindo ao Gustum!"
       );
     }
 
