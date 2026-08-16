@@ -54,6 +54,50 @@ app.get("/teste-whatsapp", async (req, res) => {
 
 
 
+app.get("/politica-privacidade", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Política de Privacidade - Delivery Fácil</title>
+    </head>
+    <body>
+      <h1>Política de Privacidade</h1>
+
+      <p>
+        O Delivery Fácil respeita a privacidade dos seus usuários.
+        As informações enviadas pelo WhatsApp são utilizadas para
+        atendimento, processamento e acompanhamento dos pedidos.
+      </p>
+
+      <p>
+        Podemos utilizar informações como nome, número de telefone,
+        endereço de entrega e informações relacionadas ao pedido para
+        prestar o serviço solicitado.
+      </p>
+
+      <p>
+        Não vendemos informações pessoais dos usuários.
+      </p>
+
+      <p>
+        As informações são utilizadas somente para as finalidades
+        relacionadas ao funcionamento do serviço e atendimento dos clientes.
+      </p>
+
+      <p>
+        Para dúvidas sobre privacidade, entre em contato pelo canal oficial
+        do Delivery Fácil.
+      </p>
+    </body>
+    </html>
+  `);
+});
+
+
+
 app.get("/", (req, res) => {
   res.send(`
     <!DOCTYPE html>
