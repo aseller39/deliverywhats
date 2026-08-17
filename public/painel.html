@@ -82,24 +82,41 @@
     carregarAvisos();
 
     async function publicarAviso() {
-    const titulo = document.getElementById("tituloAviso").value;
-    const mensagem = document.getElementById("mensagemAviso").value;
+        const botao = document.querySelector('button[onclick="publicarAviso()"]');
 
-    const resposta = await fetch("/api/avisos", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-        restaurante_id: 1,
-        titulo: titulo,
-        mensagem: mensagem
-        })
-    });
+        botao.disabled = true;
+        const titulo = document.getElementById("tituloAviso").value;
+        const mensagem = document.getElementById("mensagemAviso").value;
 
-    const dados = await resposta.json();
+        if (!titulo.trim() || !mensagem.trim()) {
+            alert("Preencha o título e a mensagem.");
+            return;
+        }
 
-    console.log(dados);
+        const resposta = await fetch("/api/avisos", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+            restaurante_id: 1,
+            titulo: titulo,
+            mensagem: mensagem
+            })
+        });
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        botao.disabled = false;
+
+        if (dados.sucesso) {
+            document.getElementById("tituloAviso").value = "";
+            document.getElementById("mensagemAviso").value = "";
+
+            carregarAvisos();
+        }
     }
 
 
