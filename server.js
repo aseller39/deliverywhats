@@ -518,7 +518,7 @@ app.get("/api/avisos", async (req, res) => {
 
 app.post("/api/avisos", async (req, res) => {
   try {
-    const { restaurante_id, titulo, mensagem } = req.body;
+    const { restaurante_id, titulo, mensagem, data_inicio, data_fim } = req.body;
 
     const avisoExistente = await pool.query(
       `
@@ -542,11 +542,17 @@ app.post("/api/avisos", async (req, res) => {
 
     const resultado = await pool.query(
       `
-      INSERT INTO avisos (restaurante_id, titulo, mensagem)
-      VALUES ($1, $2, $3)
-      RETURNING id, restaurante_id, titulo, mensagem, ativo, criado_em
+      INSERT INTO avisos (
+      restaurante_id,
+      titulo,
+      mensagem,
+      data_inicio,
+      data_fim
+    )
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id, restaurante_id, titulo, mensagem, ativo, data_inicio, data_fim, criado_em
       `,
-      [restaurante_id, titulo, mensagem]
+      [restaurante_id, titulo, mensagem, data_inicio || null, data_fim || null]
     );
 
     res.json({

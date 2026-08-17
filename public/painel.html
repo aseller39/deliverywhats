@@ -14,18 +14,32 @@
   <h2>📢 Avisos do dia</h2>
 
     <input
-    type="text"
-    id="tituloAviso"
-    placeholder="Título do aviso"
+        type="text"
+        id="tituloAviso"
+        placeholder="Título do aviso"
     >
 
     <br><br>
 
     <textarea
-    id="mensagemAviso"
-    placeholder="Digite o aviso para os clientes"
-    rows="4"
+        id="mensagemAviso"
+        placeholder="Digite o aviso para os clientes"
+        rows="4"
     ></textarea>
+
+    <label>
+        Data de início:
+        <input type="date" id="dataInicioAviso">
+        </label>
+
+        <br><br>
+
+        <label>
+        Data de fim:
+        <input type="date" id="dataFimAviso">
+    </label>
+
+    <br><br>
 
     <br><br>
 
@@ -86,6 +100,8 @@
     async function publicarAviso() {
         const titulo = document.getElementById("tituloAviso").value;
         const mensagem = document.getElementById("mensagemAviso").value;
+        const dataInicio = document.getElementById("dataInicioAviso").value;
+        const dataFim = document.getElementById("dataFimAviso").value;
 
         if (!titulo.trim() || !mensagem.trim()) {
             alert("Preencha o título e a mensagem.");
@@ -104,7 +120,9 @@
             body: JSON.stringify({
             restaurante_id: 1,
             titulo: titulo,
-            mensagem: mensagem
+            mensagem: mensagem,
+            data_inicio: dataInicio || null,
+            data_fim: dataFim || null
             })
         });
 
