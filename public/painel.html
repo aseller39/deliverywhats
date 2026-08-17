@@ -10,13 +10,24 @@
   <h1>Painel do Restaurante</h1>
 
   <p>Bem-vindo ao painel do Gustum.</p>
+  
+  <div id="pratos"></div>
 
   <script>
     async function carregarPratos() {
         const resposta = await fetch("/api/cardapio?restaurante=1");
         const dados = await resposta.json();
 
-        console.log(dados);
+        const painel = document.getElementById("pratos");
+
+        painel.innerHTML = dados.pratos.map(prato => `
+            <div>
+                <h2>${prato.nome}</h2>
+                <p>${prato.descricao}</p>
+                <p>R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}</p>
+                <p>Disponível: ${prato.disponivel ? "Sim" : "Não"}</p>
+            </div>
+        `).join("");
     }
 
     carregarPratos();
