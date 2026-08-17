@@ -160,6 +160,30 @@ app.get("/criar-tabela-pratos", async (req, res) => {
   }
 });
 
+app.get("/teste-pratos", async (req, res) => {
+  try {
+    const resultado = await pool.query(`
+      SELECT *
+      FROM pratos
+      WHERE restaurante_id = 1
+      ORDER BY id
+    `);
+
+    res.json({
+      sucesso: true,
+      pratos: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar pratos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
 
 
 app.get("/teste-whatsapp", async (req, res) => {
