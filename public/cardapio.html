@@ -24,8 +24,19 @@
 
         <script>
             let itensPedido = [];
-            let observacaoPedido = "";
             let pratosDisponiveis = [];
+
+            let observacaoPedido = "";
+            const itensSalvos = localStorage.getItem("itensPedido");
+            const observacaoSalva = localStorage.getItem("observacaoPedido");
+
+            if (itensSalvos) {
+                itensPedido = JSON.parse(itensSalvos);
+            }
+
+            if (observacaoSalva) {
+                observacaoPedido = observacaoSalva;
+            }
 
             
 
@@ -98,6 +109,8 @@
                 if (campoObservacao) {
                     observacaoPedido = campoObservacao.value;
                 }
+                localStorage.setItem("itensPedido", JSON.stringify(itensPedido));
+                localStorage.setItem("observacaoPedido", observacaoPedido);
                 const container = document.getElementById("pedido");
 
                 const total = itensPedido.reduce(
@@ -135,7 +148,24 @@
                         placeholder="Ex.: pouco sal, sem cebola..."
                         rows="3"
                     >${observacaoPedido}</textarea>
+
+                    <br><br>
+
+                    <button onclick="limparCarrinho()">
+                        🗑️ Limpar carrinho
+                    </button>
                 `;
+            }
+
+
+            function limparCarrinho() {
+                itensPedido = [];
+                observacaoPedido = "";
+
+                localStorage.removeItem("itensPedido");
+                localStorage.removeItem("observacaoPedido");
+
+                document.getElementById("pedido").innerHTML = "";
             }
 
 
