@@ -111,11 +111,39 @@
 
         container.innerHTML = dados.avisos.map(aviso => `
             <div>
-            <h3>${aviso.titulo}</h3>
-            <p>${aviso.mensagem}</p>
+                <h3>${aviso.titulo}</h3>
+                <p>${aviso.mensagem}</p>
+
+                <p>
+                    Status: ${aviso.ativo ? "Ativo" : "Inativo"}
+                </p>
+
+                <button onclick="alterarAviso(${aviso.id}, ${!aviso.ativo})">
+                    ${aviso.ativo ? "Desativar aviso" : "Ativar aviso"}
+                </button>
             </div>
         `).join("");
     }
+
+
+    async function alterarAviso(id, ativo) {
+        const resposta = await fetch(`/api/avisos/${id}/ativo`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ativo: ativo
+            })
+        });
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        carregarAvisos();
+    }
+
 
     </script>
 

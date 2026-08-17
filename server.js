@@ -542,6 +542,38 @@ app.post("/api/avisos", async (req, res) => {
 });
 
 
+app.put("/api/avisos/:id/ativo", async (req, res) => {
+  try {
+    const avisoId = req.params.id;
+    const { ativo } = req.body;
+
+    const resultado = await pool.query(
+      `
+      UPDATE avisos
+      SET ativo = $1
+      WHERE id = $2
+      RETURNING id, titulo, mensagem, ativo
+      `,
+      [ativo, avisoId]
+    );
+
+    res.json({
+      sucesso: true,
+      aviso: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao atualizar aviso:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar aviso"
+    });
+  }
+});
+
+
+
 app.post("/webhook", async (req, res) => {
   try {
     const entrada = req.body.entry?.[0];
