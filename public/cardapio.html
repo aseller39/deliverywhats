@@ -83,7 +83,11 @@
                     ${itensPedido.map(item => `
                         <div>
                             <strong>${item.nome}</strong>
-                            <p>Quantidade: ${item.quantidade}</p>
+                            <p>
+                                <button onclick="alterarQuantidade(${item.id}, -1)">−</button>
+                                Quantidade: ${item.quantidade}
+                                <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+                            </p>
                             <p>R$ ${(item.preco * item.quantidade).toFixed(2).replace(".", ",")}</p>
                         </div>
                     `).join("")}
@@ -93,6 +97,58 @@
                     </h3>
                 `;
             }
+
+            function alterarQuantidade(pratoId, valor) {
+                const item = itensPedido.find(item => item.id === pratoId);
+
+                if (!item) {
+                    return;
+                }
+
+                item.quantidade += valor;
+
+                if (item.quantidade <= 0) {
+                    itensPedido = itensPedido.filter(item => item.id !== pratoId);
+                }
+
+                adicionarAoPedidoAtualizar();
+            }
+
+
+            function adicionarAoPedidoAtualizar() {
+                const container = document.getElementById("pedido");
+
+                const total = itensPedido.reduce(
+                    (soma, item) => soma + (item.preco * item.quantidade),
+                    0
+                );
+
+                container.innerHTML = `
+                    <h2>🛒 Seu pedido</h2>
+
+                    ${itensPedido.map(item => `
+                        <div>
+                            <strong>${item.nome}</strong>
+
+                            <p>
+                                <button onclick="alterarQuantidade(${item.id}, -1)">−</button>
+                                Quantidade: ${item.quantidade}
+                                <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+                            </p>
+
+                            <p>
+                                R$ ${(item.preco * item.quantidade).toFixed(2).replace(".", ",")}
+                            </p>
+                        </div>
+                    `).join("")}
+
+                    <h3>
+                        Total: R$ ${total.toFixed(2).replace(".", ",")}
+                    </h3>
+                `;
+            }
+
+
             async function carregarAvisos() {
                 const parametros = new URLSearchParams(window.location.search);
                 const restauranteId = parametros.get("restaurante");
