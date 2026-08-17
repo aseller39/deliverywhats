@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel - Delivery Fácil</title>
+</head>
+<body>
+
+  <h1>Painel do Restaurante</h1>
+
+  <p>Bem-vindo ao painel do Gustum.</p>
+
+  <script>
+    async function carregarPratos() {
+        const resposta = await fetch("/api/cardapio?restaurante=1");
+        const dados = await resposta.json();
+
+        console.log(dados);
+    }
+
+    carregarPratos();
+    </script>
+
+</body>
+</html>

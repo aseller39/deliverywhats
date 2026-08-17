@@ -466,27 +466,6 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.delete("/api/pratos/2", async (req, res) => {
-  try {
-    await pool.query(
-      "DELETE FROM pratos WHERE id = $1",
-      [2]
-    );
-
-    res.json({
-      sucesso: true,
-      mensagem: "Prato 2 excluído."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao excluir prato:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao excluir prato"
-    });
-  }
-});
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
