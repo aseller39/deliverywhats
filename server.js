@@ -461,29 +461,29 @@ app.post("/webhook", async (req, res) => {
 });
 
 
-app.get("/criar-tabela-ingredientes", async (req, res) => {
+app.get("/cadastrar-ingredientes-arrumadinho", async (req, res) => {
   try {
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS ingredientes (
-        id SERIAL PRIMARY KEY,
-        prato_id INTEGER NOT NULL REFERENCES pratos(id) ON DELETE CASCADE,
-        nome VARCHAR(150) NOT NULL,
-        disponivel BOOLEAN DEFAULT true,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+      INSERT INTO ingredientes (prato_id, nome)
+      VALUES
+        (1, 'Feijão'),
+        (1, 'Arroz'),
+        (1, 'Farofa'),
+        (1, 'Vinagrete'),
+        (1, 'Carne')
     `);
 
     res.json({
       sucesso: true,
-      mensagem: "Tabela ingredientes criada com sucesso."
+      mensagem: "Ingredientes cadastrados com sucesso."
     });
 
   } catch (erro) {
-    console.error("Erro ao criar tabela ingredientes:", erro);
+    console.error("Erro ao cadastrar ingredientes:", erro);
 
     res.status(500).json({
       sucesso: false,
-      erro: "Erro ao criar tabela ingredientes"
+      erro: "Erro ao cadastrar ingredientes"
     });
   }
 });
