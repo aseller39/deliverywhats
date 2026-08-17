@@ -3,7 +3,10 @@ const app = express();
 const pool = require("./config/database");
 
 
+app.use(express.static("public"));
+
 app.use(express.json());
+
 
 
 app.get("/criar-tabela-restaurantes", async (req, res) => {
@@ -377,7 +380,16 @@ app.get("/", (req, res) => {
 
 
 
-app.get("/cardapio", (req, res) => {
+app.get("/cardapio", async (req, res) => {
+
+  const resultado = await pool.query(`
+    SELECT *
+    FROM pratos
+    WHERE restaurante_id = 1
+      AND disponivel = true
+    ORDER BY id
+  `);
+
   res.send(`
     <!DOCTYPE html>
     <html lang="pt-BR">
