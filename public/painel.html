@@ -30,8 +30,10 @@
     <br><br>
 
     <button onclick="publicarAviso()">
-    Publicar aviso
+        Publicar aviso
     </button>
+
+    <p id="mensagemAviso"></p>
 
     <div id="avisos"></div>
   
@@ -113,14 +115,16 @@
         botao.disabled = false;
 
         if (dados.sucesso) {
-            alert("✅ Aviso publicado com sucesso!");
+            document.getElementById("mensagemAviso").textContent =
+                "✅ Aviso publicado com sucesso!";
 
             document.getElementById("tituloAviso").value = "";
             document.getElementById("mensagemAviso").value = "";
 
             carregarAvisos();
         } else {
-            alert("❌ Não foi possível publicar o aviso.");
+            document.getElementById("mensagemAviso").textContent =
+                "❌ Não foi possível publicar o aviso.";
         }
     }
 
