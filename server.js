@@ -381,13 +381,15 @@ app.get("/", (req, res) => {
 
 app.get("/api/cardapio", async (req, res) => {
   try {
+    const restauranteId = req.query.restaurante;
+
     const resultado = await pool.query(`
       SELECT id, nome, descricao, preco
       FROM pratos
-      WHERE restaurante_id = 1
+      WHERE restaurante_id = $1
         AND disponivel = true
       ORDER BY id
-    `);
+    `, [restauranteId]);
 
     res.json({
       sucesso: true,
