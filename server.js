@@ -494,6 +494,8 @@ app.get("/api/avisos", async (req, res) => {
       FROM avisos
       WHERE restaurante_id = $1
         AND ativo = true
+        AND (data_inicio IS NULL OR data_inicio <= CURRENT_DATE)
+        AND (data_fim IS NULL OR data_fim >= CURRENT_DATE)
       ORDER BY criado_em DESC
     `, [restauranteId]);
 
