@@ -6,6 +6,34 @@ const pool = require("./config/database");
 app.use(express.json());
 
 
+app.get("/criar-tabela-restaurantes", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS restaurantes (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(150) NOT NULL,
+        telefone VARCHAR(20),
+        ativo BOOLEAN DEFAULT TRUE,
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela restaurantes criada com sucesso."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao criar tabela restaurantes:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
+
 
 async function enviarMensagemWhatsApp(numero, texto) {
   const token = process.env.WHATSAPP_ACCESS_TOKEN;
@@ -54,6 +82,29 @@ app.get("/teste-banco", async (req, res) => {
     });
   }
 });
+
+
+app.get("/teste-restaurantes", async (req, res) => {
+  try {
+    const resultado = await pool.query(
+      "SELECT * FROM restaurantes"
+    );
+
+    res.json({
+      sucesso: true,
+      restaurantes: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar restaurantes:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
 
 
 app.get("/teste-whatsapp", async (req, res) => {
