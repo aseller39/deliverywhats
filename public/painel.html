@@ -103,6 +103,12 @@
         const dataInicio = document.getElementById("dataInicioAviso").value;
         const dataFim = document.getElementById("dataFimAviso").value;
 
+        if (dataInicio && dataFim && dataInicio > dataFim) {
+            document.getElementById("statusAviso").textContent =
+                "❌ A data de início não pode ser maior que a data de fim.";
+            return;
+        }
+
         if (!titulo.trim() || !mensagem.trim()) {
             alert("Preencha o título e a mensagem.");
             return;
