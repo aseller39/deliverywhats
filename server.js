@@ -1,15 +1,6 @@
 const express = require("express");
-
 const app = express();
-
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const pool = require("./config/database");
 
 
 app.use(express.json());
@@ -45,6 +36,24 @@ async function enviarMensagemWhatsApp(numero, texto) {
 
   return dados;
 }
+
+
+app.get("/teste-banco", async (req, res) => {
+  try {
+    const resultado = await pool.query("SELECT NOW()");
+    
+    res.json({
+      conectado: true,
+      data: resultado.rows[0]
+    });
+  } catch (erro) {
+    console.error("Erro no banco:", erro);
+    res.status(500).json({
+      conectado: false,
+      erro: "Não foi possível conectar ao banco."
+    });
+  }
+});
 
 
 app.get("/teste-whatsapp", async (req, res) => {
@@ -365,22 +374,7 @@ app.post("/webhook", async (req, res) => {
 });
 
 
-app.get("/teste-banco", async (req, res) => {
-  try {
-    const resultado = await pool.query("SELECT NOW()");
-    
-    res.json({
-      conectado: true,
-      data: resultado.rows[0]
-    });
-  } catch (erro) {
-    console.error("Erro no banco:", erro);
-    res.status(500).json({
-      conectado: false,
-      erro: "Não foi possível conectar ao banco."
-    });
-  }
-});
+
 
 
 const PORT = process.env.PORT || 3000;
