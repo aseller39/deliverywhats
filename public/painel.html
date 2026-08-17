@@ -33,7 +33,7 @@
         Publicar aviso
     </button>
 
-    <p id="mensagemAviso"></p>
+    <p id="statusAviso"></p>
 
     <div id="avisos"></div>
   
@@ -111,7 +111,7 @@
         const dados = await resposta.json();
 
         if (!resposta.ok) {
-            document.getElementById("mensagemAviso").textContent =
+            document.getElementById("statusAviso").textContent =
                 `❌ ${dados.erro || "Não foi possível publicar o aviso."}`;
 
             botao.disabled = false;
@@ -123,7 +123,7 @@
         botao.disabled = false;
 
         if (dados.sucesso) {
-            document.getElementById("mensagemAviso").textContent =
+            document.getElementById("statusAviso").textContent =
                 "✅ Aviso publicado com sucesso!";
 
             document.getElementById("tituloAviso").value = "";
@@ -131,7 +131,7 @@
 
             carregarAvisos();
         } else {
-            document.getElementById("mensagemAviso").textContent =
+            document.getElementById("statusAviso").textContent =
                 `❌ ${dados.erro || "Não foi possível publicar o aviso."}`;
         }
     }
