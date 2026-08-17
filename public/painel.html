@@ -82,9 +82,6 @@
     carregarAvisos();
 
     async function publicarAviso() {
-        const botao = document.querySelector('button[onclick="publicarAviso()"]');
-
-        botao.disabled = true;
         const titulo = document.getElementById("tituloAviso").value;
         const mensagem = document.getElementById("mensagemAviso").value;
 
@@ -92,6 +89,10 @@
             alert("Preencha o título e a mensagem.");
             return;
         }
+
+        const botao = document.querySelector('button[onclick="publicarAviso()"]');
+
+        botao.disabled = true;
 
         const resposta = await fetch("/api/avisos", {
             method: "POST",
