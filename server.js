@@ -185,6 +185,40 @@ app.get("/teste-pratos", async (req, res) => {
 });
 
 
+app.get("/cadastrar-arrumadinho", async (req, res) => {
+  try {
+    const resultado = await pool.query(`
+      INSERT INTO pratos (
+        restaurante_id,
+        nome,
+        descricao,
+        preco
+      )
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `, [
+      1,
+      "Arrumadinho",
+      "Feijão, arroz, farofa, vinagrete e carne.",
+      20.00
+    ]);
+
+    res.json({
+      sucesso: true,
+      prato: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao cadastrar prato:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
+
 
 app.get("/teste-whatsapp", async (req, res) => {
   try {
