@@ -16,10 +16,12 @@
 
         <script>
             async function carregarCardapio() {
-            const resposta = await fetch("/api/cardapio");
-            const dados = await resposta.json();
+                const parametros = new URLSearchParams(window.location.search);
+                const restauranteId = parametros.get("restaurante");
 
-            const container = document.getElementById("cardapio");
+                const resposta = await fetch(`/api/cardapio?restaurante=${restauranteId}`);
+                const dados = await resposta.json();
+                const container = document.getElementById("cardapio");
 
             container.innerHTML = dados.pratos.map(prato => `
                 <div>
