@@ -250,6 +250,37 @@ app.get("/api/pratos/:id/ingredientes", async (req, res) => {
 
 
 
+app.put("/api/ingredientes/:id/disponibilidade", async (req, res) => {
+  try {
+    const ingredienteId = req.params.id;
+    const { disponivel } = req.body;
+
+    await pool.query(
+      `
+      UPDATE ingredientes
+      SET disponivel = $1
+      WHERE id = $2
+      `,
+      [disponivel, ingredienteId]
+    );
+
+    res.json({
+      sucesso: true,
+      mensagem: "Disponibilidade do ingrediente atualizada."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao atualizar ingrediente:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar ingrediente"
+    });
+  }
+});
+
+
+
 app.get("/teste-whatsapp", async (req, res) => {
   try {
     const resultado = await enviarMensagemWhatsApp(
