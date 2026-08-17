@@ -18,6 +18,8 @@
 
         <div id="pratos"></div>
 
+        <div id="pedido"></div>
+
     </main>
 
         <script>
@@ -45,14 +47,16 @@
             }
 
 
-            let pedido = [];
-
             function adicionarAoPedido(pratoId) {
                 pedido.push(pratoId);
 
-                console.log("Pedido atual:", pedido);
-            }
+                const container = document.getElementById("pedido");
 
+                container.innerHTML = `
+                    <h2>🛒 Seu pedido</h2>
+                    <p>Itens no pedido: ${pedido.length}</p>
+                `;
+            }
 
             async function carregarAvisos() {
                 const parametros = new URLSearchParams(window.location.search);
