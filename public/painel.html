@@ -124,7 +124,7 @@
             carregarAvisos();
         } else {
             document.getElementById("mensagemAviso").textContent =
-                "❌ Não foi possível publicar o aviso.";
+                `❌ ${dados.erro || "Não foi possível publicar o aviso."}`;
         }
     }
 
