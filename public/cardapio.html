@@ -10,5 +10,17 @@
   <h1>🍽️ Gustum</h1>
   <p>Cardápio de hoje</p>
 
+
+    <script>
+        async function carregarCardapio() {
+            const resposta = await fetch("/api/cardapio");
+            const dados = await resposta.json();
+
+            console.log(dados);
+        }
+
+        carregarCardapio();
+    </script>
+
 </body>
 </html>
