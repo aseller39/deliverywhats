@@ -23,7 +23,7 @@
     </main>
 
         <script>
-            let itensPedido = [];
+            
             
 
             async function carregarCardapio() {
@@ -46,15 +46,16 @@
             `).join("");
             }
 
+            let itensPedido = [];
 
             function adicionarAoPedido(pratoId) {
-                pedido.push(pratoId);
+                itensPedido.push(pratoId);
 
                 const container = document.getElementById("pedido");
 
                 container.innerHTML = `
                     <h2>🛒 Seu pedido</h2>
-                    <p>Itens no pedido: ${pedido.length}</p>
+                    <p>Itens no pedido: ${itensPedido.length}</p>
                 `;
             }
 
