@@ -339,7 +339,12 @@ app.post("/webhook", async (req, res) => {
 
       await enviarMensagemWhatsApp(
         numero,
-        "Olá! 👋 Bem-vindo ao Gustum!"
+        `🍽️ Olá! Bem-vindo ao Gustum!
+
+      Confira nosso cardápio:
+      🔗 https://SEU-LINK-DO-CARDAPIO
+
+      Escolha seu prato e faça seu pedido!`
       );
     }
 
