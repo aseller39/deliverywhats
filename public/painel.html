@@ -10,6 +10,30 @@
   <h1>Painel do Restaurante</h1>
 
   <p>Bem-vindo ao painel do Gustum.</p>
+
+  <h2>📢 Avisos do dia</h2>
+
+    <input
+    type="text"
+    id="tituloAviso"
+    placeholder="Título do aviso"
+    >
+
+    <br><br>
+
+    <textarea
+    id="mensagemAviso"
+    placeholder="Digite o aviso para os clientes"
+    rows="4"
+    ></textarea>
+
+    <br><br>
+
+    <button onclick="publicarAviso()">
+    Publicar aviso
+    </button>
+
+    <div id="avisos"></div>
   
   <div id="pratos"></div>
 
@@ -53,7 +77,30 @@
         }
     }
 
+
     carregarPratos();
+
+    async function publicarAviso() {
+    const titulo = document.getElementById("tituloAviso").value;
+    const mensagem = document.getElementById("mensagemAviso").value;
+
+    const resposta = await fetch("/api/avisos", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+        restaurante_id: 1,
+        titulo: titulo,
+        mensagem: mensagem
+        })
+    });
+
+    const dados = await resposta.json();
+
+    console.log(dados);
+    }
+
     </script>
 
 </body>
