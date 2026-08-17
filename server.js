@@ -461,7 +461,32 @@ app.post("/webhook", async (req, res) => {
 });
 
 
+app.get("/criar-tabela-ingredientes", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS ingredientes (
+        id SERIAL PRIMARY KEY,
+        prato_id INTEGER NOT NULL REFERENCES pratos(id) ON DELETE CASCADE,
+        nome VARCHAR(150) NOT NULL,
+        disponivel BOOLEAN DEFAULT true,
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela ingredientes criada com sucesso."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao criar tabela ingredientes:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao criar tabela ingredientes"
+    });
+  }
+});
 
 
 const PORT = process.env.PORT || 3000;
