@@ -131,6 +131,36 @@ app.get("/cadastrar-gustum", async (req, res) => {
 });
 
 
+app.get("/criar-tabela-pratos", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS pratos (
+        id SERIAL PRIMARY KEY,
+        restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
+        nome VARCHAR(150) NOT NULL,
+        descricao TEXT,
+        preco NUMERIC(10,2) NOT NULL,
+        disponivel BOOLEAN DEFAULT TRUE,
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela pratos criada com sucesso."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao criar tabela pratos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
+
 
 app.get("/teste-whatsapp", async (req, res) => {
   try {
