@@ -110,6 +110,14 @@
 
         const dados = await resposta.json();
 
+        if (!resposta.ok) {
+            document.getElementById("mensagemAviso").textContent =
+                `❌ ${dados.erro || "Não foi possível publicar o aviso."}`;
+
+            botao.disabled = false;
+            return;
+        }
+
         console.log(dados);
 
         botao.disabled = false;
