@@ -513,29 +513,6 @@ app.get("/api/avisos", async (req, res) => {
 });
 
 
-app.get("/adicionar-validade-avisos", async (req, res) => {
-  try {
-    await pool.query(`
-      ALTER TABLE avisos
-      ADD COLUMN IF NOT EXISTS data_inicio DATE,
-      ADD COLUMN IF NOT EXISTS data_fim DATE
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Validade dos avisos adicionada com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao adicionar validade:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao adicionar validade aos avisos"
-    });
-  }
-});
-
 
 app.post("/api/avisos", async (req, res) => {
   try {
