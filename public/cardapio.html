@@ -49,7 +49,10 @@
             let itensPedido = [];
 
             function adicionarAoPedido(pratoId) {
-                itensPedido.push(pratoId);
+                itensPedido.push({
+                    id: pratoId,
+                    quantidade: 1
+                });
 
                 const container = document.getElementById("pedido");
 
