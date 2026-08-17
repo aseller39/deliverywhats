@@ -116,6 +116,8 @@
 
 
             function adicionarAoPedidoAtualizar() {
+                const observacaoAtual =
+                    document.getElementById("observacaoPedido")?.value || "";
                 const container = document.getElementById("pedido");
 
                 const total = itensPedido.reduce(
@@ -145,6 +147,14 @@
                     <h3>
                         Total: R$ ${total.toFixed(2).replace(".", ",")}
                     </h3>
+
+                    <h3>📝 Observação do pedido</h3>
+
+                    <textarea
+                        id="observacaoPedido"
+                        placeholder="Ex.: pouco sal, sem cebola..."
+                        rows="3"
+                    >${observacaoAtual}</textarea>
                 `;
             }
 
