@@ -24,7 +24,9 @@
 
         <script>
             let itensPedido = [];
+            let observacaoPedido = "";
             let pratosDisponiveis = [];
+
             
 
             async function carregarCardapio() {
@@ -70,32 +72,7 @@
                     });
                 }
 
-                const container = document.getElementById("pedido");
-
-                const total = itensPedido.reduce(
-                    (soma, item) => soma + (item.preco * item.quantidade),
-                    0
-                );
-
-                container.innerHTML = `
-                    <h2>🛒 Seu pedido</h2>
-
-                    ${itensPedido.map(item => `
-                        <div>
-                            <strong>${item.nome}</strong>
-                            <p>
-                                <button onclick="alterarQuantidade(${item.id}, -1)">−</button>
-                                Quantidade: ${item.quantidade}
-                                <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
-                            </p>
-                            <p>R$ ${(item.preco * item.quantidade).toFixed(2).replace(".", ",")}</p>
-                        </div>
-                    `).join("")}
-
-                    <h3>
-                        Total: R$ ${total.toFixed(2).replace(".", ",")}
-                    </h3>
-                `;
+                adicionarAoPedidoAtualizar();
             }
 
             function alterarQuantidade(pratoId, valor) {
@@ -116,8 +93,11 @@
 
 
             function adicionarAoPedidoAtualizar() {
-                const observacaoAtual =
-                    document.getElementById("observacaoPedido")?.value || "";
+                const campoObservacao = document.getElementById("observacaoPedido");
+
+                if (campoObservacao) {
+                    observacaoPedido = campoObservacao.value;
+                }
                 const container = document.getElementById("pedido");
 
                 const total = itensPedido.reduce(
@@ -154,7 +134,7 @@
                         id="observacaoPedido"
                         placeholder="Ex.: pouco sal, sem cebola..."
                         rows="3"
-                    >${observacaoAtual}</textarea>
+                    >${observacaoPedido}</textarea>
                 `;
             }
 
