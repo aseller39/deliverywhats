@@ -107,6 +107,31 @@ app.get("/teste-restaurantes", async (req, res) => {
 
 
 
+app.get("/cadastrar-gustum", async (req, res) => {
+  try {
+    const resultado = await pool.query(`
+      INSERT INTO restaurantes (nome, telefone)
+      VALUES ($1, $2)
+      RETURNING *
+    `, ["Gustum", "5586988134359"]);
+
+    res.json({
+      sucesso: true,
+      restaurante: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao cadastrar restaurante:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: erro.message
+    });
+  }
+});
+
+
+
 app.get("/teste-whatsapp", async (req, res) => {
   try {
     const resultado = await enviarMensagemWhatsApp(
