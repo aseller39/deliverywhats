@@ -20,14 +20,37 @@
 
         const painel = document.getElementById("pratos");
 
-        painel.innerHTML = dados.pratos.map(prato => `
-            <div>
+        for (const prato of dados.pratos) {
+
+            const respostaIngredientes = await fetch(
+                `/api/pratos/${prato.id}/ingredientes`
+            );
+
+            const dadosIngredientes = await respostaIngredientes.json();
+
+            painel.innerHTML += `
+                <div>
                 <h2>${prato.nome}</h2>
+
                 <p>${prato.descricao}</p>
-                <p>R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}</p>
-                <p>Disponível: ${prato.disponivel ? "Sim" : "Não"}</p>
+
+                <p>
+                    R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}
+                </p>
+
+                <h3>Ingredientes</h3>
+
+                <ul>
+                    ${dadosIngredientes.ingredientes.map(ingrediente => `
+                    <li>
+                        ${ingrediente.nome}
+                        — ${ingrediente.disponivel ? "Disponível" : "Indisponível"}
+                    </li>
+                    `).join("")}
+                </ul>
             </div>
-        `).join("");
+        `;
+        }
     }
 
     carregarPratos();
