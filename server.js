@@ -2,6 +2,15 @@ const express = require("express");
 
 const app = express();
 
+const { Pool } = require("pg");
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 
 app.use(express.json());
 
@@ -352,6 +361,24 @@ app.post("/webhook", async (req, res) => {
   } catch (erro) {
     console.error("Erro no webhook:", erro);
     res.sendStatus(500);
+  }
+});
+
+
+app.get("/teste-banco", async (req, res) => {
+  try {
+    const resultado = await pool.query("SELECT NOW()");
+    
+    res.json({
+      conectado: true,
+      data: resultado.rows[0]
+    });
+  } catch (erro) {
+    console.error("Erro no banco:", erro);
+    res.status(500).json({
+      conectado: false,
+      erro: "Não foi possível conectar ao banco."
+    });
   }
 });
 
