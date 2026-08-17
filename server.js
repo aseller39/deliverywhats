@@ -379,6 +379,32 @@ app.get("/", (req, res) => {
 });
 
 
+app.get("/api/cardapio", async (req, res) => {
+  try {
+    const resultado = await pool.query(`
+      SELECT id, nome, descricao, preco
+      FROM pratos
+      WHERE restaurante_id = 1
+        AND disponivel = true
+      ORDER BY id
+    `);
+
+    res.json({
+      sucesso: true,
+      pratos: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar cardápio:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar cardápio"
+    });
+  }
+});
+
+
 
 app.get("/cardapio", async (req, res) => {
 
