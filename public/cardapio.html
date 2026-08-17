@@ -23,7 +23,8 @@
     </main>
 
         <script>
-            
+            let itensPedido = [];
+            let pratosDisponiveis = [];
             
 
             async function carregarCardapio() {
@@ -32,6 +33,7 @@
 
                 const resposta = await fetch(`/api/cardapio?restaurante=${restauranteId}`);
                 const dados = await resposta.json();
+                pratosDisponiveis = dados.pratos;
                 const container = document.getElementById("pratos");
 
             container.innerHTML = dados.pratos.map(prato => `
@@ -46,22 +48,45 @@
             `).join("");
             }
 
-            let itensPedido = [];
+            
 
             function adicionarAoPedido(pratoId) {
+                const prato = pratosDisponiveis.find(p => p.id === pratoId);
+
+                if (!prato) {
+                    return;
+                }
+
                 itensPedido.push({
-                    id: pratoId,
+                    id: prato.id,
+                    nome: prato.nome,
+                    preco: Number(prato.preco),
                     quantidade: 1
                 });
 
                 const container = document.getElementById("pedido");
 
+                const total = itensPedido.reduce(
+                    (soma, item) => soma + (item.preco * item.quantidade),
+                    0
+                );
+
                 container.innerHTML = `
                     <h2>🛒 Seu pedido</h2>
-                    <p>Itens no pedido: ${itensPedido.length}</p>
+
+                    ${itensPedido.map(item => `
+                        <div>
+                            <strong>${item.nome}</strong>
+                            <p>Quantidade: ${item.quantidade}</p>
+                            <p>R$ ${(item.preco * item.quantidade).toFixed(2).replace(".", ",")}</p>
+                        </div>
+                    `).join("")}
+
+                    <h3>
+                        Total: R$ ${total.toFixed(2).replace(".", ",")}
+                    </h3>
                 `;
             }
-
             async function carregarAvisos() {
                 const parametros = new URLSearchParams(window.location.search);
                 const restauranteId = parametros.get("restaurante");
