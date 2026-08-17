@@ -579,7 +579,27 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
+app.delete("/api/avisos/2", async (req, res) => {
+  try {
+    await pool.query(
+      "DELETE FROM avisos WHERE id = $1",
+      [2]
+    );
 
+    res.json({
+      sucesso: true,
+      mensagem: "Aviso 2 excluído."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao excluir aviso:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao excluir aviso"
+    });
+  }
+});
 
 
 app.listen(PORT, () => {
