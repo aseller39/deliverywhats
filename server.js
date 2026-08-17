@@ -517,6 +517,26 @@ app.post("/api/avisos", async (req, res) => {
   try {
     const { restaurante_id, titulo, mensagem } = req.body;
 
+    const avisoExistente = await pool.query(
+      `
+      SELECT id
+      FROM avisos
+      WHERE restaurante_id = $1
+        AND titulo = $2
+        AND mensagem = $3
+        AND ativo = true
+      LIMIT 1
+      `,
+      [restaurante_id, titulo.trim(), mensagem.trim()]
+    );
+
+    if (avisoExistente.rows.length > 0) {
+      return res.status(409).json({
+        sucesso: false,
+        erro: "Este aviso já está publicado."
+      });
+    }
+
     const resultado = await pool.query(
       `
       INSERT INTO avisos (restaurante_id, titulo, mensagem)
