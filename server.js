@@ -490,7 +490,7 @@ app.get("/api/avisos", async (req, res) => {
     const restauranteId = req.query.restaurante;
 
     const resultado = await pool.query(`
-      SELECT id, titulo, mensagem, ativo, criado_em
+      SELECT id, titulo, mensagem, ativo, data_inicio, data_fim, criado_em
       FROM avisos
       WHERE restaurante_id = $1
         AND ativo = true
