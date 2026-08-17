@@ -222,6 +222,33 @@ app.get("/cadastrar-arrumadinho", async (req, res) => {
 });
 
 
+app.get("/api/pratos/:id/ingredientes", async (req, res) => {
+  try {
+    const pratoId = req.params.id;
+
+    const resultado = await pool.query(`
+      SELECT id, nome, disponivel
+      FROM ingredientes
+      WHERE prato_id = $1
+      ORDER BY id
+    `, [pratoId]);
+
+    res.json({
+      sucesso: true,
+      ingredientes: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar ingredientes:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar ingredientes"
+    });
+  }
+});
+
+
 
 app.get("/teste-whatsapp", async (req, res) => {
   try {
