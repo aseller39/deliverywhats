@@ -523,33 +523,6 @@ app.post("/webhook", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 
-app.get("/criar-tabela-avisos", async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS avisos (
-        id SERIAL PRIMARY KEY,
-        restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id) ON DELETE CASCADE,
-        titulo VARCHAR(150) NOT NULL,
-        mensagem TEXT NOT NULL,
-        ativo BOOLEAN DEFAULT true,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela avisos criada com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao criar tabela avisos:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao criar tabela avisos"
-    });
-  }
-});
 
 
 app.listen(PORT, () => {
