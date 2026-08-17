@@ -20,8 +20,7 @@
 
         <script>
 
-            carregarCardapio();
-            carregarAvisos();
+            
 
             async function carregarCardapio() {
                 const parametros = new URLSearchParams(window.location.search);
@@ -42,19 +41,24 @@
             }
 
             async function carregarAvisos() {
-                const resposta = await fetch("/api/avisos?restaurante=1");
+                const parametros = new URLSearchParams(window.location.search);
+                const restauranteId = parametros.get("restaurante");
+
+                const resposta = await fetch(`/api/avisos?restaurante=${restauranteId}`);
                 const dados = await resposta.json();
 
                 const container = document.getElementById("avisos");
 
                 container.innerHTML = dados.avisos.map(aviso => `
                     <div>
-                    <h2>📢 ${aviso.titulo}</h2>
-                    <p>${aviso.mensagem}</p>
+                        <h2>📢 ${aviso.titulo}</h2>
+                        <p>${aviso.mensagem}</p>
                     </div>
                 `).join("");
             }
 
+            carregarCardapio();
+            carregarAvisos();
 
             
         </script>
