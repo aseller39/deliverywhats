@@ -461,33 +461,6 @@ app.post("/webhook", async (req, res) => {
 });
 
 
-app.get("/cadastrar-ingredientes-arrumadinho", async (req, res) => {
-  try {
-    await pool.query(`
-      INSERT INTO ingredientes (prato_id, nome)
-      VALUES
-        (1, 'Feijão'),
-        (1, 'Arroz'),
-        (1, 'Farofa'),
-        (1, 'Vinagrete'),
-        (1, 'Carne')
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Ingredientes cadastrados com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao cadastrar ingredientes:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao cadastrar ingredientes"
-    });
-  }
-});
-
 
 const PORT = process.env.PORT || 3000;
 
