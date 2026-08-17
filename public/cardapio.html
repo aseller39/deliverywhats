@@ -5,22 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cardápio - Gustum</title>
 </head>
-<body>
+    <body>
 
-  <h1>🍽️ Gustum</h1>
-  <p>Cardápio de hoje</p>
+    <header>
+        <h1>🍽️ Gustum</h1>
+        <p>Cardápio de hoje</p>
+    </header>
 
+    <main id="cardapio"></main>
 
-    <script>
-        async function carregarCardapio() {
+        <script>
+            async function carregarCardapio() {
             const resposta = await fetch("/api/cardapio");
             const dados = await resposta.json();
 
-            console.log(dados);
-        }
+            const container = document.getElementById("cardapio");
 
-        carregarCardapio();
-    </script>
+            container.innerHTML = dados.pratos.map(prato => `
+                <div>
+                <h2>${prato.nome}</h2>
+                <p>${prato.descricao}</p>
+                <strong>R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}</strong>
+                <button>Adicionar ao pedido</button>
+                </div>
+            `).join("");
+            }
 
-</body>
+            carregarCardapio();
+        </script>
+
+    </body>
 </html>
