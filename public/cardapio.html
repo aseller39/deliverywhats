@@ -57,12 +57,18 @@
                     return;
                 }
 
-                itensPedido.push({
-                    id: prato.id,
-                    nome: prato.nome,
-                    preco: Number(prato.preco),
-                    quantidade: 1
-                });
+                const itemExistente = itensPedido.find(item => item.id === prato.id);
+
+                if (itemExistente) {
+                    itemExistente.quantidade++;
+                } else {
+                    itensPedido.push({
+                        id: prato.id,
+                        nome: prato.nome,
+                        preco: Number(prato.preco),
+                        quantidade: 1
+                    });
+                }
 
                 const container = document.getElementById("pedido");
 
