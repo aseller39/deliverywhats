@@ -485,6 +485,63 @@ app.get("/webhook", (req, res) => {
 });
 
 
+app.get("/api/avisos", async (req, res) => {
+  try {
+    const restauranteId = req.query.restaurante;
+
+    const resultado = await pool.query(`
+      SELECT id, titulo, mensagem, ativo, criado_em
+      FROM avisos
+      WHERE restaurante_id = $1
+        AND ativo = true
+      ORDER BY criado_em DESC
+    `, [restauranteId]);
+
+    res.json({
+      sucesso: true,
+      avisos: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar avisos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar avisos"
+    });
+  }
+});
+
+
+app.post("/api/avisos", async (req, res) => {
+  try {
+    const { restaurante_id, titulo, mensagem } = req.body;
+
+    const resultado = await pool.query(
+      `
+      INSERT INTO avisos (restaurante_id, titulo, mensagem)
+      VALUES ($1, $2, $3)
+      RETURNING id, restaurante_id, titulo, mensagem, ativo, criado_em
+      `,
+      [restaurante_id, titulo, mensagem]
+    );
+
+    res.json({
+      sucesso: true,
+      aviso: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao cadastrar aviso:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao cadastrar aviso"
+    });
+  }
+});
+
+
 app.post("/webhook", async (req, res) => {
   try {
     const entrada = req.body.entry?.[0];
