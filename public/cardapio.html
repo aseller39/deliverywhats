@@ -321,6 +321,12 @@
                     return;
                 }
 
+                const campoObservacao = document.getElementById("observacaoPedido");
+
+                if (campoObservacao) {
+                    observacaoPedido = campoObservacao.value.trim();
+                }
+
                 const pedidoFinal = {
                     itens: itensPedido,
                     observacao: observacaoPedido,
