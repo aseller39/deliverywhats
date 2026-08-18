@@ -231,6 +231,12 @@
 
                     </div>
 
+                    <br><br>
+
+                    <button onclick="enviarPedido()">
+                        🟢 Enviar pedido
+                    </button>
+
                     
                 `;
             }
@@ -276,6 +282,56 @@
 
             carregarCardapio();
             carregarAvisos();
+
+
+            function enviarPedido() {
+                if (itensPedido.length === 0) {
+                    alert("Adicione pelo menos um item ao pedido.");
+                    return;
+                }
+
+                const telefone = document.getElementById("telefonePedido")?.value.trim();
+
+                if (!telefone) {
+                    alert("Informe seu telefone.");
+                    return;
+                }
+
+                const tipoEntrega =
+                    document.querySelector('input[name="tipoEntrega"]:checked')?.value;
+
+                if (!tipoEntrega) {
+                    alert("Escolha como deseja receber o pedido.");
+                    return;
+                }
+
+                const endereco =
+                    document.getElementById("enderecoPedido")?.value.trim();
+
+                if (tipoEntrega === "entrega" && !endereco) {
+                    alert("Informe o endereço de entrega.");
+                    return;
+                }
+
+                const formaPagamento =
+                    document.querySelector('input[name="formaPagamento"]:checked')?.value;
+
+                if (!formaPagamento) {
+                    alert("Escolha a forma de pagamento.");
+                    return;
+                }
+
+                const pedidoFinal = {
+                    itens: itensPedido,
+                    observacao: observacaoPedido,
+                    telefone: telefone,
+                    tipoEntrega: tipoEntrega,
+                    endereco: tipoEntrega === "entrega" ? endereco : null,
+                    formaPagamento: formaPagamento
+                };
+
+                console.log("PEDIDO FINAL:", pedidoFinal);
+            }
 
             
         </script>
