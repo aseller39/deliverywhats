@@ -148,6 +148,22 @@ app.post("/api/pedidos", async (req, res) => {
       ]
     );
 
+    const pedidoMensagem = {
+      id: resultado.rows[0].id,
+      itens,
+      observacao,
+      telefone,
+      tipo_entrega,
+      endereco,
+      forma_pagamento,
+      total
+    };
+
+    const mensagemWhatsApp = montarMensagemPedido(pedidoMensagem);
+
+    console.log("MENSAGEM DO PEDIDO:");
+    console.log(mensagemWhatsApp);
+
     res.status(201).json({
       sucesso: true,
       mensagem: "Pedido recebido com sucesso.",
@@ -163,6 +179,39 @@ app.post("/api/pedidos", async (req, res) => {
     });
   }
 });
+
+
+function montarMensagemPedido(pedido) {
+  let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
+
+  mensagem += `Itens:\n`;
+
+  pedido.itens.forEach(item => {
+    const subtotal = Number(item.preco) * Number(item.quantidade);
+
+    mensagem += `${item.quantidade}x ${item.nome} - R$ ${subtotal.toFixed(2).replace(".", ",")}\n`;
+  });
+
+  mensagem += `\n💰 Total: R$ ${Number(pedido.total).toFixed(2).replace(".", ",")}`;
+
+  mensagem += `\n\n📝 Observação: ${pedido.observacao || "Nenhuma"}`;
+
+  mensagem += `\n\n📱 Telefone: ${pedido.telefone}`;
+
+  mensagem += `\n📦 Recebimento: ${
+    pedido.tipo_entrega === "entrega"
+      ? "Entrega"
+      : "Retirada no local"
+  }`;
+
+  if (pedido.tipo_entrega === "entrega") {
+    mensagem += `\n📍 Endereço: ${pedido.endereco}`;
+  }
+
+  mensagem += `\n💳 Pagamento: ${pedido.forma_pagamento}`;
+
+  return mensagem;
+}
 
 
 
