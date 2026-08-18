@@ -198,6 +198,46 @@ app.post("/api/pedidos", async (req, res) => {
   }
 });
 
+app.get("/api/pedidos", async (req, res) => {
+  try {
+    const restauranteId = req.query.restaurante;
+
+    const resultado = await pool.query(
+      `
+      SELECT
+        id,
+        restaurante_id,
+        itens,
+        observacao,
+        telefone,
+        tipo_entrega,
+        endereco,
+        forma_pagamento,
+        total,
+        status,
+        criado_em
+      FROM pedidos
+      WHERE restaurante_id = $1
+      ORDER BY criado_em DESC
+      `,
+      [restauranteId]
+    );
+
+    res.json({
+      sucesso: true,
+      pedidos: resultado.rows
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar pedidos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao buscar pedidos."
+    });
+  }
+});
+
 
 function montarMensagemPedido(pedido) {
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
