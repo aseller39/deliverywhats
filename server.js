@@ -38,6 +38,41 @@ app.get("/criar-tabela-restaurantes", async (req, res) => {
 
 
 
+app.get("/criar-tabela-pedidos", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS pedidos (
+        id SERIAL PRIMARY KEY,
+        restaurante_id INTEGER NOT NULL,
+        itens JSONB NOT NULL,
+        observacao TEXT,
+        telefone VARCHAR(20) NOT NULL,
+        tipo_entrega VARCHAR(20) NOT NULL,
+        endereco TEXT,
+        forma_pagamento VARCHAR(30) NOT NULL,
+        total NUMERIC(10,2) NOT NULL,
+        status VARCHAR(30) DEFAULT 'novo',
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela pedidos criada com sucesso."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao criar tabela pedidos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao criar tabela pedidos."
+    });
+  }
+});
+
+
+
 async function enviarMensagemWhatsApp(numero, texto) {
   const token = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
