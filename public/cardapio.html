@@ -161,6 +161,7 @@
                             type="radio"
                             name="tipoEntrega"
                             value="retirada"
+                            onchange="mostrarEndereco()"
                         >
                         🏪 Retirar no local
                     </label>
@@ -172,12 +173,43 @@
                             type="radio"
                             name="tipoEntrega"
                             value="entrega"
+                            onchange="mostrarEndereco()"
                         >
                         🛵 Entrega
                     </label>
 
+                    <h3>📱 Telefone</h3>
+
+                    <input
+                        type="tel"
+                        id="telefonePedido"
+                        placeholder="(86) 99999-9999"
+                    >
+
+                    <div id="enderecoEntrega" style="display: none;">
+
+                        <h3>📍 Endereço de entrega</h3>
+
+                        <textarea
+                            id="enderecoPedido"
+                            placeholder="Digite seu endereço completo"
+                            rows="3"
+                        ></textarea>
+
+                    </div>
+
                     
                 `;
+            }
+
+
+            function mostrarEndereco() {
+                const entregaSelecionada =
+                    document.querySelector('input[name="tipoEntrega"]:checked')?.value === "entrega";
+
+                const endereco = document.getElementById("enderecoEntrega");
+
+                endereco.style.display = entregaSelecionada ? "block" : "none";
             }
 
 
