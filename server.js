@@ -164,6 +164,22 @@ app.post("/api/pedidos", async (req, res) => {
     console.log("MENSAGEM DO PEDIDO:");
     console.log(mensagemWhatsApp);
 
+    const restaurante = await pool.query(
+      "SELECT telefone FROM restaurantes WHERE id = $1",
+      [restaurante_id]
+    );
+
+    const numeroRestaurante = restaurante.rows[0]?.telefone;
+
+    if (!numeroRestaurante) {
+      throw new Error("Telefone do restaurante não cadastrado.");
+    }
+
+    await enviarMensagemWhatsApp(
+      numeroRestaurante,
+      mensagemWhatsApp
+    );
+
     res.status(201).json({
       sucesso: true,
       mensagem: "Pedido recebido com sucesso.",
