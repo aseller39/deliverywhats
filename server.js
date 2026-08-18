@@ -876,26 +876,28 @@ app.post("/webhook", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 
-app.get("/atualizar-tabela-pratos", async (req, res) => {
+app.get("/atualizar-precos-arrumadinho", async (req, res) => {
   try {
     await pool.query(`
-      ALTER TABLE pratos
-      ADD COLUMN IF NOT EXISTS preco_pequena NUMERIC(10,2),
-      ADD COLUMN IF NOT EXISTS preco_media NUMERIC(10,2),
-      ADD COLUMN IF NOT EXISTS preco_grande NUMERIC(10,2)
+      UPDATE pratos
+      SET
+        preco_pequena = 15.00,
+        preco_media = 20.00,
+        preco_grande = 25.00
+      WHERE id = 1
     `);
 
     res.json({
       sucesso: true,
-      mensagem: "Tabela pratos atualizada com tamanhos."
+      mensagem: "Preços do Arrumadinho atualizados."
     });
 
   } catch (erro) {
-    console.error("Erro ao atualizar tabela pratos:", erro);
+    console.error("Erro ao atualizar preços:", erro);
 
     res.status(500).json({
       sucesso: false,
-      erro: "Erro ao atualizar tabela pratos."
+      erro: "Erro ao atualizar preços."
     });
   }
 });
