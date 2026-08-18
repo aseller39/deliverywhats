@@ -677,7 +677,15 @@ app.get("/api/cardapio", async (req, res) => {
     const restauranteId = req.query.restaurante;
 
     const resultado = await pool.query(`
-      SELECT id, nome, descricao, preco, disponivel
+      SELECT
+        id,
+        nome,
+        descricao,
+        preco,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        disponivel
       FROM pratos
       WHERE restaurante_id = $1
         AND disponivel = true
