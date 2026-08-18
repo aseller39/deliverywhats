@@ -72,6 +72,77 @@ app.get("/criar-tabela-pedidos", async (req, res) => {
 });
 
 
+app.post("/api/pedidos", async (req, res) => {
+  try {
+    const {
+      restaurante_id,
+      itens,
+      observacao,
+      telefone,
+      tipo_entrega,
+      endereco,
+      forma_pagamento,
+      total
+    } = req.body;
+
+    if (
+      !restaurante_id ||
+      !itens ||
+      !telefone ||
+      !tipo_entrega ||
+      !forma_pagamento ||
+      total === undefined
+    ) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Dados do pedido incompletos."
+      });
+    }
+
+    const resultado = await pool.query(
+      `
+      INSERT INTO pedidos (
+        restaurante_id,
+        itens,
+        observacao,
+        telefone,
+        tipo_entrega,
+        endereco,
+        forma_pagamento,
+        total
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING id, criado_em
+      `,
+      [
+        restaurante_id,
+        JSON.stringify(itens),
+        observacao || null,
+        telefone,
+        tipo_entrega,
+        endereco || null,
+        forma_pagamento,
+        total
+      ]
+    );
+
+    res.status(201).json({
+      sucesso: true,
+      mensagem: "Pedido recebido com sucesso.",
+      pedido: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao salvar pedido:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao salvar pedido."
+    });
+  }
+});
+
+
 
 async function enviarMensagemWhatsApp(numero, texto) {
   const token = process.env.WHATSAPP_ACCESS_TOKEN;
