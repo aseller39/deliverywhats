@@ -883,29 +883,24 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-
-app.get("/atualizar-precos-arrumadinho", async (req, res) => {
+app.get("/atualizar-tabela-pratos-categoria", async (req, res) => {
   try {
     await pool.query(`
-      UPDATE pratos
-      SET
-        preco_pequena = 15.00,
-        preco_media = 20.00,
-        preco_grande = 25.00
-      WHERE id = 1
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS categoria VARCHAR(50) DEFAULT 'prato'
     `);
 
     res.json({
       sucesso: true,
-      mensagem: "Preços do Arrumadinho atualizados."
+      mensagem: "Categoria adicionada à tabela pratos."
     });
 
   } catch (erro) {
-    console.error("Erro ao atualizar preços:", erro);
+    console.error("Erro ao adicionar categoria:", erro);
 
     res.status(500).json({
       sucesso: false,
-      erro: "Erro ao atualizar preços."
+      erro: "Erro ao adicionar categoria."
     });
   }
 });
