@@ -354,6 +354,12 @@
                 const dados = await resposta.json();
 
                 console.log("RESPOSTA DO PEDIDO:", dados);
+
+                if (dados.sucesso) {
+                    alert(`Pedido enviado com sucesso! Número do pedido: ${dados.pedido.id}`);
+
+                    limparCarrinho();
+                }
             }
 
             
