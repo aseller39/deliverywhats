@@ -59,7 +59,7 @@
                 <p>${prato.descricao}</p>
                 <strong>R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}</strong>
                 <button onclick="adicionarAoPedido(${prato.id})">
-                    Adicionar pedido
+                    Adicionar ao carrinho
                 </button>
                 </div>
             `).join("");
@@ -133,6 +133,7 @@
                                 <button onclick="alterarQuantidade(${item.id}, -1)">−</button>
                                 Quantidade: ${item.quantidade}
                                 <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+                                <button onclick="limparCarrinho()">🗑️ Limpar</button>
                             </p>
 
                             <p>
@@ -153,11 +154,29 @@
                         rows="3"
                     >${observacaoPedido}</textarea>
 
-                    <br><br>
+                    <h3>📦 Como deseja receber?</h3>
 
-                    <button onclick="limparCarrinho()">
-                        🗑️ Limpar carrinho
-                    </button>
+                    <label>
+                        <input
+                            type="radio"
+                            name="tipoEntrega"
+                            value="retirada"
+                        >
+                        🏪 Retirar no local
+                    </label>
+
+                    <br>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="tipoEntrega"
+                            value="entrega"
+                        >
+                        🛵 Entrega
+                    </label>
+
+                    
                 `;
             }
 
