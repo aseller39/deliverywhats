@@ -10,6 +10,9 @@
     <header>
         <h1>🍽️ Gustum</h1>
         <p>Cardápio de hoje</p>
+        <button id="botaoCarrinho" onclick="abrirCarrinho()">
+            🛒 <span id="quantidadeCarrinho">0</span>
+        </button>
     </header>
 
     <main id="cardapio">
@@ -89,6 +92,7 @@
 
                 adicionarAoPedidoAtualizar();
             }
+            atualizarIconeCarrinho();
 
             function alterarQuantidade(pratoId, valor) {
                 const item = itensPedido.find(item => item.id === pratoId);
@@ -282,6 +286,8 @@
 
             carregarCardapio();
             carregarAvisos();
+            
+
 
 
             async function enviarPedido() {
@@ -363,6 +369,15 @@
 
                     limparCarrinho();
                 }
+            }
+
+            function atualizarIconeCarrinho() {
+                const quantidade = itensPedido.reduce(
+                    (total, item) => total + item.quantidade,
+                    0
+                );
+
+                document.getElementById("quantidadeCarrinho").textContent = quantidade;
             }
 
             

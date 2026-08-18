@@ -876,6 +876,29 @@ app.post("/webhook", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 
+app.get("/atualizar-tabela-pratos", async (req, res) => {
+  try {
+    await pool.query(`
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS preco_pequena NUMERIC(10,2),
+      ADD COLUMN IF NOT EXISTS preco_media NUMERIC(10,2),
+      ADD COLUMN IF NOT EXISTS preco_grande NUMERIC(10,2)
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela pratos atualizada com tamanhos."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao atualizar tabela pratos:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar tabela pratos."
+    });
+  }
+});
 
 
 app.listen(PORT, () => {
