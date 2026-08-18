@@ -327,16 +327,33 @@
                     observacaoPedido = campoObservacao.value.trim();
                 }
 
+                const total = itensPedido.reduce(
+                    (soma, item) => soma + (item.preco * item.quantidade),
+                    0
+                );
+
                 const pedidoFinal = {
+                    restaurante_id: 1,
                     itens: itensPedido,
                     observacao: observacaoPedido,
                     telefone: telefone,
-                    tipoEntrega: tipoEntrega,
+                    tipo_entrega: tipoEntrega,
                     endereco: tipoEntrega === "entrega" ? endereco : null,
-                    formaPagamento: formaPagamento
+                    forma_pagamento: formaPagamento,
+                    total: total
                 };
 
-                console.log("PEDIDO FINAL:", pedidoFinal);
+                const resposta = await fetch("/api/pedidos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(pedidoFinal)
+                });
+
+                const dados = await resposta.json();
+
+                console.log("RESPOSTA DO PEDIDO:", dados);
             }
 
             
