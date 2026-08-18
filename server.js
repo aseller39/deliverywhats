@@ -180,6 +180,8 @@ app.post("/api/pedidos", async (req, res) => {
       mensagemWhatsApp
     );
 
+    console.log("Pedido enviado para o WhatsApp do restaurante com sucesso.");
+
     res.status(201).json({
       sucesso: true,
       mensagem: "Pedido recebido com sucesso.",

@@ -356,7 +356,10 @@
                 console.log("RESPOSTA DO PEDIDO:", dados);
 
                 if (dados.sucesso) {
-                    alert(`Pedido enviado com sucesso! Número do pedido: ${dados.pedido.id}`);
+                    alert(
+                        `✅ Pedido #${dados.pedido.id} enviado com sucesso!\n\n` +
+                        `O restaurante recebeu seu pedido.`
+                    );
 
                     limparCarrinho();
                 }
