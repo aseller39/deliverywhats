@@ -72,6 +72,28 @@ app.get("/criar-tabela-pedidos", async (req, res) => {
 });
 
 
+app.get("/api/restaurantes/1", async (req, res) => {
+  try {
+    const resultado = await pool.query(
+      "SELECT id, nome, telefone, ativo FROM restaurantes WHERE id = 1"
+    );
+
+    res.json({
+      sucesso: true,
+      restaurante: resultado.rows[0] || null
+    });
+
+  } catch (erro) {
+    console.error("Erro ao buscar restaurante:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao buscar restaurante."
+    });
+  }
+});
+
+
 app.post("/api/pedidos", async (req, res) => {
   try {
     const {
