@@ -25,6 +25,14 @@
             min-height: 100vh;
         }
 
+        .titulo-painel {
+            text-align: center;
+            margin: 10px 0 30px;
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
         #listaProdutos {
             width: 100%;
         }
@@ -148,11 +156,78 @@
             border-radius: 8px;
         }
 
+        .card-produto-painel {
+            background: #1e293b;
+            color: #f8fafc;
+
+            border: 1px solid #334155;
+            border-radius: 16px;
+
+            padding: 20px;
+
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .card-produto-painel:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.45);
+        }
+
+        .card-produto-painel h3 {
+            color: #ffffff;
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .card-produto-painel .descricao-produto {
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .card-produto-painel .precos-produto {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .card-produto-painel strong {
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .card-produto-painel .status-disponivel {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .card-produto-painel .status-indisponivel {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .card-produto-painel .acoes-produto {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .card-produto-painel .acoes-produto button {
+            margin: 0;
+        }
+
     </style>
 </head>
 <body>
 
-  <h1>Bem-vindo ao painel do Gustum.</h1>
+  <h1 class="titulo-painel">
+        Bem-vindo ao painel do Gustum.
+    </h1>
 
 
     <div id="formularioProduto" style="display: none;">
