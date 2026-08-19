@@ -339,6 +339,43 @@
             }
 
 
+            function adicionarPorcaoCarrinho(id) {
+                const produto = pratosDisponiveis.find(p => p.id === id);
+
+                if (!produto) {
+                    return;
+                }
+
+                const textoQuantidade =
+                    document.getElementById("quantidadePorcao").textContent;
+
+                const gramas =
+                    textoQuantidade === "1 kg"
+                        ? 1000
+                        : parseInt(textoQuantidade);
+
+                const precoKg = Number(produto.preco_kg);
+
+                const subtotal = precoKg * (gramas / 1000);
+
+                const item = {
+                    id: produto.id,
+                    nome: produto.nome,
+                    tipo: "porcao",
+                    gramas: gramas,
+                    preco_kg: precoKg,
+                    quantidade: 1,
+                    subtotal: subtotal
+                };
+
+                carrinho.push(item);
+
+                console.log("CARRINHO:", carrinho);
+
+                fecharProduto();
+            }
+
+
             function atualizarTotalProduto(produto) {
                 const quantidade = Number(
                     document.getElementById("quantidadeProduto").textContent
