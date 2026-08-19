@@ -1294,9 +1294,7 @@
 
             carregarProdutosPainel();
 
-            atualizarContadorPedidos();
-
-            setInterval(atualizarContadorPedidos, 5000);
+            
 
         } catch (erro) {
 
@@ -1315,7 +1313,9 @@
         window.location.href = "/pedidos.html";
     }
     
+            atualizarContadorPedidos();
 
+            setInterval(atualizarContadorPedidos, 5000);
     </script>
 
     <div id="modalEditarProduto" class="modal-editar-produto">
