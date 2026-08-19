@@ -146,6 +146,12 @@
         Carregando pedidos...
     </div>
 
+    <h2>👨‍🍳 Em preparo</h2>
+
+    <div id="pedidosEmPreparo">
+        Nenhum pedido em preparo.
+    </div>
+
     <script>
 
         async function carregarPedidos() {
@@ -178,6 +184,64 @@
                 const pedidosFila = dados.pedidos.filter(
                     pedido => pedido.status === "novo"
                 );
+
+                const pedidosEmPreparo = dados.pedidos.filter(
+                    pedido => pedido.status === "em_preparo"
+                );
+
+                const containerPreparo =
+                    document.getElementById("pedidosEmPreparo");
+
+                if (pedidosEmPreparo.length === 0) {
+
+                    containerPreparo.innerHTML =
+                        "<p>Nenhum pedido em preparo.</p>";
+
+                } else {
+
+                    containerPreparo.innerHTML =
+                        pedidosEmPreparo.map(pedido => `
+
+                            <div class="card-pedido">
+
+                                <h2>
+                                    🍽️ Pedido #${pedido.id}
+                                </h2>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    👨‍🍳 Em preparo
+                                </p>
+
+                                <h3>Itens</h3>
+
+                                <ul>
+                                    ${pedido.itens.map(item => `
+                                        <li>
+                                            ${item.quantidade}x
+                                            ${item.nome}
+                                        </li>
+                                    `).join("")}
+                                </ul>
+
+                                <p class="total-pedido">
+                                    Total:
+                                    R$ ${Number(pedido.total)
+                                        .toFixed(2)
+                                        .replace(".", ",")}
+                                </p>
+
+                                <button
+                                    class="botao-pronto"
+                                    onclick="marcarComoPronto(${pedido.id})"
+                                >
+                                    ✅ Marcar como pronto
+                                </button>
+
+                            </div>
+
+                        `).join("");
+                }
 
                 if (pedidosFila.length === 0) {
 
