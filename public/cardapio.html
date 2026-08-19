@@ -102,6 +102,7 @@
             let itensPedido = [];
             let pratosDisponiveis = [];
             let produtoSelecionadoId = null;
+            let carrinho = [];
 
             let observacaoPedido = "";
             const itensSalvos = localStorage.getItem("itensPedido");
@@ -298,6 +299,56 @@
 
                 document.getElementById("totalProduto").textContent =
                     total.toFixed(2).replace(".", ",");
+            }
+
+            function adicionarProdutoCarrinho(id) {
+                const produto = pratosDisponiveis.find(p => p.id === id);
+
+                if (!produto) {
+                    return;
+                }
+
+                const quantidade = Number(
+                    document.getElementById("quantidadeProduto").textContent
+                );
+
+                let tamanho = null;
+                let preco = Number(produto.preco);
+
+                const tamanhoSelecionado = document.querySelector(
+                    'input[name="tamanhoProduto"]:checked'
+                );
+
+                if (tamanhoSelecionado) {
+                    tamanho = tamanhoSelecionado.value;
+
+                    if (tamanho === "pequena") {
+                        preco = Number(produto.preco_pequena);
+                    }
+
+                    if (tamanho === "media") {
+                        preco = Number(produto.preco_media);
+                    }
+
+                    if (tamanho === "grande") {
+                        preco = Number(produto.preco_grande);
+                    }
+                }
+
+                const item = {
+                    id: produto.id,
+                    nome: produto.nome,
+                    tamanho: tamanho,
+                    preco: preco,
+                    quantidade: quantidade,
+                    subtotal: preco * quantidade
+                };
+
+                carrinho.push(item);
+
+                console.log("CARRINHO:", carrinho);
+
+                fecharProduto();
             }
 
 
