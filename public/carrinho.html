@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Carrinho</title>
+</head>
+
+<body>
+
+    <h1>🛒 Meu carrinho</h1>
+
+    <div id="itensCarrinho"></div>
+
+    <h2>
+        Total: R$ <span id="totalCarrinho">0,00</span>
+    </h2>
+
+    <button onclick="voltarCardapio()">
+        ← Voltar ao cardápio
+    </button>
+
+    <script>
+
+        let carrinho = [];
+
+        const carrinhoSalvo = localStorage.getItem("carrinho");
+
+        if (carrinhoSalvo) {
+            carrinho = JSON.parse(carrinhoSalvo);
+        }
+
+        function carregarCarrinho() {
+
+            const container =
+                document.getElementById("itensCarrinho");
+
+            let total = 0;
+
+            if (carrinho.length === 0) {
+
+                container.innerHTML = `
+                    <p>Seu carrinho está vazio.</p>
+                `;
+
+                return;
+            }
+
+            container.innerHTML = carrinho.map(item => {
+
+                total += Number(item.subtotal);
+
+                let descricao = "";
+
+                if (item.tipo === "porcao") {
+
+                    descricao = item.gramas === 1000
+                        ? "1 kg"
+                        : `${item.gramas} g`;
+
+                } else if (item.tamanho) {
+
+                    descricao = item.tamanho;
+                }
+
+                return `
+                    <div>
+                        <h3>${item.nome}</h3>
+
+                        ${descricao
+                            ? `<p>${descricao}</p>`
+                            : ""
+                        }
+
+                        <p>
+                            Quantidade: ${item.quantidade}
+                        </p>
+
+                        <strong>
+                            R$ ${Number(item.subtotal)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </strong>
+                    </div>
+                `;
+
+            }).join("");
+
+            document.getElementById("totalCarrinho").textContent =
+                total.toFixed(2).replace(".", ",");
+        }
+
+        function voltarCardapio() {
+
+            const parametros =
+                new URLSearchParams(window.location.search);
+
+            const restauranteId =
+                parametros.get("restaurante");
+
+            window.location.href =
+                `/cardapio.html?restaurante=${restauranteId}`;
+        }
+
+        carregarCarrinho();
+
+    </script>
+
+</body>
+</html>

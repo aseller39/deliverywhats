@@ -127,6 +127,11 @@
             let pratosDisponiveis = [];
             let produtoSelecionadoId = null;
             let carrinho = [];
+            const carrinhoSalvo = localStorage.getItem("carrinho");
+
+            if (carrinhoSalvo) {
+                carrinho = JSON.parse(carrinhoSalvo);
+            }
 
             let observacaoPedido = "";
             const itensSalvos = localStorage.getItem("itensPedido");
@@ -393,6 +398,7 @@
                 };
 
                 carrinho.push(item);
+                localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
                 console.log("CARRINHO:", carrinho);
 
@@ -475,6 +481,7 @@
                 };
 
                 carrinho.push(item);
+                localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
                 console.log("CARRINHO:", carrinho);
 
