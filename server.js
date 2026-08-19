@@ -561,6 +561,42 @@ app.post("/api/pratos", async (req, res) => {
 });
 
 
+app.put("/api/pratos/:id/disponibilidade", async (req, res) => {
+  try {
+
+    const pratoId = req.params.id;
+    const { disponivel } = req.body;
+
+    await pool.query(
+      `
+      UPDATE pratos
+      SET disponivel = $1
+      WHERE id = $2
+      `,
+      [disponivel, pratoId]
+    );
+
+    res.json({
+      sucesso: true,
+      mensagem: "Disponibilidade do produto atualizada."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao atualizar disponibilidade do prato:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar disponibilidade."
+    });
+
+  }
+});
+
+
 app.get("/api/pratos/:id/ingredientes", async (req, res) => {
   try {
     const pratoId = req.params.id;
