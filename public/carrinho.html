@@ -9,34 +9,85 @@
     <style>
 
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }
+    font-family: Arial, sans-serif;
+
+    margin: 0;
+
+    padding: 25px;
+
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #111827,
+            #172033
+        );
+
+    color: #ffffff;
+}
+
+
+body > h1 {
+    text-align: center;
+
+    margin: 10px 0 30px;
+
+    font-size: 30px;
+}
+
 
         .card-item-carrinho {
-            background: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            width: 220px;
-        }
+    position: relative;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    margin: 0 auto 15px;
+
+    max-width: 650px;
+
+    box-sizing: border-box;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.35);
+}
 
         .info-item-carrinho h3 {
-            margin: 0 0 6px;
-        }
+    margin: 0 0 8px;
 
-        .info-item-carrinho p {
-            margin: 4px 0;
-        }
+    color: #ffffff;
 
-        .info-item-carrinho strong {
-            display: block;
-            margin-top: 8px;
-            font-size: 18px;
-        }
+    font-size: 20px;
+}
+
+.info-item-carrinho p {
+    margin: 5px 0;
+
+    color: #cbd5e1;
+
+    font-size: 15px;
+}
+
+.info-item-carrinho strong {
+    display: block;
+
+    margin-top: 10px;
+
+    color: #86efac;
+
+    font-size: 20px;
+}
 
         .quantidade-carrinho {
             display: flex;
@@ -44,14 +95,49 @@
             gap: 10px;
         }
 
-        .quantidade-carrinho button {
-            width: 36px;
-            height: 36px;
-            border: none;
-            border-radius: 50%;
-            font-size: 22px;
-            cursor: pointer;
-        }
+        .quantidade-carrinho {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 16px;
+}
+
+.quantidade-carrinho button {
+    width: 40px;
+
+    height: 40px;
+
+    border: 1px solid #475569;
+
+    border-radius: 10px;
+
+    background: #334155;
+
+    color: #ffffff;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.quantidade-carrinho button:hover {
+    background: #475569;
+}
+
+.quantidade-carrinho span {
+    min-width: 60px;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    font-weight: bold;
+}
 
         .quantidade-carrinho span {
             min-width: 50px;
@@ -73,6 +159,207 @@
             cursor: pointer;
         }
 
+
+.resumo-carrinho {
+    max-width: 650px;
+
+    margin: 25px auto;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: #0f172a;
+
+    border: 1px solid #475569;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.resumo-carrinho span:first-child {
+    color: #cbd5e1;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.resumo-carrinho strong {
+    color: #86efac;
+
+    font-size: 25px;
+}
+
+
+.acoes-carrinho {
+    max-width: 650px;
+
+    margin: 20px auto;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.acoes-carrinho button {
+    flex: 1;
+
+    padding: 15px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+.botao-continuar {
+    background: #334155;
+}
+
+.botao-finalizar {
+    background: #16a34a;
+
+    box-shadow:
+        0 6px 18px rgba(22, 163, 74, 0.3);
+}
+
+.acoes-carrinho button:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.1);
+}
+
+
+.carrinho-vazio {
+    max-width: 500px;
+
+    margin: 40px auto;
+
+    padding: 35px 25px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.icone-carrinho-vazio {
+    font-size: 55px;
+
+    margin-bottom: 10px;
+}
+
+.carrinho-vazio h2 {
+    margin: 10px 0;
+
+    color: #ffffff;
+}
+
+.carrinho-vazio p {
+    color: #cbd5e1;
+
+    line-height: 1.5;
+
+    margin-bottom: 22px;
+}
+
+.botao-vazio {
+    padding: 13px 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #16a34a;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.botao-vazio:hover {
+    background: #22c55e;
+}
+
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 18px 12px;
+    }
+
+    body > h1 {
+        font-size: 26px;
+
+        margin-bottom: 24px;
+    }
+
+    .card-item-carrinho {
+        padding: 16px;
+    }
+
+    .resumo-carrinho {
+        padding: 16px;
+
+        margin-top: 20px;
+    }
+
+    .resumo-carrinho span:first-child {
+        font-size: 16px;
+    }
+
+    .resumo-carrinho strong {
+        font-size: 22px;
+    }
+
+    .acoes-carrinho {
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-bottom: 20px;
+    }
+
+    .acoes-carrinho button {
+        width: 100%;
+
+        padding: 16px;
+    }
+
+}
+
     </style>
 
 </head>
@@ -83,17 +370,33 @@
 
     <div id="itensCarrinho"></div>
 
-    <h2>
-        Total: R$ <span id="totalCarrinho">0,00</span>
-    </h2>
+    <div class="resumo-carrinho">
 
-    <button onclick="voltarCardapio()">
+    <span>Total do pedido</span>
+
+    <strong>
+        R$ <span id="totalCarrinho">0,00</span>
+    </strong>
+
+</div>
+
+    <div class="acoes-carrinho">
+
+    <button
+        class="botao-continuar"
+        onclick="voltarCardapio()"
+    >
         🛍️ Continuar comprando
     </button>
 
-    <button onclick="finalizarPedido()">
+    <button
+        class="botao-finalizar"
+        onclick="finalizarPedido()"
+    >
         ✅ Finalizar pedido
     </button>
+
+</div>
 
     <script>
 
@@ -115,7 +418,27 @@
             if (carrinho.length === 0) {
 
                 container.innerHTML = `
-                    <p>Seu carrinho está vazio.</p>
+                    <div class="carrinho-vazio">
+
+                        <div class="icone-carrinho-vazio">
+                            🛒
+                        </div>
+
+                        <h2>Seu carrinho está vazio</h2>
+
+                        <p>
+                            Escolha seus pratos favoritos no cardápio
+                            e adicione ao seu pedido.
+                        </p>
+
+                        <button
+                            class="botao-vazio"
+                            onclick="voltarCardapio()"
+                        >
+                            🍽️ Ver cardápio
+                        </button>
+
+                    </div>
                 `;
 
                 document.getElementById("totalCarrinho").textContent = "0,00";
