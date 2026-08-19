@@ -300,6 +300,45 @@
             }
 
 
+            function alterarQuantidadePorcao(valor) {
+                const elemento = document.getElementById("quantidadePorcao");
+
+                let gramas = parseInt(elemento.textContent);
+
+                gramas += valor;
+
+                if (gramas < 100) {
+                    gramas = 100;
+                }
+
+                if (gramas > 1000) {
+                    gramas = 1000;
+                }
+
+                elemento.textContent =
+                    gramas >= 1000
+                        ? "1 kg"
+                        : `${gramas} g`;
+
+                const produto = pratosDisponiveis.find(
+                    p => p.id === produtoSelecionadoId
+                );
+
+                if (produto) {
+                    atualizarTotalPorcao(produto, gramas);
+                }
+            }
+
+            function atualizarTotalPorcao(produto, gramas) {
+                const precoKg = Number(produto.preco_kg);
+
+                const total = precoKg * (gramas / 1000);
+
+                document.getElementById("totalProduto").textContent =
+                    total.toFixed(2).replace(".", ",");
+            }
+
+
             function atualizarTotalProduto(produto) {
                 const quantidade = Number(
                     document.getElementById("quantidadeProduto").textContent
