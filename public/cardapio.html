@@ -7,13 +7,112 @@
 
     <style>
         .card-produto {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-            width: 220px;
-        }
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    cursor: pointer;
+
+    width: 220px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.35);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.card-produto:hover {
+    transform: translateY(-4px);
+
+    border-color: #64748b;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.45);
+}
+
+.card-produto h2 {
+    margin: 0 0 10px;
+
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+.card-produto p {
+    margin: 0 0 14px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+.card-produto strong {
+    display: block;
+
+    font-size: 19px;
+
+    color: #86efac;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #111827,
+            #172033
+        );
+
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+
+    padding: 25px 20px;
+
+    background: #111827;
+
+    border-bottom: 1px solid #334155;
+
+    position: relative;
+}
+
+header h1 {
+    margin: 0;
+
+    font-size: 32px;
+}
+
+header p {
+    margin: 8px 0 0;
+
+    color: #cbd5e1;
+}
+
+main {
+    width: 92%;
+
+    max-width: 1100px;
+
+    margin: 30px auto;
+}
+
 
         .card-produto h2 {
             margin: 0 0 8px;
@@ -50,15 +149,83 @@
         }
 
         .conteudo-modal-produto {
-            background: white;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 16px;
-            padding: 20px;
-            position: relative;
-        }
+    background: #1e293b;
+
+    color: #ffffff;
+
+    width: 90%;
+
+    max-width: 500px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    position: relative;
+
+    border: 1px solid #334155;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.6);
+
+    box-sizing: border-box;
+}
+
+.conteudo-modal-produto h2 {
+    color: #ffffff;
+
+    margin-top: 0;
+
+    font-size: 25px;
+}
+
+.conteudo-modal-produto h3 {
+    color: #e2e8f0;
+
+    margin-top: 20px;
+}
+
+.conteudo-modal-produto p {
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+.conteudo-modal-produto > button {
+    color: #ffffff;
+
+    background: #334155;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    top: 12px;
+    right: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.conteudo-modal-produto > button:hover {
+    background: #475569;
+
+    transform: rotate(90deg);
+}
 
         .conteudo-modal-produto > button {
             position: absolute;
@@ -69,6 +236,371 @@
             font-size: 24px;
             cursor: pointer;
         }
+
+#botaoCarrinho {
+    position: absolute;
+
+    right: 25px;
+    top: 25px;
+
+    background: #16a34a;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 12px 18px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(22, 163, 74, 0.35);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+#botaoCarrinho:hover {
+    background: #22c55e;
+
+    transform: translateY(-2px);
+}
+
+#quantidadeCarrinho {
+    display: inline-flex;
+
+    min-width: 24px;
+    height: 24px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 5px;
+
+    background: #ffffff;
+
+    color: #166534;
+
+    border-radius: 50%;
+
+    font-size: 14px;
+}
+
+
+.titulo-categoria {
+    width: 100%;
+
+    margin: 30px 0 18px;
+
+    padding: 12px 16px;
+
+    box-sizing: border-box;
+
+    background: #1e293b;
+
+    border-left: 5px solid #22c55e;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    font-size: 24px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+
+.conteudo-modal-produto button:not(:first-child) {
+    cursor: pointer;
+}
+
+.conteudo-modal-produto #quantidadeProduto,
+.conteudo-modal-produto #quantidadePorcao {
+    display: inline-flex;
+
+    min-width: 45px;
+
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 10px;
+
+    background: #0f172a;
+
+    border: 1px solid #475569;
+
+    border-radius: 10px;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+
+.controle-quantidade {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 15px 0;
+}
+
+.botao-quantidade {
+    width: 44px;
+    height: 44px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #334155;
+
+    color: #ffffff;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.botao-quantidade:hover {
+    background: #475569;
+
+    transform: scale(1.05);
+}
+
+.botao-quantidade:active {
+    transform: scale(0.95);
+}
+
+
+.conteudo-modal-produto .botao-adicionar-carrinho {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 15px 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #16a34a;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(22, 163, 74, 0.35);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.conteudo-modal-produto .botao-adicionar-carrinho:hover {
+    background: #22c55e;
+
+    transform: translateY(-2px);
+}
+
+
+#avisos {
+    margin-bottom: 25px;
+}
+
+#avisos > div {
+    background: #1e293b;
+
+    border: 1px solid #475569;
+
+    border-left: 5px solid #f59e0b;
+
+    border-radius: 14px;
+
+    padding: 16px 18px;
+
+    margin-bottom: 14px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+#avisos h2 {
+    margin: 0 0 8px;
+
+    color: #fbbf24;
+
+    font-size: 20px;
+}
+
+#avisos p {
+    margin: 0;
+
+    color: #e2e8f0;
+
+    line-height: 1.5;
+}
+
+
+#quantidadeCarrinho {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 24px;
+    height: 24px;
+
+    margin-left: 6px;
+
+    padding: 0 5px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    color: #166534;
+
+    border-radius: 50%;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+#botaoCarrinho:hover {
+    background: #22c55e;
+
+    transform: translateY(-2px) scale(1.03);
+
+    box-shadow:
+        0 8px 22px rgba(22, 163, 74, 0.45);
+}
+
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 20px 15px 25px;
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+
+    header p {
+        font-size: 15px;
+    }
+
+    #botaoCarrinho {
+        right: 12px;
+        top: 18px;
+
+        padding: 10px 13px;
+
+        font-size: 16px;
+    }
+
+    main {
+        width: 94%;
+
+        margin: 20px auto;
+    }
+
+    .grade-produtos {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 12px;
+    }
+
+    .card-produto {
+        width: auto;
+
+        padding: 15px;
+
+        box-sizing: border-box;
+    }
+
+    .card-produto h2 {
+        font-size: 18px;
+    }
+
+    .card-produto p {
+        font-size: 14px;
+    }
+
+    .card-produto strong {
+        font-size: 17px;
+    }
+
+    .titulo-categoria {
+        font-size: 21px;
+
+        margin-top: 25px;
+    }
+
+    .conteudo-modal-produto {
+        width: 94%;
+
+        padding: 20px;
+
+        border-radius: 16px;
+    }
+
+}
+
+
+@media (max-width: 400px) {
+
+    header {
+        padding-top: 70px;
+    }
+
+    #botaoCarrinho {
+        top: 15px;
+        right: 15px;
+    }
+
+}
+
+
+html,
+body {
+    background: #0f172a !important;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
 
     </style>
 
@@ -314,10 +846,24 @@
 
                         <h3>Quantidade</h3>
 
-                        <div>
-                            <button onclick="alterarQuantidadeProduto(-1)">−</button>
+                        <div class="controle-quantidade">
+
+                            <button
+                                class="botao-quantidade"
+                                onclick="alterarQuantidadeProduto(-1)"
+                            >
+                                −
+                            </button>
+
                             <span id="quantidadeProduto">1</span>
-                            <button onclick="alterarQuantidadeProduto(1)">+</button>
+
+                            <button
+                                class="botao-quantidade"
+                                onclick="alterarQuantidadeProduto(1)"
+                            >
+                                +
+                            </button>
+
                         </div>
 
                         <h3>
@@ -327,7 +873,10 @@
                             </span>
                         </h3>
 
-                        <button onclick="adicionarProdutoCarrinho(${produto.id})">
+                        <button
+                            class="botao-adicionar-carrinho"
+                            onclick="adicionarProdutoCarrinho(${produto.id})"
+                        >
                             🛒 Adicionar ao carrinho
                         </button>
                     `;
@@ -352,10 +901,24 @@
 
                             <h3>Quantidade</h3>
 
-                            <div>
-                                <button onclick="alterarQuantidadePorcao(-100)">−</button>
+                            <div class="controle-quantidade">
+
+                                <button
+                                    class="botao-quantidade"
+                                    onclick="alterarQuantidadePorcao(-100)"
+                                >
+                                    −
+                                </button>
+
                                 <span id="quantidadePorcao">100 g</span>
-                                <button onclick="alterarQuantidadePorcao(100)">+</button>
+
+                                <button
+                                    class="botao-quantidade"
+                                    onclick="alterarQuantidadePorcao(100)"
+                                >
+                                    +
+                                </button>
+
                             </div>
 
                             <h3>
@@ -365,7 +928,10 @@
                                 </span>
                             </h3>
 
-                            <button onclick="adicionarPorcaoCarrinho(${produto.id})">
+                            <button
+                                class="botao-adicionar-carrinho"
+                                onclick="adicionarPorcaoCarrinho(${produto.id})"
+                            >
                                 🛒 Adicionar ao carrinho
                             </button>
                         `;
@@ -382,10 +948,24 @@
 
                             <h3>Quantidade</h3>
 
-                            <div>
-                                <button onclick="alterarQuantidadeProduto(-1)">−</button>
+                            <div class="controle-quantidade">
+
+                                <button
+                                    class="botao-quantidade"
+                                    onclick="alterarQuantidadeProduto(-1)"
+                                >
+                                    −
+                                </button>
+
                                 <span id="quantidadeProduto">1</span>
-                                <button onclick="alterarQuantidadeProduto(1)">+</button>
+
+                                <button
+                                    class="botao-quantidade"
+                                    onclick="alterarQuantidadeProduto(1)"
+                                >
+                                    +
+                                </button>
+
                             </div>
 
                             <h3>
@@ -395,7 +975,10 @@
                                 </span>
                             </h3>
 
-                            <button onclick="adicionarProdutoCarrinho(${produto.id})">
+                            <button
+                                class="botao-adicionar-carrinho"
+                                onclick="adicionarProdutoCarrinho(${produto.id})"
+                            >
                                 🛒 Adicionar ao carrinho
                             </button>
                         `;
