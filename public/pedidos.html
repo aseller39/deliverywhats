@@ -459,6 +459,13 @@
                                     🖨️ Imprimir guia
                                 </button>
 
+                                <button
+                                    class="botao-finalizar"
+                                    onclick="finalizarPedido(${pedido.id})"
+                                >
+                                    📦 Finalizar pedido
+                                </button>
+
                             </div>
 
                         `).join("");
@@ -570,6 +577,47 @@
 
                 container.innerHTML =
                     "<p>Erro de comunicação com o servidor.</p>";
+            }
+        }
+
+
+        async function finalizarPedido(pedidoId) {
+
+            try {
+
+                const resposta = await fetch(
+                    `/api/pedidos/${pedidoId}/finalizar`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                console.log(dados);
+
+                if (!resposta.ok || !dados.sucesso) {
+
+                    alert(
+                        dados.erro ||
+                        "Não foi possível finalizar o pedido."
+                    );
+
+                    return;
+                }
+
+                carregarPedidos();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao finalizar pedido:",
+                    erro
+                );
+
+                alert(
+                    "Erro de comunicação com o servidor."
+                );
             }
         }
 

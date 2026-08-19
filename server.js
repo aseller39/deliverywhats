@@ -333,6 +333,45 @@ app.put("/api/pedidos/:id/marcar-pronto", async (req, res) => {
 });
 
 
+app.put("/api/pedidos/:id/finalizar", async (req, res) => {
+  try {
+    const pedidoId = req.params.id;
+
+    const resultado = await pool.query(
+      `
+      UPDATE pedidos
+      SET status = 'finalizado'
+      WHERE id = $1
+        AND status = 'pronto'
+      RETURNING id, status
+      `,
+      [pedidoId]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Pedido não encontrado ou ainda não está pronto."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Pedido finalizado com sucesso.",
+      pedido: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao finalizar pedido:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao finalizar pedido."
+    });
+  }
+});
+
+
 function montarMensagemPedido(pedido) {
 
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
