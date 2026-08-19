@@ -218,7 +218,7 @@ app.get("/api/pedidos", async (req, res) => {
         criado_em
       FROM pedidos
       WHERE restaurante_id = $1
-      ORDER BY criado_em DESC
+      ORDER BY criado_em ASC
       `,
       [restauranteId]
     );
@@ -234,6 +234,52 @@ app.get("/api/pedidos", async (req, res) => {
     res.status(500).json({
       sucesso: false,
       erro: "Erro ao buscar pedidos."
+    });
+  }
+});
+
+
+app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
+  try {
+
+    const pedidoId = req.params.id;
+
+    const resultado = await pool.query(
+      `
+      UPDATE pedidos
+      SET status = 'em_preparo'
+      WHERE id = $1
+        AND status = 'aguardando'
+      RETURNING id, status
+      `,
+      [pedidoId]
+    );
+
+    if (resultado.rows.length === 0) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Este pedido não está aguardando preparo."
+      });
+
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Preparo iniciado.",
+      pedido: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao iniciar preparo:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao iniciar preparo."
     });
   }
 });

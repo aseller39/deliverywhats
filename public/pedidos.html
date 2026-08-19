@@ -6,19 +6,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Pedidos - Gustum</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f3f4f6;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .topo-pedidos {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .topo-pedidos h1 {
+        margin: 0;
+    }
+
+    .botao-voltar {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #333;
+        color: white;
+        font-size: 15px;
+    }
+
+    #pedidos {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .baralho {
+        position: relative;
+        min-height: 500px;
+    }
+
+    .card-pedido {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box;
+
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-pedido:nth-child(1) {
+        top: 0;
+        z-index: 10;
+    }
+
+    .card-pedido:nth-child(2) {
+        top: 30px;
+        z-index: 9;
+        transform: scale(0.98);
+    }
+
+    .card-pedido:nth-child(3) {
+        top: 60px;
+        z-index: 8;
+        transform: scale(0.96);
+    }
+
+    .card-pedido:nth-child(4) {
+        top: 90px;
+        z-index: 7;
+        transform: scale(0.94);
+    }
+
+    .card-pedido:nth-child(5) {
+        top: 120px;
+        z-index: 6;
+        transform: scale(0.92);
+    }
+
+    .card-pedido h2 {
+        margin-top: 0;
+    }
+
+    .total-pedido {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .botao-iniciar {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        font-size: 17px;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+</style>
+
 </head>
 
 <body>
 
-    <h1>📦 Pedidos</h1>
+    <div class="topo-pedidos">
 
-    <button onclick="voltarPainel()">
-        ← Voltar ao painel
-    </button>
+        <h1>📦 Pedidos</h1>
 
-    <hr>
+        <button
+            class="botao-voltar"
+            onclick="voltarPainel()"
+        >
+            ← Voltar ao painel
+        </button>
 
-    <h2>🆕 Novos pedidos</h2>
+    </div>
+
+    <h2>🕐 Fila de pedidos</h2>
 
     <div id="pedidos">
         Carregando pedidos...
@@ -53,8 +162,22 @@
                     return;
                 }
 
-                container.innerHTML =
-                    dados.pedidos.map(pedido => `
+                const pedidosFila = dados.pedidos.filter(
+                    pedido => pedido.status === "aguardando"
+                );
+
+                if (pedidosFila.length === 0) {
+
+                    container.innerHTML =
+                        "<p>📭 Nenhum pedido aguardando.</p>";
+
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="baralho">
+
+                        ${pedidosFila.map((pedido, indice) => `
 
                         <div>
 
@@ -123,11 +246,27 @@
                                 }
                             </p>
 
+                            ${
+                                indice === 0
+                                    ? `
+                                        <button
+                                            class="botao-iniciar"
+                                            onclick="iniciarPreparo(${pedido.id})"
+                                        >
+                                            ▶️ Iniciar preparo
+                                        </button>
+                                    `
+                                    : ""
+                            }
+
                             <hr>
 
                         </div>
 
-                    `).join("");
+                            `).join("")}
+
+                        </div>
+                    `;
 
             } catch (erro) {
 
@@ -138,6 +277,47 @@
 
                 container.innerHTML =
                     "<p>Erro de comunicação com o servidor.</p>";
+            }
+        }
+
+
+        async function iniciarPreparo(pedidoId) {
+
+            try {
+
+                const resposta = await fetch(
+                    `/api/pedidos/${pedidoId}/iniciar-preparo`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                console.log(dados);
+
+                if (!resposta.ok || !dados.sucesso) {
+
+                    alert(
+                        dados.erro ||
+                        "Não foi possível iniciar o preparo."
+                    );
+
+                    return;
+                }
+
+                carregarPedidos();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao iniciar preparo:",
+                    erro
+                );
+
+                alert(
+                    "Erro de comunicação com o servidor."
+                );
             }
         }
 
