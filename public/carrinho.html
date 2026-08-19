@@ -65,23 +65,42 @@
                 }
 
                 return `
-                    <div>
-                        <h3>${item.nome}</h3>
+                    <div class="card-item-carrinho">
 
-                        ${descricao
-                            ? `<p>${descricao}</p>`
-                            : ""
-                        }
+                        <div class="info-item-carrinho">
 
-                        <p>
-                            Quantidade: ${item.quantidade}
-                        </p>
+                            <h3>${item.nome}</h3>
 
-                        <strong>
-                            R$ ${Number(item.subtotal)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                        </strong>
+                            ${descricao
+                                ? `<p>${descricao}</p>`
+                                : ""
+                            }
+
+                            <strong>
+                                R$ ${Number(item.subtotal)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                            </strong>
+
+                        </div>
+
+                        <div class="quantidade-carrinho">
+
+                            <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, -1)">
+                                −
+                            </button>
+
+                            <span>${item.tipo === "porcao"
+                                ? (item.gramas === 1000 ? "1 kg" : item.gramas + " g")
+                                : item.quantidade
+                            }</span>
+
+                            <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, 1)">
+                                +
+                            </button>
+
+                        </div>
+
                     </div>
                 `;
 
