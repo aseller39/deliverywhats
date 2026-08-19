@@ -1042,9 +1042,7 @@
         }
     }
 
-    document.getElementById("editarCategoria")
-    .addEventListener("change", atualizarCamposPrecoEdicao);
-
+    
 
     </script>
 
@@ -1082,7 +1080,10 @@
 
         <label>
             Categoria
-            <select id="editarCategoria">
+            <select
+                id="editarCategoria"
+                onchange="atualizarCamposPrecoEdicao()"
+            >
                 <option value="prato">🍽️ Prato</option>
                 <option value="porcao">🥩 Porção</option>
                 <option value="bebida">🥤 Bebida</option>
