@@ -369,6 +369,133 @@
     }
 
 
+    async function salvarProduto() {
+
+        const nome =
+            document.getElementById("nomeProduto").value.trim();
+
+        const descricao =
+            document.getElementById("descricaoProduto").value.trim();
+
+        const categoria =
+            document.getElementById("categoriaProduto").value;
+
+        const status =
+            document.getElementById("statusProduto");
+
+        if (!nome) {
+
+            status.textContent =
+                "❌ Informe o nome do produto.";
+
+            return;
+        }
+
+        let dadosProduto = {
+            restaurante_id: 1,
+            nome: nome,
+            descricao: descricao,
+            categoria: categoria,
+            preco: 0,
+            preco_pequena: null,
+            preco_media: null,
+            preco_grande: null,
+            preco_kg: null
+        };
+
+        if (categoria === "prato") {
+
+            dadosProduto.preco_pequena =
+                Number(document.getElementById("precoPequena").value);
+
+            dadosProduto.preco_media =
+                Number(document.getElementById("precoMedia").value);
+
+            dadosProduto.preco_grande =
+                Number(document.getElementById("precoGrande").value);
+
+            dadosProduto.preco =
+                dadosProduto.preco_media;
+
+        }
+
+        if (categoria === "porcao") {
+
+            dadosProduto.preco_kg =
+                Number(document.getElementById("precoKg").value);
+
+            dadosProduto.preco =
+                dadosProduto.preco_kg;
+
+        }
+
+        if (categoria === "bebida") {
+
+            dadosProduto.preco =
+                Number(
+                    document.getElementById("precoBebidaInput").value
+                );
+
+        }
+
+        if (!dadosProduto.preco || dadosProduto.preco <= 0) {
+
+            status.textContent =
+                "❌ Informe um preço válido.";
+
+            return;
+        }
+
+        try {
+
+            const resposta = await fetch("/api/pratos", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(dadosProduto)
+
+            });
+
+            const dados = await resposta.json();
+
+            console.log(dados);
+
+            if (!resposta.ok || !dados.sucesso) {
+
+                status.textContent =
+                    `❌ ${dados.erro || "Erro ao cadastrar produto."}`;
+
+                return;
+            }
+
+            status.textContent =
+                "✅ Produto cadastrado com sucesso!";
+
+            document.getElementById("nomeProduto").value = "";
+            document.getElementById("descricaoProduto").value = "";
+
+            document.getElementById("precoPequena").value = "";
+            document.getElementById("precoMedia").value = "";
+            document.getElementById("precoGrande").value = "";
+
+            document.getElementById("precoKg").value = "";
+            document.getElementById("precoBebidaInput").value = "";
+
+        } catch (erro) {
+
+            console.error("Erro ao cadastrar produto:", erro);
+
+            status.textContent =
+                "❌ Erro de comunicação com o servidor.";
+
+        }
+    }
+
+
     </script>
 
 </body>
