@@ -314,6 +314,26 @@
                 0 10px 24px rgba(37, 99, 235, 0.45);
         }
 
+        #contadorPedidos {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 24px;
+            height: 24px;
+
+            margin-left: 6px;
+            padding: 0 6px;
+
+            background: #ef4444;
+            color: #ffffff;
+
+            border-radius: 50%;
+
+            font-size: 13px;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -486,6 +506,7 @@
         onclick="abrirPedidos()"
     >
         📦 Pedidos
+        <span id="contadorPedidos">0</span>
     </button>
 
 </div>
@@ -1020,6 +1041,44 @@
     }
 
 
+    async function atualizarContadorPedidos() {
+
+        try {
+
+            const resposta =
+                await fetch("/api/pedidos?restaurante=1");
+
+            const dados =
+                await resposta.json();
+
+            if (!dados.sucesso) {
+                return;
+            }
+
+            const pedidosNovos =
+                dados.pedidos.filter(
+                    pedido => pedido.status === "novo"
+                );
+
+            const contador =
+                document.getElementById("contadorPedidos");
+
+            if (!contador) {
+                return;
+            }
+
+            contador.textContent = pedidosNovos.length;
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao atualizar contador de pedidos:",
+                erro
+            );
+        }
+    }
+
+
     async function alterarDisponibilidade(id, disponivel) {
 
         try {
@@ -1234,6 +1293,10 @@
             fecharModalEditar();
 
             carregarProdutosPainel();
+
+            atualizarContadorPedidos();
+
+            setInterval(atualizarContadorPedidos, 5000);
 
         } catch (erro) {
 
