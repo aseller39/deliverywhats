@@ -212,37 +212,67 @@
                             });
                         });
 
-                } else {
+                    } else if (produto.categoria === "porcao") {
 
-                    detalhes.innerHTML = `
-                        <h2>${produto.nome}</h2>
-                        <p>${produto.descricao}</p>
+                        detalhes.innerHTML = `
+                            <h2>${produto.nome}</h2>
+                            <p>${produto.descricao}</p>
 
-                        <h3>
-                            R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}
-                        </h3>
+                            <h3>
+                                R$ ${Number(produto.preco_kg).toFixed(2).replace(".", ",")} / kg
+                            </h3>
 
-                        <h3>Quantidade</h3>
+                            <h3>Quantidade</h3>
 
-                        <div>
-                            <button onclick="alterarQuantidadeProduto(-1)">−</button>
-                            <span id="quantidadeProduto">1</span>
-                            <button onclick="alterarQuantidadeProduto(1)">+</button>
-                        </div>
+                            <div>
+                                <button onclick="alterarQuantidadePorcao(-100)">−</button>
+                                <span id="quantidadePorcao">100 g</span>
+                                <button onclick="alterarQuantidadePorcao(100)">+</button>
+                            </div>
 
-                        <h3>
-                            Total:
-                            R$ <span id="totalProduto">
-                                ${Number(produto.preco).toFixed(2).replace(".", ",")}
-                            </span>
-                        </h3>
+                            <h3>
+                                Total:
+                                R$ <span id="totalProduto">
+                                    ${(Number(produto.preco_kg) / 10).toFixed(2).replace(".", ",")}
+                                </span>
+                            </h3>
 
-                        <button onclick="adicionarProdutoCarrinho(${produto.id})">
-                            🛒 Adicionar ao carrinho
-                        </button>
-                    `;
+                            <button onclick="adicionarPorcaoCarrinho(${produto.id})">
+                                🛒 Adicionar ao carrinho
+                            </button>
+                        `;
 
-                }
+                    } else {
+
+                        detalhes.innerHTML = `
+                            <h2>${produto.nome}</h2>
+                            <p>${produto.descricao}</p>
+
+                            <h3>
+                                R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}
+                            </h3>
+
+                            <h3>Quantidade</h3>
+
+                            <div>
+                                <button onclick="alterarQuantidadeProduto(-1)">−</button>
+                                <span id="quantidadeProduto">1</span>
+                                <button onclick="alterarQuantidadeProduto(1)">+</button>
+                            </div>
+
+                            <h3>
+                                Total:
+                                R$ <span id="totalProduto">
+                                    ${Number(produto.preco).toFixed(2).replace(".", ",")}
+                                </span>
+                            </h3>
+
+                            <button onclick="adicionarProdutoCarrinho(${produto.id})">
+                                🛒 Adicionar ao carrinho
+                            </button>
+                        `;
+
+                    }
 
                 document.getElementById("modalProduto").style.display = "flex";
             }
