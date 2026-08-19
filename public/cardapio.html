@@ -114,6 +114,7 @@
 
 
             function abrirProduto(id) {
+                console.log("CLIQUEI NO PRODUTO:", id);
                 const produto = pratosDisponiveis.find(p => p.id === id);
 
                 if (!produto) {
