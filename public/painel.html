@@ -221,6 +221,50 @@
             margin: 0;
         }
 
+        .card-aviso {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+
+            padding: 24px;
+            margin-bottom: 30px;
+
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-aviso input[type="text"],
+        .card-aviso textarea,
+        .card-aviso input[type="date"] {
+            width: 100%;
+            box-sizing: border-box;
+
+            background: #0f172a;
+            color: #f8fafc;
+
+            border: 1px solid #475569;
+            border-radius: 10px;
+
+            padding: 12px;
+            margin-top: 6px;
+
+            font-size: 15px;
+        }
+
+        .card-aviso textarea {
+            resize: vertical;
+        }
+
+        .card-aviso label {
+            display: block;
+            color: #e2e8f0;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .card-aviso button {
+            margin: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -331,7 +375,7 @@
     </div>
 
   <h2>📢 Avisos do dia</h2>
-
+<div class="card-aviso">
     <input
         type="text"
         id="tituloAviso"
@@ -365,7 +409,7 @@
     <button onclick="publicarAviso()">
         Publicar aviso
     </button>
-
+</div>
     <p id="statusAviso"></p>
 
     <div id="avisos"></div>
