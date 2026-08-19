@@ -492,6 +492,75 @@ app.get("/cadastrar-arrumadinho", async (req, res) => {
 });
 
 
+app.post("/api/pratos", async (req, res) => {
+  try {
+
+    const {
+      restaurante_id,
+      nome,
+      descricao,
+      categoria,
+      preco,
+      preco_pequena,
+      preco_media,
+      preco_grande,
+      preco_kg
+    } = req.body;
+
+    if (!restaurante_id || !nome || !categoria) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Restaurante, nome e categoria são obrigatórios."
+      });
+    }
+
+    const resultado = await pool.query(
+      `
+      INSERT INTO pratos (
+        restaurante_id,
+        nome,
+        descricao,
+        preco,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        categoria,
+        preco_kg
+      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      RETURNING *
+      `,
+      [
+        restaurante_id,
+        nome,
+        descricao || null,
+        preco || 0,
+        preco_pequena || null,
+        preco_media || null,
+        preco_grande || null,
+        categoria,
+        preco_kg || null
+      ]
+    );
+
+    res.status(201).json({
+      sucesso: true,
+      prato: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error("Erro ao cadastrar prato:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao cadastrar prato."
+    });
+
+  }
+});
+
+
 app.get("/api/pratos/:id/ingredientes", async (req, res) => {
   try {
     const pratoId = req.params.id;
