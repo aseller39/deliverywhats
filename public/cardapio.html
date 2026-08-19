@@ -115,9 +115,11 @@
 
             function abrirProduto(id) {
                 console.log("CLIQUEI NO PRODUTO:", id);
+
                 const produto = pratosDisponiveis.find(p => p.id === id);
 
                 if (!produto) {
+                    console.log("Produto não encontrado:", id);
                     return;
                 }
 
@@ -135,7 +137,11 @@
                     </strong>
                 `;
 
-                document.getElementById("modalProduto").style.display = "flex";
+                const modal = document.getElementById("modalProduto");
+
+                modal.style.display = "flex";
+
+                console.log("MODAL ABERTO");
             }
 
 
