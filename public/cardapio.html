@@ -488,63 +488,14 @@
 
             function abrirCarrinho() {
                 console.log("CLIQUEI NO CARRINHO");
-                const container = document.getElementById("itensCarrinho");
-                console.log("ITENS CARRINHO:", container);
-                console.log("MODAL CARRINHO:", document.getElementById("modalCarrinho"));
 
-                if (carrinho.length === 0) {
-                    container.innerHTML = `
-                        <p>Seu carrinho está vazio.</p>
-                    `;
+                const modal = document.getElementById("modalCarrinho");
 
-                    document.getElementById("totalCarrinho").textContent = "0,00";
+                console.log("MODAL:", modal);
 
-                    document.getElementById("modalCarrinho").style.display = "flex";
+                modal.style.display = "flex";
 
-                    return;
-                }
-
-                let total = 0;
-
-                container.innerHTML = carrinho.map(item => {
-
-                    total += Number(item.subtotal);
-
-                    let descricao = "";
-
-                    if (item.tipo === "porcao") {
-                        descricao = `${item.gramas >= 1000 ? "1 kg" : item.gramas + " g"}`;
-                    } else if (item.tamanho) {
-                        descricao = item.tamanho;
-                    }
-
-                    return `
-                        <div class="item-carrinho">
-                            <h3>${item.nome}</h3>
-
-                            ${descricao
-                                ? `<p>${descricao}</p>`
-                                : ""
-                            }
-
-                            <p>
-                                Quantidade: ${item.quantidade}
-                            </p>
-
-                            <strong>
-                                R$ ${Number(item.subtotal).toFixed(2).replace(".", ",")}
-                            </strong>
-                        </div>
-                    `;
-                }).join("");
-
-                document.getElementById("totalCarrinho").textContent =
-                    total.toFixed(2).replace(".", ",");
-
-                console.log("VOU ABRIR O MODAL");    
-                document.getElementById("modalCarrinho").style.display = "flex";
-
-                console.log("DISPLAY:", document.getElementById("modalCarrinho").style.display);
+                console.log("MODAL ABERTO");
             }
 
 
