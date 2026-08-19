@@ -271,8 +271,13 @@
                     document.querySelector(
                         'input[name="tipoEntrega"]:checked'
                     ).value,
-                endereco:
-                    document.getElementById("endereco").value,
+                endereco: {
+                    rua: document.getElementById("rua").value,
+                    numero: document.getElementById("numero").value,
+                    bairro: document.getElementById("bairro").value,
+                    complemento: document.getElementById("complemento").value,
+                    referencia: document.getElementById("referencia").value
+                },
                 pagamento:
                     document.querySelector(
                         'input[name="pagamento"]:checked'
