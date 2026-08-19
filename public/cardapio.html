@@ -101,6 +101,7 @@
         <script>
             let itensPedido = [];
             let pratosDisponiveis = [];
+            let produtoSelecionadoId = null;
 
             let observacaoPedido = "";
             const itensSalvos = localStorage.getItem("itensPedido");
@@ -151,6 +152,7 @@
                 if (!produto) {
                     return;
                 }
+                produtoSelecionadoId = id;
 
                 const detalhes = document.getElementById("detalhesProduto");
 
@@ -256,6 +258,46 @@
                 }
 
                 elemento.textContent = quantidade;
+
+                const produto = pratosDisponiveis.find(
+                    p => p.id === produtoSelecionadoId
+                );
+
+                if (produto) {
+                    atualizarTotalProduto(produto);
+                }
+            }
+
+
+            function atualizarTotalProduto(produto) {
+                const quantidade = Number(
+                    document.getElementById("quantidadeProduto").textContent
+                );
+
+                let preco = Number(produto.preco);
+
+                const tamanho = document.querySelector(
+                    'input[name="tamanhoProduto"]:checked'
+                );
+
+                if (tamanho) {
+                    if (tamanho.value === "pequena") {
+                        preco = Number(produto.preco_pequena);
+                    }
+
+                    if (tamanho.value === "media") {
+                        preco = Number(produto.preco_media);
+                    }
+
+                    if (tamanho.value === "grande") {
+                        preco = Number(produto.preco_grande);
+                    }
+                }
+
+                const total = preco * quantidade;
+
+                document.getElementById("totalProduto").textContent =
+                    total.toFixed(2).replace(".", ",");
             }
 
 
