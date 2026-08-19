@@ -1312,7 +1312,7 @@ app.post("/webhook", async (req, res) => {
         `🍽️ Olá! Bem-vindo ao Gustum!
 
       Confira nosso cardápio:
-      🔗 https://SEU-LINK-DO-CARDAPIO
+      🔗 https://deliverywhats.onrender.com/cardapio.html?restaurante=1
 
       Escolha seu prato e faça seu pedido!`
       );
