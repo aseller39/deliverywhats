@@ -33,6 +33,38 @@
             flex-wrap: wrap;
             gap: 16px;
         }
+
+        .modal-produto {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .conteudo-modal-produto {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .conteudo-modal-produto > button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
     </style>
 
 </head>
@@ -114,34 +146,116 @@
 
 
             function abrirProduto(id) {
-                console.log("CLIQUEI NO PRODUTO:", id);
-
                 const produto = pratosDisponiveis.find(p => p.id === id);
 
                 if (!produto) {
-                    console.log("Produto não encontrado:", id);
                     return;
                 }
 
                 const detalhes = document.getElementById("detalhesProduto");
 
-                detalhes.innerHTML = `
-                    <h2>${produto.nome}</h2>
-                    <p>${produto.descricao}</p>
-                    <strong>
-                        R$ ${Number(
-                            produto.categoria === "porcao"
-                                ? produto.preco_kg
-                                : produto.preco
-                        ).toFixed(2).replace(".", ",")}
-                    </strong>
-                `;
+                if (produto.categoria === "prato" && produto.preco_pequena) {
 
-                const modal = document.getElementById("modalProduto");
+                    detalhes.innerHTML = `
+                        <h2>${produto.nome}</h2>
+                        <p>${produto.descricao}</p>
 
-                modal.style.display = "flex";
+                        <h3>Tamanho</h3>
 
-                console.log("MODAL ABERTO");
+                        <label>
+                            <input type="radio" name="tamanhoProduto" value="pequena" checked>
+                            Pequena — R$ ${Number(produto.preco_pequena).toFixed(2).replace(".", ",")}
+                        </label>
+
+                        <br>
+
+                        <label>
+                            <input type="radio" name="tamanhoProduto" value="media">
+                            Média — R$ ${Number(produto.preco_media).toFixed(2).replace(".", ",")}
+                        </label>
+
+                        <br>
+
+                        <label>
+                            <input type="radio" name="tamanhoProduto" value="grande">
+                            Grande — R$ ${Number(produto.preco_grande).toFixed(2).replace(".", ",")}
+                        </label>
+
+                        <h3>Quantidade</h3>
+
+                        <div>
+                            <button onclick="alterarQuantidadeProduto(-1)">−</button>
+                            <span id="quantidadeProduto">1</span>
+                            <button onclick="alterarQuantidadeProduto(1)">+</button>
+                        </div>
+
+                        <h3>
+                            Total:
+                            R$ <span id="totalProduto">
+                                ${Number(produto.preco_pequena).toFixed(2).replace(".", ",")}
+                            </span>
+                        </h3>
+
+                        <button onclick="adicionarProdutoCarrinho(${produto.id})">
+                            🛒 Adicionar ao carrinho
+                        </button>
+                    `;
+
+                    document
+                        .querySelectorAll('input[name="tamanhoProduto"]')
+                        .forEach(radio => {
+                            radio.addEventListener("change", () => {
+                                atualizarTotalProduto(produto);
+                            });
+                        });
+
+                } else {
+
+                    detalhes.innerHTML = `
+                        <h2>${produto.nome}</h2>
+                        <p>${produto.descricao}</p>
+
+                        <h3>
+                            R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}
+                        </h3>
+
+                        <h3>Quantidade</h3>
+
+                        <div>
+                            <button onclick="alterarQuantidadeProduto(-1)">−</button>
+                            <span id="quantidadeProduto">1</span>
+                            <button onclick="alterarQuantidadeProduto(1)">+</button>
+                        </div>
+
+                        <h3>
+                            Total:
+                            R$ <span id="totalProduto">
+                                ${Number(produto.preco).toFixed(2).replace(".", ",")}
+                            </span>
+                        </h3>
+
+                        <button onclick="adicionarProdutoCarrinho(${produto.id})">
+                            🛒 Adicionar ao carrinho
+                        </button>
+                    `;
+
+                }
+
+                document.getElementById("modalProduto").style.display = "flex";
+            }
+
+            function alterarQuantidadeProduto(valor) {
+                const elemento = document.getElementById("quantidadeProduto");
+
+                let quantidade = Number(elemento.textContent);
+
+                quantidade += valor;
+
+                if (quantidade < 1) {
+                    quantidade = 1;
+                }
+
+                elemento.textContent = quantidade;
             }
 
 
