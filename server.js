@@ -249,7 +249,7 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
       UPDATE pedidos
       SET status = 'em_preparo'
       WHERE id = $1
-        AND status = 'aguardando'
+        AND status = 'novo'
       RETURNING id, status
       `,
       [pedidoId]
