@@ -850,6 +850,51 @@ app.get("/api/cardapio", async (req, res) => {
 });
 
 
+app.get("/api/painel/produtos", async (req, res) => {
+  try {
+
+    const restauranteId = req.query.restaurante;
+
+    const resultado = await pool.query(`
+      SELECT
+        id,
+        restaurante_id,
+        nome,
+        descricao,
+        preco,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        preco_kg,
+        categoria,
+        disponivel,
+        criado_em
+      FROM pratos
+      WHERE restaurante_id = $1
+      ORDER BY id
+    `, [restauranteId]);
+
+    res.json({
+      sucesso: true,
+      pratos: resultado.rows
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao consultar produtos do painel:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar produtos."
+    });
+
+  }
+});
+
+
 app.get("/cardapio", (req, res) => {
   res.redirect("/cardapio.html");
 });

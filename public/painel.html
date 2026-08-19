@@ -155,6 +155,12 @@
   
     <div id="pratos"></div>
 
+    <hr>
+
+<h2>📋 Produtos cadastrados</h2>
+
+<div id="listaProdutos"></div>
+
   <script>
     async function carregarPratos() {
         const resposta = await fetch("/api/cardapio?restaurante=1");
@@ -216,6 +222,7 @@
 
     carregarPratos();
     carregarAvisos();
+    carregarProdutosPainel();
 
     async function publicarAviso() {
         const titulo = document.getElementById("tituloAviso").value;
@@ -493,6 +500,90 @@
                 "❌ Erro de comunicação com o servidor.";
 
         }
+    }
+
+
+    async function carregarProdutosPainel() {
+
+        const resposta =
+            await fetch("/api/painel/produtos?restaurante=1");
+
+        const dados =
+            await resposta.json();
+
+        const container =
+            document.getElementById("listaProdutos");
+
+        if (!dados.sucesso || !dados.pratos.length) {
+
+            container.innerHTML =
+                "<p>Nenhum produto cadastrado.</p>";
+
+            return;
+        }
+
+        container.innerHTML = dados.pratos.map(prato => {
+
+            let preco = "";
+
+            if (prato.categoria === "porcao") {
+
+                preco =
+                    `R$ ${Number(prato.preco_kg)
+                        .toFixed(2)
+                        .replace(".", ",")} / kg`;
+
+            } else if (prato.categoria === "prato") {
+
+                preco = `
+                    Pequena: R$ ${Number(prato.preco_pequena)
+                        .toFixed(2).replace(".", ",")}
+                    <br>
+                    Média: R$ ${Number(prato.preco_media)
+                        .toFixed(2).replace(".", ",")}
+                    <br>
+                    Grande: R$ ${Number(prato.preco_grande)
+                        .toFixed(2).replace(".", ",")}
+                `;
+
+            } else {
+
+                preco =
+                    `R$ ${Number(prato.preco)
+                        .toFixed(2)
+                        .replace(".", ",")}`;
+
+            }
+
+            return `
+                <div class="produto-painel">
+
+                    <h3>${prato.nome}</h3>
+
+                    <p>${prato.descricao || ""}</p>
+
+                    <p>
+                        <strong>Categoria:</strong>
+                        ${prato.categoria}
+                    </p>
+
+                    <p>
+                        ${preco}
+                    </p>
+
+                    <p>
+                        Status:
+                        ${
+                            prato.disponivel
+                                ? "🟢 Disponível"
+                                : "🔴 Indisponível"
+                        }
+                    </p>
+
+                </div>
+            `;
+
+        }).join("");
     }
 
 
