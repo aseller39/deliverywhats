@@ -489,6 +489,8 @@
             function abrirCarrinho() {
                 console.log("CLIQUEI NO CARRINHO");
                 const container = document.getElementById("itensCarrinho");
+                console.log("ITENS CARRINHO:", container);
+                console.log("MODAL CARRINHO:", document.getElementById("modalCarrinho"));
 
                 if (carrinho.length === 0) {
                     container.innerHTML = `
