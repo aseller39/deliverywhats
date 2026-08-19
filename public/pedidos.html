@@ -121,6 +121,307 @@
         cursor: pointer;
         margin-top: 15px;
     }
+
+    body {
+        margin: 0;
+        padding: 20px;
+
+        font-family: Arial, sans-serif;
+
+        background:
+            radial-gradient(
+                circle at top right,
+                #1e293b 0%,
+                #0f172a 45%,
+                #020617 100%
+            );
+
+        color: #f8fafc;
+
+        min-height: 100vh;
+    }
+
+    .titulo-pedidos {
+        text-align: center;
+
+        color: #ffffff;
+
+        font-size: 32px;
+
+        margin: 10px 0 25px;
+    }
+
+    .card-pedido {
+    background: #1e293b;
+    color: #f8fafc;
+
+    border: 1px solid #334155;
+    border-radius: 16px;
+
+    padding: 20px;
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.35);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card-pedido:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.card-pedido h2 {
+    color: #ffffff;
+    margin-top: 0;
+}
+
+.card-pedido h3 {
+    color: #e2e8f0;
+}
+
+.card-pedido p,
+.card-pedido li {
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.card-pedido strong {
+    color: #ffffff;
+}
+
+.card-pedido .total-pedido {
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.baralho {
+    position: relative;
+
+    width: 100%;
+    max-width: 600px;
+
+    height: 650px;
+
+    margin: 20px auto;
+}
+
+.baralho .card-pedido {
+    position: absolute;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    margin: 0;
+
+    left: 0;
+    top: 0;
+}
+
+.baralho .card-pedido:nth-child(1) {
+    z-index: 10;
+}
+
+.baralho .card-pedido:nth-child(2) {
+    z-index: 9;
+    transform: translateY(10px) scale(0.98);
+}
+
+.baralho .card-pedido:nth-child(3) {
+    z-index: 8;
+    transform: translateY(20px) scale(0.96);
+}
+
+.baralho .card-pedido:nth-child(4) {
+    z-index: 7;
+    transform: translateY(30px) scale(0.94);
+}
+
+.baralho .card-pedido:nth-child(5) {
+    z-index: 6;
+    transform: translateY(40px) scale(0.92);
+}
+
+.status-pedido {
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    margin: 5px 0 12px;
+}
+
+.status-novo {
+    background: #78350f;
+    color: #fbbf24;
+
+    border: 1px solid #f59e0b;
+}
+
+.status-preparo {
+    background: #1e3a8a;
+    color: #93c5fd;
+
+    border: 1px solid #3b82f6;
+}
+
+.status-pronto {
+    background: #14532d;
+    color: #86efac;
+
+    border: 1px solid #22c55e;
+}
+
+.botao-iniciar {
+    width: 100%;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 14px 20px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-top: 18px;
+
+    box-shadow:
+        0 6px 18px rgba(37, 99, 235, 0.35);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.botao-iniciar:hover {
+    background: #3b82f6;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 24px rgba(37, 99, 235, 0.45);
+}
+
+.botao-pronto {
+    width: 100%;
+
+    background: #16a34a;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 14px 20px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-top: 18px;
+
+    box-shadow:
+        0 6px 18px rgba(22, 163, 74, 0.35);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.botao-pronto:hover {
+    background: #22c55e;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 24px rgba(22, 163, 74, 0.45);
+}
+
+.botao-imprimir {
+    width: 100%;
+
+    background: #475569;
+    color: #ffffff;
+
+    border: 1px solid #64748b;
+    border-radius: 12px;
+
+    padding: 12px 20px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-top: 10px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.botao-imprimir:hover {
+    background: #64748b;
+    transform: translateY(-2px);
+}
+
+.card-pedido .endereco-pedido {
+    background: #0f172a;
+
+    border: 1px solid #334155;
+    border-radius: 12px;
+
+    padding: 14px;
+    margin: 15px 0;
+}
+
+.card-pedido .endereco-pedido h3 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.card-pedido .endereco-pedido p {
+    margin: 6px 0;
+    color: #cbd5e1;
+}
+
+.card-pedido .endereco-pedido strong {
+    color: #ffffff;
+}
+
+.card-pedido .total-pedido {
+    background: #0f172a;
+
+    border: 1px solid #334155;
+    border-radius: 12px;
+
+    padding: 12px 15px;
+    margin: 15px 0;
+
+    font-size: 20px;
+}
+
+.card-pedido .total-pedido strong {
+    color: #ffffff;
+}
+
 </style>
 
 </head>
@@ -129,7 +430,9 @@
 
     <div class="topo-pedidos">
 
-        <h1>📦 Pedidos</h1>
+        <h1 class="titulo-pedidos">
+            📦 Pedidos
+        </h1>
 
         <button
             class="botao-voltar"
@@ -223,7 +526,10 @@
 
                                 <p>
                                     <strong>Status:</strong>
-                                    👨‍🍳 Em preparo
+
+                                    <span class="status-pedido status-preparo">
+                                        👨‍🍳 Em preparo
+                                    </span>
                                 </p>
 
                                 <h3>Itens</h3>
@@ -393,7 +699,9 @@
 
                                 <p>
                                     <strong>Status:</strong>
+                                   
                                     ✅ Pronto
+                                    
                                 </p>
 
                                 <h3>Itens</h3>
@@ -490,9 +798,12 @@
                                     🍽️ Pedido #${pedido.id}
                                 </h2>
 
-                                <p>
+                               <p>
                                     <strong>Status:</strong>
-                                    ${pedido.status}
+
+                                    <span class="status-pedido status-novo">
+                                        🟡 Novo
+                                    </span>
                                 </p>
 
                                 <h3>Itens</h3>
