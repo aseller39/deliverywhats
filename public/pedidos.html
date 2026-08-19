@@ -394,6 +394,47 @@
         }
 
 
+        async function marcarComoPronto(pedidoId) {
+
+            try {
+
+                const resposta = await fetch(
+                    `/api/pedidos/${pedidoId}/marcar-pronto`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+                const dados = await resposta.json();
+
+                console.log(dados);
+
+                if (!resposta.ok || !dados.sucesso) {
+
+                    alert(
+                        dados.erro ||
+                        "Não foi possível marcar o pedido como pronto."
+                    );
+
+                    return;
+                }
+
+                carregarPedidos();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao marcar pedido como pronto:",
+                    erro
+                );
+
+                alert(
+                    "Erro de comunicação com o servidor."
+                );
+            }
+        }
+
+
         carregarPedidos();
 
     </script>

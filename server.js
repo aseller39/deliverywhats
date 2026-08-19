@@ -285,6 +285,52 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
 });
 
 
+app.put("/api/pedidos/:id/marcar-pronto", async (req, res) => {
+  try {
+
+    const pedidoId = req.params.id;
+
+    const resultado = await pool.query(
+      `
+      UPDATE pedidos
+      SET status = 'pronto'
+      WHERE id = $1
+        AND status = 'em_preparo'
+      RETURNING id, status
+      `,
+      [pedidoId]
+    );
+
+    if (resultado.rows.length === 0) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Este pedido não está em preparo."
+      });
+
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Pedido marcado como pronto.",
+      pedido: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao marcar pedido como pronto:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao marcar pedido como pronto."
+    });
+  }
+});
+
+
 function montarMensagemPedido(pedido) {
 
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
