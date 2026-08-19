@@ -73,7 +73,25 @@
                 <p>${prato.descricao}</p>
 
                 <p>
-                    R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}
+                    ${
+                        prato.categoria === "porcao"
+                            ? `R$ ${Number(prato.preco_kg)
+                                .toFixed(2)
+                                .replace(".", ",")} / kg`
+                            : `
+                                P: R$ ${Number(prato.preco_pequena)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                                |
+                                M: R$ ${Number(prato.preco_media)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                                |
+                                G: R$ ${Number(prato.preco_grande)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                            `
+                    }
                 </p>
 
                 <h3>Ingredientes</h3>

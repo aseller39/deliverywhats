@@ -160,19 +160,92 @@
                 pratosDisponiveis = dados.pratos;
                 const container = document.getElementById("pratos");
 
-            container.innerHTML = dados.pratos.map(prato => `
-                <div class="card-produto" onclick="abrirProduto(${prato.id})">
-                    <h2>${prato.nome}</h2>
-                    <p>${prato.descricao}</p>
-                    <strong>
-                        R$ ${Number(
-                            prato.categoria === "porcao"
-                                ? prato.preco_kg
-                                : prato.preco
-                        ).toFixed(2).replace(".", ",")}
-                    </strong>
+            const comidas = dados.pratos.filter(prato =>
+                prato.categoria === "prato" ||
+                prato.categoria === "porcao"
+            );
+
+            const bebidas = dados.pratos.filter(prato =>
+                prato.categoria === "bebida"
+            );
+
+            container.innerHTML = `
+
+                <h2 class="titulo-categoria">🍽️ Comidas</h2>
+
+                <div class="grade-produtos">
+
+                    ${
+                        comidas.map(prato => `
+                            <div
+                                class="card-produto"
+                                onclick="abrirProduto(${prato.id})"
+                            >
+
+                                <h2>${prato.nome}</h2>
+
+                                <p>${prato.descricao || ""}</p>
+
+                                <strong>
+                                    R$ ${
+                                        Number(
+                                            prato.categoria === "porcao"
+                                                ? prato.preco_kg
+                                                : prato.preco
+                                        )
+                                        .toFixed(2)
+                                        .replace(".", ",")
+                                    }
+                                </strong>
+
+                            </div>
+                        `).join("")
+                    }
+
                 </div>
-            `).join("");
+
+
+                ${
+                    bebidas.length > 0
+                        ? `
+
+                            <h2 class="titulo-categoria">
+                                🥤 Bebidas
+                            </h2>
+
+                            <div class="grade-produtos">
+
+                                ${
+                                    bebidas.map(bebida => `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${bebida.id})"
+                                        >
+
+                                            <h2>${bebida.nome}</h2>
+
+                                            <p>
+                                                ${bebida.descricao || ""}
+                                            </p>
+
+                                            <strong>
+                                                R$ ${
+                                                    Number(bebida.preco)
+                                                        .toFixed(2)
+                                                        .replace(".", ",")
+                                                }
+                                            </strong>
+
+                                        </div>
+                                    `).join("")
+                                }
+
+                            </div>
+                        `
+                        : ""
+                }
+
+            `;
             }
 
 
