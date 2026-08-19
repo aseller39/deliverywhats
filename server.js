@@ -685,6 +685,8 @@ app.get("/api/cardapio", async (req, res) => {
         preco_pequena,
         preco_media,
         preco_grande,
+        preco_kg,
+        categoria,
         disponivel
       FROM pratos
       WHERE restaurante_id = $1
