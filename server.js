@@ -945,6 +945,82 @@ app.get("/api/pratos/:id", async (req, res) => {
 });
 
 
+app.put("/api/pratos/:id", async (req, res) => {
+  try {
+
+    const pratoId = req.params.id;
+
+    const {
+      nome,
+      descricao,
+      categoria,
+      preco,
+      preco_pequena,
+      preco_media,
+      preco_grande,
+      preco_kg
+    } = req.body;
+
+    if (!nome || !categoria) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Nome e categoria são obrigatórios."
+      });
+    }
+
+    const resultado = await pool.query(`
+      UPDATE pratos
+      SET
+        nome = $1,
+        descricao = $2,
+        categoria = $3,
+        preco = $4,
+        preco_pequena = $5,
+        preco_media = $6,
+        preco_grande = $7,
+        preco_kg = $8
+      WHERE id = $9
+      RETURNING *
+    `, [
+      nome,
+      descricao || null,
+      categoria,
+      preco || null,
+      preco_pequena || null,
+      preco_media || null,
+      preco_grande || null,
+      preco_kg || null,
+      pratoId
+    ]);
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Produto não encontrado."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Produto atualizado com sucesso.",
+      prato: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao atualizar produto:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar produto."
+    });
+  }
+});
+
+
 app.get("/cardapio", (req, res) => {
   res.redirect("/cardapio.html");
 });

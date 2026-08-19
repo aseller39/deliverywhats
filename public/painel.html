@@ -956,6 +956,92 @@
             "none";
     }
 
+    async function salvarEdicaoProduto() {
+
+        const id =
+            document.getElementById("editarProdutoId").value;
+
+        const categoria =
+            document.getElementById("editarCategoria").value;
+
+        const dadosProduto = {
+            nome:
+                document.getElementById("editarNome").value.trim(),
+
+            descricao:
+                document.getElementById("editarDescricao").value.trim(),
+
+            categoria: categoria,
+
+            preco:
+                document.getElementById("editarPreco").value || null,
+
+            preco_pequena:
+                document.getElementById("editarPrecoPequena").value || null,
+
+            preco_media:
+                document.getElementById("editarPrecoMedia").value || null,
+
+            preco_grande:
+                document.getElementById("editarPrecoGrande").value || null,
+
+            preco_kg:
+                document.getElementById("editarPrecoKg").value || null
+        };
+
+        if (!dadosProduto.nome) {
+
+            alert("Informe o nome do produto.");
+
+            return;
+        }
+
+        try {
+
+            const resposta = await fetch(
+                `/api/pratos/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(dadosProduto)
+                }
+            );
+
+            const dados = await resposta.json();
+
+            console.log(dados);
+
+            if (!resposta.ok || !dados.sucesso) {
+
+                alert(
+                    dados.erro ||
+                    "Não foi possível atualizar o produto."
+                );
+
+                return;
+            }
+
+            alert("✅ Produto atualizado com sucesso!");
+
+            fecharModalEditar();
+
+            carregarProdutosPainel();
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao salvar produto:",
+                erro
+            );
+
+            alert(
+                "Erro de comunicação com o servidor."
+            );
+        }
+    }
+
     document.getElementById("editarCategoria")
     .addEventListener("change", atualizarCamposPrecoEdicao);
 
