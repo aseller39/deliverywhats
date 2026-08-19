@@ -145,10 +145,6 @@
                 observacaoPedido = observacaoSalva;
             }
 
-            if (itensPedido.length > 0) {
-                adicionarAoPedidoAtualizar();
-            }
-
             
 
             async function carregarCardapio() {
@@ -603,7 +599,7 @@
                     });
                 }
 
-                adicionarAoPedidoAtualizar();
+                
             }
             atualizarIconeCarrinho();
 
@@ -620,7 +616,7 @@
                     itensPedido = itensPedido.filter(item => item.id !== pratoId);
                 }
 
-                adicionarAoPedidoAtualizar();
+                
             }
 
 
