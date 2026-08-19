@@ -220,15 +220,78 @@
                                         <li>
                                             ${item.quantidade}x
                                             ${item.nome}
+
+                                            ${
+                                                item.tamanho
+                                                    ? ` — ${item.tamanho}`
+                                                    : ""
+                                            }
+
+                                            ${
+                                                item.tipo === "porcao"
+                                                    ? ` — ${
+                                                        item.gramas === 1000
+                                                            ? "1 kg"
+                                                            : item.gramas + " g"
+                                                    }`
+                                                    : ""
+                                            }
+
+                                            ${
+                                                item.subtotal !== undefined
+                                                    ? ` — R$ ${Number(item.subtotal)
+                                                        .toFixed(2)
+                                                        .replace(".", ",")}`
+                                                    : ""
+                                            }
                                         </li>
                                     `).join("")}
                                 </ul>
 
                                 <p class="total-pedido">
-                                    Total:
+                                    <strong>Total:</strong>
                                     R$ ${Number(pedido.total)
                                         .toFixed(2)
                                         .replace(".", ",")}
+                                </p>
+
+                                <p>
+                                    📱 ${pedido.telefone}
+                                </p>
+
+                                <p>
+                                    💳 ${
+                                        pedido.forma_pagamento === "pix"
+                                            ? "Pix"
+                                            : pedido.forma_pagamento === "dinheiro"
+                                                ? "Dinheiro"
+                                                : "Cartão"
+                                    }
+                                </p>
+
+                                <p>
+                                    📦 ${
+                                        pedido.tipo_entrega === "entrega"
+                                            ? "🛵 Entrega"
+                                            : "🏪 Retirada no local"
+                                    }
+                                </p>
+
+                                ${
+                                    pedido.tipo_entrega === "entrega"
+                                        ? `
+                                            <p>
+                                                📍 ${pedido.endereco || "Endereço não informado"}
+                                            </p>
+                                        `
+                                        : ""
+                                }
+
+                                <p>
+                                    📝 ${
+                                        pedido.observacao ||
+                                        "Nenhuma observação"
+                                    }
                                 </p>
 
                                 <button
