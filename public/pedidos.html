@@ -422,6 +422,140 @@
     color: #ffffff;
 }
 
+#pedidos + h2,
+#pedidosEmPreparo {
+    margin-top: 35px;
+}
+
+#pedidos + h2 {
+    color: #ffffff;
+
+    font-size: 24px;
+
+    text-align: center;
+
+    padding: 14px 20px;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+    border-radius: 12px;
+
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+body > h2:first-of-type {
+    color: #ffffff;
+
+    font-size: 24px;
+
+    text-align: center;
+
+    padding: 14px 20px;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+    border-radius: 12px;
+
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .titulo-pedidos {
+        font-size: 26px;
+    }
+
+    .card-pedido {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .baralho {
+        max-width: 100%;
+        height: 700px;
+    }
+
+    .card-pedido h2 {
+        font-size: 21px;
+    }
+
+    .card-pedido h3 {
+        font-size: 18px;
+    }
+
+    .card-pedido p,
+    .card-pedido li {
+        font-size: 15px;
+    }
+
+    .botao-iniciar,
+    .botao-pronto,
+    .botao-imprimir {
+        padding: 13px 15px;
+        font-size: 16px;
+    }
+}
+
+.mensagem-vazia {
+    background: #1e293b;
+
+    border: 1px solid #334155;
+    border-radius: 14px;
+
+    padding: 25px 20px;
+
+    margin: 20px auto;
+
+    max-width: 500px;
+
+    text-align: center;
+
+    color: #cbd5e1;
+
+    font-size: 17px;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.card-pedido .info-cliente {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin: 15px 0;
+}
+
+.card-pedido .info-cliente p {
+    background: #0f172a;
+
+    border: 1px solid #334155;
+
+    border-radius: 10px;
+
+    padding: 10px;
+
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+
+    .card-pedido .info-cliente {
+        grid-template-columns: 1fr;
+    }
+
+}
+
 </style>
 
 </head>
@@ -510,8 +644,12 @@
 
                 if (pedidosEmPreparo.length === 0) {
 
-                    containerPreparo.innerHTML =
-                        "<p>Nenhum pedido em preparo.</p>";
+                    containerPreparo.innerHTML = `
+                        <div class="mensagem-vazia">
+                            👨‍🍳<br>
+                            Nenhum pedido em preparo.
+                        </div>
+                    `;
 
                 } else {
 
@@ -574,27 +712,34 @@
                                         .replace(".", ",")}
                                 </p>
 
-                                <p>
-                                    📱 ${pedido.telefone}
-                                </p>
+                               <div class="info-cliente">
 
-                                <p>
-                                    💳 ${
-                                        pedido.forma_pagamento === "pix"
-                                            ? "Pix"
-                                            : pedido.forma_pagamento === "dinheiro"
-                                                ? "Dinheiro"
-                                                : "Cartão"
-                                    }
-                                </p>
+                                    <p>
+                                        📱 <strong>Telefone:</strong>
+                                        ${pedido.telefone}
+                                    </p>
 
-                                <p>
-                                    📦 ${
-                                        pedido.tipo_entrega === "entrega"
-                                            ? "🛵 Entrega"
-                                            : "🏪 Retirada no local"
-                                    }
-                                </p>
+                                    <p>
+                                        💳 <strong>Pagamento:</strong>
+                                        ${
+                                            pedido.forma_pagamento === "pix"
+                                                ? "Pix"
+                                                : pedido.forma_pagamento === "dinheiro"
+                                                    ? "Dinheiro"
+                                                    : "Cartão"
+                                        }
+                                    </p>
+
+                                    <p>
+                                        📦 <strong>Recebimento:</strong>
+                                        ${
+                                            pedido.tipo_entrega === "entrega"
+                                                ? "🛵 Entrega"
+                                                : "🏪 Retirada no local"
+                                        }
+                                    </p>
+
+                                </div>
 
                                 ${
                                     pedido.tipo_entrega === "entrega"
@@ -781,8 +926,12 @@
 
                 if (pedidosFila.length === 0) {
 
-                    container.innerHTML =
-                        "<p>📭 Nenhum pedido aguardando.</p>";
+                    container.innerHTML = `
+                        <div class="mensagem-vazia">
+                            📭<br>
+                            Nenhum pedido aguardando.
+                        </div>
+                    `;
 
                     return;
                 }
@@ -826,21 +975,34 @@
                                         .replace(".", ",")}
                                 </p>
 
-                                <p>
-                                    📱 ${pedido.telefone}
-                                </p>
+                                <div class="info-cliente">
 
-                                <p>
-                                    💳 ${pedido.forma_pagamento}
-                                </p>
+                                    <p>
+                                        📱 <strong>Telefone:</strong>
+                                        ${pedido.telefone}
+                                    </p>
 
-                                <p>
-                                    📦 ${
-                                        pedido.tipo_entrega === "entrega"
-                                            ? "🛵 Entrega"
-                                            : "🏪 Retirada no local"
-                                    }
-                                </p>
+                                    <p>
+                                        💳 <strong>Pagamento:</strong>
+                                        ${
+                                            pedido.forma_pagamento === "pix"
+                                                ? "Pix"
+                                                : pedido.forma_pagamento === "dinheiro"
+                                                    ? "Dinheiro"
+                                                    : "Cartão"
+                                        }
+                                    </p>
+
+                                    <p>
+                                        📦 <strong>Recebimento:</strong>
+                                        ${
+                                            pedido.tipo_entrega === "entrega"
+                                                ? "🛵 Entrega"
+                                                : "🏪 Retirada no local"
+                                        }
+                                    </p>
+
+                                </div>
 
                                 ${
                                     pedido.tipo_entrega === "entrega"
