@@ -4,6 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel - Delivery Fácil</title>
+    <style>
+
+        #listaProdutos {
+            width: 100%;
+        }
+
+        .secao-produtos {
+            margin-top: 30px;
+        }
+
+        .secao-produtos > h2 {
+            margin-bottom: 15px;
+        }
+
+        .grade-produtos-painel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .card-produto-painel {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            width: 280px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+        }
+
+        .topo-card-produto {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .topo-card-produto h3 {
+            margin: 0;
+        }
+
+        .descricao-produto {
+            color: #555;
+            min-height: 40px;
+        }
+
+        .precos-produto {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .precos-produto span {
+            font-weight: bold;
+        }
+
+        .status-disponivel {
+            font-size: 13px;
+        }
+
+        .status-indisponivel {
+            font-size: 13px;
+        }
+
+        .acoes-produto {
+            display: flex;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .acoes-produto button {
+            border: none;
+            border-radius: 8px;
+            padding: 9px 12px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -153,7 +231,6 @@
 
     <div id="avisos"></div>
   
-    <div id="pratos"></div>
 
     <hr>
 
@@ -522,68 +599,217 @@
             return;
         }
 
-        container.innerHTML = dados.pratos.map(prato => {
+        const pratos = dados.pratos.filter(
+            produto => produto.categoria === "prato"
+        );
 
-            let preco = "";
+        const porcoes = dados.pratos.filter(
+            produto => produto.categoria === "porcao"
+        );
 
-            if (prato.categoria === "porcao") {
+        const bebidas = dados.pratos.filter(
+            produto => produto.categoria === "bebida"
+        );
 
-                preco =
-                    `R$ ${Number(prato.preco_kg)
-                        .toFixed(2)
-                        .replace(".", ",")} / kg`;
 
-            } else if (prato.categoria === "prato") {
+        function criarCards(lista) {
 
-                preco = `
-                    Pequena: R$ ${Number(prato.preco_pequena)
-                        .toFixed(2).replace(".", ",")}
-                    <br>
-                    Média: R$ ${Number(prato.preco_media)
-                        .toFixed(2).replace(".", ",")}
-                    <br>
-                    Grande: R$ ${Number(prato.preco_grande)
-                        .toFixed(2).replace(".", ",")}
+            return lista.map(produto => {
+
+                let preco = "";
+
+                if (produto.categoria === "prato") {
+
+                    preco = `
+                        <div class="precos-produto">
+                            <span>P: R$ ${Number(produto.preco_pequena)
+                                .toFixed(2).replace(".", ",")}</span>
+
+                            <span>M: R$ ${Number(produto.preco_media)
+                                .toFixed(2).replace(".", ",")}</span>
+
+                            <span>G: R$ ${Number(produto.preco_grande)
+                                .toFixed(2).replace(".", ",")}</span>
+                        </div>
+                    `;
+
+                } else if (produto.categoria === "porcao") {
+
+                    preco = `
+                        <strong>
+                            R$ ${Number(produto.preco_kg)
+                                .toFixed(2).replace(".", ",")} / kg
+                        </strong>
+                    `;
+
+                } else {
+
+                    preco = `
+                        <strong>
+                            R$ ${Number(produto.preco)
+                                .toFixed(2).replace(".", ",")}
+                        </strong>
+                    `;
+                }
+
+                return `
+                    <div class="card-produto-painel">
+
+                        <div class="topo-card-produto">
+
+                            <h3>${produto.nome}</h3>
+
+                            <span class="${
+                                produto.disponivel
+                                    ? "status-disponivel"
+                                    : "status-indisponivel"
+                            }">
+
+                                ${
+                                    produto.disponivel
+                                        ? "🟢 Disponível"
+                                        : "🔴 Indisponível"
+                                }
+
+                            </span>
+
+                        </div>
+
+                        <p class="descricao-produto">
+                            ${produto.descricao || ""}
+                        </p>
+
+                        ${preco}
+
+                        <div class="acoes-produto">
+
+                            <button
+                                onclick="editarProduto(${produto.id})"
+                            >
+                                ✏️ Editar
+                            </button>
+
+                            <button
+                                onclick="alterarDisponibilidade(
+                                    ${produto.id},
+                                    ${!produto.disponivel}
+                                )"
+                            >
+                                ${
+                                    produto.disponivel
+                                        ? "🔴 Desativar"
+                                        : "🟢 Ativar"
+                                }
+                            </button>
+
+                        </div>
+
+                    </div>
                 `;
 
-            } else {
+            }).join("");
+        }
 
-                preco =
-                    `R$ ${Number(prato.preco)
-                        .toFixed(2)
-                        .replace(".", ",")}`;
 
+        let html = "";
+
+
+        if (pratos.length > 0) {
+
+            html += `
+                <section class="secao-produtos">
+
+                    <h2>🍽️ Pratos</h2>
+
+                    <div class="grade-produtos-painel">
+                        ${criarCards(pratos)}
+                    </div>
+
+                </section>
+            `;
+        }
+
+
+        if (porcoes.length > 0) {
+
+            html += `
+                <section class="secao-produtos">
+
+                    <h2>🥩 Porções</h2>
+
+                    <div class="grade-produtos-painel">
+                        ${criarCards(porcoes)}
+                    </div>
+
+                </section>
+            `;
+        }
+
+
+        if (bebidas.length > 0) {
+
+            html += `
+                <section class="secao-produtos">
+
+                    <h2>🥤 Bebidas</h2>
+
+                    <div class="grade-produtos-painel">
+                        ${criarCards(bebidas)}
+                    </div>
+
+                </section>
+            `;
+        }
+
+
+        container.innerHTML = html;
+    }
+
+
+    async function alterarDisponibilidade(id, disponivel) {
+
+        try {
+
+            const resposta = await fetch(
+                `/api/pratos/${id}/disponibilidade`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        disponivel: disponivel
+                    })
+                }
+            );
+
+            const dados = await resposta.json();
+
+            console.log(dados);
+
+            if (!resposta.ok || !dados.sucesso) {
+
+                alert(
+                    dados.erro ||
+                    "Não foi possível alterar a disponibilidade."
+                );
+
+                return;
             }
 
-            return `
-                <div class="produto-painel">
+            carregarProdutosPainel();
 
-                    <h3>${prato.nome}</h3>
+        } catch (erro) {
 
-                    <p>${prato.descricao || ""}</p>
+            console.error(
+                "Erro ao alterar disponibilidade:",
+                erro
+            );
 
-                    <p>
-                        <strong>Categoria:</strong>
-                        ${prato.categoria}
-                    </p>
-
-                    <p>
-                        ${preco}
-                    </p>
-
-                    <p>
-                        Status:
-                        ${
-                            prato.disponivel
-                                ? "🟢 Disponível"
-                                : "🔴 Indisponível"
-                        }
-                    </p>
-
-                </div>
-            `;
-
-        }).join("");
+            alert(
+                "Erro de comunicação com o servidor."
+            );
+        }
     }
 
 
