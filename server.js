@@ -895,6 +895,56 @@ app.get("/api/painel/produtos", async (req, res) => {
 });
 
 
+app.get("/api/pratos/:id", async (req, res) => {
+  try {
+
+    const pratoId = req.params.id;
+
+    const resultado = await pool.query(`
+      SELECT
+        id,
+        restaurante_id,
+        nome,
+        descricao,
+        preco,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        preco_kg,
+        categoria,
+        disponivel
+      FROM pratos
+      WHERE id = $1
+    `, [pratoId]);
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Produto não encontrado."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      prato: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao consultar produto:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar produto."
+    });
+
+  }
+});
+
+
 app.get("/cardapio", (req, res) => {
   res.redirect("/cardapio.html");
 });
