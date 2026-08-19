@@ -883,25 +883,46 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/marcar-arrumadinho", async (req, res) => {
+app.get("/atualizar-tabela-pratos-categoria", async (req, res) => {
   try {
     await pool.query(`
-      UPDATE pratos
-      SET categoria = 'prato'
-      WHERE id = 1
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS categoria VARCHAR(50) DEFAULT 'prato'
     `);
 
     res.json({
       sucesso: true,
-      mensagem: "Arrumadinho marcado como prato."
+      mensagem: "Categoria adicionada à tabela pratos."
     });
 
   } catch (erro) {
-    console.error("Erro:", erro);
+    console.error("Erro ao adicionar categoria:", erro);
 
     res.status(500).json({
       sucesso: false,
-      erro: "Erro ao marcar Arrumadinho."
+      erro: "Erro ao adicionar categoria."
+    });
+  }
+});
+
+app.get("/atualizar-tabela-porcoes", async (req, res) => {
+  try {
+    await pool.query(`
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS preco_kg NUMERIC(10,2)
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Campo de preço por kg criado."
+    });
+
+  } catch (erro) {
+    console.error("Erro ao atualizar tabela:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar tabela."
     });
   }
 });
