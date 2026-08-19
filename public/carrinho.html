@@ -274,6 +274,23 @@
                 `/cardapio.html?restaurante=${restauranteId}`;
         }
 
+        function finalizarPedido() {
+
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio.");
+                return;
+            }
+
+            const parametros =
+                new URLSearchParams(window.location.search);
+
+            const restauranteId =
+                parametros.get("restaurante");
+
+            window.location.href =
+                `/finalizar.html?restaurante=${restauranteId}`;
+        }
+
         carregarCarrinho();
 
     </script>
