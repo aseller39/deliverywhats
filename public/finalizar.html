@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Finalizar pedido</title>
+
+</head>
+
+<body>
+
+    <h1>Finalizar pedido</h1>
+
+    <div id="resumoPedido"></div>
+
+    <h2>
+        Total: R$
+        <span id="totalPedido">0,00</span>
+    </h2>
+
+    <hr>
+
+    <h2>Como deseja receber?</h2>
+
+    <label>
+        <input
+            type="radio"
+            name="tipoEntrega"
+            value="retirada"
+            checked
+        >
+        Retirar no local
+    </label>
+
+    <br>
+
+    <label>
+        <input
+            type="radio"
+            name="tipoEntrega"
+            value="entrega"
+        >
+        Entrega
+    </label>
+
+    <div id="dadosEntrega" style="display: none;">
+
+        <h3>Endereço de entrega</h3>
+
+        <input
+            type="text"
+            id="endereco"
+            placeholder="Digite seu endereço completo"
+        >
+
+    </div>
+
+    <h2>Telefone</h2>
+
+    <input
+        type="tel"
+        id="telefone"
+        placeholder="Digite seu telefone"
+    >
+
+    <h2>Forma de pagamento</h2>
+
+    <label>
+        <input
+            type="radio"
+            name="pagamento"
+            value="pix"
+            checked
+        >
+        Pix
+    </label>
+
+    <br>
+
+    <label>
+        <input
+            type="radio"
+            name="pagamento"
+            value="dinheiro"
+        >
+        Dinheiro
+    </label>
+
+    <br>
+
+    <label>
+        <input
+            type="radio"
+            name="pagamento"
+            value="cartao"
+        >
+        Cartão
+    </label>
+
+    <h2>Observação</h2>
+
+    <textarea
+        id="observacao"
+        placeholder="Alguma observação sobre o pedido?"
+    ></textarea>
+
+    <br><br>
+
+    <button onclick="voltarCarrinho()">
+        ← Voltar ao carrinho
+    </button>
+
+    <button onclick="enviarPedido()">
+        ✅ Enviar pedido
+    </button>
+
+
+    <script>
+
+        let carrinho = [];
+
+        const carrinhoSalvo =
+            localStorage.getItem("carrinho");
+
+        if (carrinhoSalvo) {
+            carrinho = JSON.parse(carrinhoSalvo);
+        }
+
+
+        function carregarResumo() {
+
+            const container =
+                document.getElementById("resumoPedido");
+
+            let total = 0;
+
+            container.innerHTML =
+                carrinho.map(item => {
+
+                    total += Number(item.subtotal);
+
+                    let descricao = "";
+
+                    if (item.tipo === "porcao") {
+
+                        descricao =
+                            item.gramas === 1000
+                                ? "1 kg"
+                                : `${item.gramas} g`;
+
+                    } else if (item.tamanho) {
+
+                        descricao = item.tamanho;
+                    }
+
+                    return `
+                        <div>
+
+                            <h3>${item.nome}</h3>
+
+                            ${
+                                descricao
+                                    ? `<p>${descricao}</p>`
+                                    : ""
+                            }
+
+                            <p>
+                                Quantidade:
+                                ${item.quantidade}
+                            </p>
+
+                            <strong>
+                                R$
+                                ${Number(item.subtotal)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                            </strong>
+
+                        </div>
+                    `;
+
+                }).join("");
+
+            document.getElementById("totalPedido")
+                .textContent =
+                    total.toFixed(2)
+                        .replace(".", ",");
+        }
+
+
+        document
+            .querySelectorAll('input[name="tipoEntrega"]')
+            .forEach(input => {
+
+                input.addEventListener("change", () => {
+
+                    const entrega =
+                        document.querySelector(
+                            'input[name="tipoEntrega"]:checked'
+                        ).value;
+
+                    document.getElementById("dadosEntrega")
+                        .style.display =
+                            entrega === "entrega"
+                                ? "block"
+                                : "none";
+                });
+
+            });
+
+
+        function voltarCarrinho() {
+
+            const parametros =
+                new URLSearchParams(window.location.search);
+
+            const restauranteId =
+                parametros.get("restaurante");
+
+            window.location.href =
+                `/carrinho.html?restaurante=${restauranteId}`;
+        }
+
+
+        function enviarPedido() {
+
+            console.log("PEDIDO:", {
+                carrinho,
+                telefone:
+                    document.getElementById("telefone").value,
+                tipoEntrega:
+                    document.querySelector(
+                        'input[name="tipoEntrega"]:checked'
+                    ).value,
+                endereco:
+                    document.getElementById("endereco").value,
+                pagamento:
+                    document.querySelector(
+                        'input[name="pagamento"]:checked'
+                    ).value,
+                observacao:
+                    document.getElementById("observacao").value
+            });
+
+        }
+
+
+        carregarResumo();
+
+    </script>
+
+</body>
+
+</html>
