@@ -928,6 +928,46 @@ app.get("/atualizar-tabela-porcoes", async (req, res) => {
 });
 
 
+app.get("/criar-porcao-teste", async (req, res) => {
+  try {
+    const resultado = await pool.query(`
+      INSERT INTO pratos (
+        restaurante_id,
+        nome,
+        descricao,
+        preco,
+        preco_kg,
+        categoria,
+        disponivel
+      )
+      VALUES (
+        1,
+        'Carne assada',
+        'Carne assada temperada',
+        60.00,
+        60.00,
+        'porcao',
+        true
+      )
+      RETURNING *
+    `);
+
+    res.json({
+      sucesso: true,
+      porcao: resultado.rows[0]
+    });
+
+  } catch (erro) {
+    console.error("Erro ao criar porção:", erro);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao criar porção."
+    });
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
