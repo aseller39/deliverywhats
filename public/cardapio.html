@@ -487,15 +487,61 @@
             }
 
             function abrirCarrinho() {
-                console.log("CLIQUEI NO CARRINHO");
-
+                const container = document.getElementById("itensCarrinho");
                 const modal = document.getElementById("modalCarrinho");
 
-                console.log("MODAL:", modal);
+                if (carrinho.length === 0) {
+                    container.innerHTML = `
+                        <p>Seu carrinho está vazio.</p>
+                    `;
+
+                    document.getElementById("totalCarrinho").textContent = "0,00";
+                    modal.style.display = "flex";
+                    return;
+                }
+
+                let total = 0;
+
+                let html = "";
+
+                carrinho.forEach(item => {
+                    total += Number(item.subtotal);
+
+                    let descricao = "";
+
+                    if (item.tipo === "porcao") {
+                        descricao = item.gramas === 1000
+                            ? "1 kg"
+                            : `${item.gramas} g`;
+                    }
+
+                    if (item.tamanho) {
+                        descricao = item.tamanho;
+                    }
+
+                    html += `
+                        <div class="item-carrinho">
+                            <h3>${item.nome}</h3>
+
+                            ${descricao ? `<p>${descricao}</p>` : ""}
+
+                            <p>Quantidade: ${item.quantidade}</p>
+
+                            <strong>
+                                R$ ${Number(item.subtotal)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+                            </strong>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+                document.getElementById("totalCarrinho").textContent =
+                    total.toFixed(2).replace(".", ",");
 
                 modal.style.display = "flex";
-
-                console.log("MODAL ABERTO");
             }
 
 
