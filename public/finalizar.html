@@ -314,14 +314,21 @@
 
                 tipo_entrega: tipoEntrega,
 
-                endereco: endereco,
+                endereco: tipoEntrega === "entrega"
+                    ? {
+                        rua: document.getElementById("rua").value,
+                        numero: document.getElementById("numero").value,
+                        bairro: document.getElementById("bairro").value,
+                        complemento: document.getElementById("complemento").value,
+                        referencia: document.getElementById("referencia").value
+                    }
+                    : null,
 
                 forma_pagamento: pagamento,
 
                 total: total
 
             };
-
             console.log("ENVIANDO PEDIDO:", pedido);
 
             try {

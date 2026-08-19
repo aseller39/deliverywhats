@@ -142,7 +142,9 @@ app.post("/api/pedidos", async (req, res) => {
         observacao || null,
         telefone,
         tipo_entrega,
-        endereco || null,
+        endereco
+        ? JSON.stringify(endereco)
+        : null,
         forma_pagamento,
         total
       ]
