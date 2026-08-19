@@ -265,6 +265,55 @@
             margin: 0;
         }
 
+        .cabecalho-produtos {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+
+            margin: 30px 0;
+            gap: 20px;
+        }
+
+        .cabecalho-produtos h2 {
+            margin: 0;
+            text-align: center;
+            color: #ffffff;
+            font-size: 28px;
+        }
+
+        .cabecalho-produtos .botao-novo-produto {
+            justify-self: start;
+            margin: 0;
+        }
+
+        .cabecalho-produtos .botao-pedidos {
+            justify-self: end;
+            margin: 0;
+
+            background: #2563eb;
+            color: #ffffff;
+
+            border: 1px solid #3b82f6;
+
+            padding: 14px 24px;
+            border-radius: 12px;
+
+            font-size: 17px;
+            font-weight: 700;
+
+            box-shadow:
+                0 6px 18px rgba(37, 99, 235, 0.35);
+        }
+
+        .cabecalho-produtos .botao-pedidos:hover {
+            background: #3b82f6;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 24px rgba(37, 99, 235, 0.45);
+        }
+
     </style>
 </head>
 <body>
@@ -419,14 +468,27 @@
 
     
 
-<h2>📋 Produtos cadastrados</h2>
+<div class="cabecalho-produtos">
 
-<button onclick="abrirNovoProduto()">
-    ➕ Novo produto
-</button>
+    <button
+        class="botao-novo-produto"
+        onclick="abrirNovoProduto()"
+    >
+        ➕ Novo produto
+    </button>
 
-<button onclick="abrirPedidos()">
-        📦 Pedidos</button>
+    <h2>
+        📋 Produtos cadastrados
+    </h2>
+
+    <button
+        class="botao-pedidos"
+        onclick="abrirPedidos()"
+    >
+        📦 Pedidos
+    </button>
+
+</div>
 
 <div id="listaProdutos"></div>
 
