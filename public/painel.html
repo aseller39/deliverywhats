@@ -9,6 +9,110 @@
 
   <h1>Bem-vindo ao painel do Gustum.</h1>
 
+    <button onclick="abrirNovoProduto()">
+    ➕ Novo produto
+    </button>
+
+    <div id="formularioProduto" style="display: none;">
+
+        <h2>Novo produto</h2>
+
+        <input
+            type="text"
+            id="nomeProduto"
+            placeholder="Nome do produto"
+        >
+
+        <br><br>
+
+        <textarea
+            id="descricaoProduto"
+            placeholder="Descrição do produto"
+            rows="3"
+        ></textarea>
+
+        <br><br>
+
+        <label>
+            Categoria:
+            <select id="categoriaProduto" onchange="alterarCamposProduto()">
+                <option value="prato">Prato</option>
+                <option value="porcao">Porção</option>
+                <option value="bebida">Bebida</option>
+            </select>
+        </label>
+
+        <div id="precosPrato">
+
+            <br>
+
+            <input
+                type="number"
+                id="precoPequena"
+                placeholder="Preço pequena"
+                step="0.01"
+            >
+
+            <br><br>
+
+            <input
+                type="number"
+                id="precoMedia"
+                placeholder="Preço média"
+                step="0.01"
+            >
+
+            <br><br>
+
+            <input
+                type="number"
+                id="precoGrande"
+                placeholder="Preço grande"
+                step="0.01"
+            >
+
+        </div>
+
+        <div id="precoPorcao" style="display: none;">
+
+            <br>
+
+            <input
+                type="number"
+                id="precoKg"
+                placeholder="Preço por kg"
+                step="0.01"
+            >
+
+        </div>
+
+        <div id="precoBebida" style="display: none;">
+
+            <br>
+
+            <input
+                type="number"
+                id="precoBebidaInput"
+                placeholder="Preço da bebida"
+                step="0.01"
+            >
+
+        </div>
+
+        <br>
+
+        <button onclick="salvarProduto()">
+            💾 Salvar produto
+        </button>
+
+        <button onclick="fecharNovoProduto()">
+            Cancelar
+        </button>
+
+        <p id="statusProduto"></p>
+
+    </div>
+
   <h2>📢 Avisos do dia</h2>
 
     <input
@@ -216,6 +320,40 @@
         console.log(dados);
 
         carregarAvisos();
+    }
+
+
+    function alterarCamposProduto() {
+
+        const categoria =
+            document.getElementById("categoriaProduto").value;
+
+        const precosPrato =
+            document.getElementById("precosPrato");
+
+        const precoPorcao =
+            document.getElementById("precoPorcao");
+
+        const precoBebida =
+            document.getElementById("precoBebida");
+
+        precosPrato.style.display = "none";
+        precoPorcao.style.display = "none";
+        precoBebida.style.display = "none";
+
+        if (categoria === "prato") {
+
+            precosPrato.style.display = "block";
+
+        } else if (categoria === "porcao") {
+
+            precoPorcao.style.display = "block";
+
+        } else if (categoria === "bebida") {
+
+            precoBebida.style.display = "block";
+
+        }
     }
 
 
