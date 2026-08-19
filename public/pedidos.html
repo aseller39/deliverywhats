@@ -657,6 +657,7 @@
 
 
         carregarPedidos();
+        setInterval(carregarPedidos, 5000);
 
         function voltarPainel() {
 
@@ -679,7 +680,7 @@
             const janela = window.open(
                 "",
                 "_blank",
-                "width=800,height=900"
+                "width=300,height=900"
             );
 
             janela.document.write(`
