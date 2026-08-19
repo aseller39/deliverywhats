@@ -25,6 +25,16 @@
 
     </main>
 
+        <div id="modalProduto" class="modal-produto">
+            <div class="conteudo-modal-produto">
+
+                <button onclick="fecharProduto()">✕</button>
+
+                <div id="detalhesProduto"></div>
+
+            </div>
+        </div>
+
         <script>
             let itensPedido = [];
             let pratosDisponiveis = [];
@@ -57,15 +67,48 @@
                 const container = document.getElementById("pratos");
 
             container.innerHTML = dados.pratos.map(prato => `
-                <div>
-                <h2>${prato.nome}</h2>
-                <p>${prato.descricao}</p>
-                <strong>R$ ${Number(prato.preco).toFixed(2).replace(".", ",")}</strong>
-                <button onclick="adicionarAoPedido(${prato.id})">
-                    Adicionar ao carrinho
-                </button>
+                <div class="card-produto" onclick="abrirProduto(${prato.id})">
+                    <h2>${prato.nome}</h2>
+                    <p>${prato.descricao}</p>
+                    <strong>
+                        R$ ${Number(
+                            prato.categoria === "porcao"
+                                ? prato.preco_kg
+                                : prato.preco
+                        ).toFixed(2).replace(".", ",")}
+                    </strong>
                 </div>
             `).join("");
+            }
+
+
+            function abrirProduto(id) {
+                const produto = pratosDisponiveis.find(p => p.id === id);
+
+                if (!produto) {
+                    return;
+                }
+
+                const detalhes = document.getElementById("detalhesProduto");
+
+                detalhes.innerHTML = `
+                    <h2>${produto.nome}</h2>
+                    <p>${produto.descricao}</p>
+                    <strong>
+                        R$ ${Number(
+                            produto.categoria === "porcao"
+                                ? produto.preco_kg
+                                : produto.preco
+                        ).toFixed(2).replace(".", ",")}
+                    </strong>
+                `;
+
+                document.getElementById("modalProduto").style.display = "flex";
+            }
+
+
+            function fecharProduto() {
+                document.getElementById("modalProduto").style.display = "none";
             }
 
             
@@ -382,6 +425,7 @@
 
             
         </script>
+
 
     </body>
 </html>
