@@ -240,33 +240,68 @@ app.get("/api/pedidos", async (req, res) => {
 
 
 function montarMensagemPedido(pedido) {
+
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
 
   mensagem += `Itens:\n`;
 
   pedido.itens.forEach(item => {
-    const subtotal = Number(item.preco) * Number(item.quantidade);
 
-    mensagem += `${item.quantidade}x ${item.nome} - R$ ${subtotal.toFixed(2).replace(".", ",")}\n`;
+    let subtotal = 0;
+    let detalhes = "";
+
+    if (item.tipo === "porcao") {
+
+      subtotal = Number(item.subtotal);
+
+      detalhes =
+        item.gramas === 1000
+          ? "1 kg"
+          : `${item.gramas} g`;
+
+    } else {
+
+      subtotal =
+        Number(item.preco) * Number(item.quantidade);
+
+      if (item.tamanho) {
+        detalhes = ` - ${item.tamanho}`;
+      }
+    }
+
+    mensagem +=
+      `${item.quantidade}x ${item.nome}${detalhes} - R$ ${subtotal
+        .toFixed(2)
+        .replace(".", ",")}\n`;
   });
 
-  mensagem += `\n💰 Total: R$ ${Number(pedido.total).toFixed(2).replace(".", ",")}`;
+  mensagem +=
+    `\n💰 Total: R$ ${Number(pedido.total)
+      .toFixed(2)
+      .replace(".", ",")}`;
 
-  mensagem += `\n\n📝 Observação: ${pedido.observacao || "Nenhuma"}`;
+  mensagem +=
+    `\n\n📝 Observação: ${
+      pedido.observacao || "Nenhuma"
+    }`;
 
-  mensagem += `\n\n📱 Telefone: ${pedido.telefone}`;
+  mensagem +=
+    `\n\n📱 Telefone: ${pedido.telefone}`;
 
-  mensagem += `\n📦 Recebimento: ${
-    pedido.tipo_entrega === "entrega"
-      ? "Entrega"
-      : "Retirada no local"
-  }`;
+  mensagem +=
+    `\n📦 Recebimento: ${
+      pedido.tipo_entrega === "entrega"
+        ? "Entrega"
+        : "Retirada no local"
+    }`;
 
   if (pedido.tipo_entrega === "entrega") {
-    mensagem += `\n📍 Endereço: ${pedido.endereco}`;
+    mensagem +=
+      `\n📍 Endereço: ${pedido.endereco}`;
   }
 
-  mensagem += `\n💳 Pagamento: ${pedido.forma_pagamento}`;
+  mensagem +=
+    `\n💳 Pagamento: ${pedido.forma_pagamento}`;
 
   return mensagem;
 }
