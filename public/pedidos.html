@@ -279,11 +279,63 @@
 
                                 ${
                                     pedido.tipo_entrega === "entrega"
-                                        ? `
-                                            <p>
-                                                📍 ${pedido.endereco || "Endereço não informado"}
-                                            </p>
-                                        `
+                                        ? (() => {
+
+                                            let endereco = pedido.endereco;
+
+                                            try {
+                                                if (typeof endereco === "string") {
+                                                    endereco = JSON.parse(endereco);
+                                                }
+                                            } catch (erro) {
+                                                endereco = null;
+                                            }
+
+                                            if (endereco && typeof endereco === "object") {
+
+                                                return `
+                                                    <div class="endereco-pedido">
+
+                                                        <h3>📍 Endereço de entrega</h3>
+
+                                                        <p>
+                                                            <strong>Rua:</strong>
+                                                            ${endereco.rua || "-"}
+                                                        </p>
+
+                                                        <p>
+                                                            <strong>Número:</strong>
+                                                            ${endereco.numero || "-"}
+                                                        </p>
+
+                                                        <p>
+                                                            <strong>Bairro:</strong>
+                                                            ${endereco.bairro || "-"}
+                                                        </p>
+
+                                                        <p>
+                                                            <strong>Complemento:</strong>
+                                                            ${endereco.complemento || "-"}
+                                                        </p>
+
+                                                        <p>
+                                                            <strong>Ponto de referência:</strong>
+                                                            ${endereco.referencia || "-"}
+                                                        </p>
+
+                                                    </div>
+                                                `;
+
+                                            }
+
+                                            return `
+                                                <p>
+                                                    📍 <strong>Endereço:</strong>
+                                                    ${pedido.endereco || "Não informado"}
+                                                </p>
+                                            `;
+
+                                        })()
                                         : ""
                                 }
 
