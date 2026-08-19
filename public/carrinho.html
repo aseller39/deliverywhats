@@ -157,6 +157,16 @@
 
                         </div>
 
+                        <button
+                            class="botao-lixeira"
+                            onclick="removerDoCarrinho(
+                                ${item.id},
+                                '${item.tamanho || ""}',
+                                ${item.gramas || 0}
+                            )">
+                            🗑️
+                        </button>
+
                     </div>
                 `;
 
@@ -205,6 +215,25 @@
                 item.subtotal =
                     item.preco * item.quantidade;
             }
+
+            localStorage.setItem(
+                "carrinho",
+                JSON.stringify(carrinho)
+            );
+
+            carregarCarrinho();
+        }
+
+
+        function removerDoCarrinho(id, tamanho, gramas) {
+
+            carrinho = carrinho.filter((item) =>
+                !(
+                    item.id === id &&
+                    (item.tamanho || "") === tamanho &&
+                    (item.gramas || 0) === gramas
+                )
+            );
 
             localStorage.setItem(
                 "carrinho",
