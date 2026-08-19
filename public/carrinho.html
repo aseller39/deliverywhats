@@ -166,6 +166,55 @@
                 total.toFixed(2).replace(".", ",");
         }
 
+
+        function alterarQuantidadeCarrinho(id, tamanho, gramas, alteracao) {
+
+            const item = carrinho.find((produto) =>
+                produto.id === id &&
+                (produto.tamanho || "") === tamanho &&
+                (produto.gramas || 0) === gramas
+            );
+
+            if (!item) {
+                return;
+            }
+
+            if (item.tipo === "porcao") {
+
+                item.gramas += alteracao * 100;
+
+                if (item.gramas < 100) {
+                    item.gramas = 100;
+                }
+
+                if (item.gramas > 1000) {
+                    item.gramas = 1000;
+                }
+
+                item.subtotal =
+                    item.preco_kg * (item.gramas / 1000);
+
+            } else {
+
+                item.quantidade += alteracao;
+
+                if (item.quantidade < 1) {
+                    item.quantidade = 1;
+                }
+
+                item.subtotal =
+                    item.preco * item.quantidade;
+            }
+
+            localStorage.setItem(
+                "carrinho",
+                JSON.stringify(carrinho)
+            );
+
+            carregarCarrinho();
+        }
+
+
         function voltarCardapio() {
 
             const parametros =
