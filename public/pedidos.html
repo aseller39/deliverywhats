@@ -192,94 +192,89 @@
 
                         ${pedidosFila.map((pedido, indice) => `
 
-                        <div>
+                            <div class="card-pedido">
 
-                            <h2>
-                                🍽️ Pedido #${pedido.id}
-                            </h2>
+                                <h2>
+                                    🍽️ Pedido #${pedido.id}
+                                </h2>
 
-                            <p>
-                                <strong>Status:</strong>
-                                ${pedido.status}
-                            </p>
+                                <p>
+                                    <strong>Status:</strong>
+                                    ${pedido.status}
+                                </p>
 
-                            <h3>Itens</h3>
+                                <h3>Itens</h3>
 
-                            <ul>
+                                <ul>
 
-                                ${pedido.itens.map(item => `
-                                    <li>
-                                        ${item.quantidade}x
-                                        ${item.nome}
-                                    </li>
-                                `).join("")}
+                                    ${pedido.itens.map(item => `
+                                        <li>
+                                            ${item.quantidade}x
+                                            ${item.nome}
+                                        </li>
+                                    `).join("")}
 
-                            </ul>
+                                </ul>
 
-                            <p>
-                                <strong>
+                                <p class="total-pedido">
                                     Total:
-                                </strong>
+                                    R$ ${Number(pedido.total)
+                                        .toFixed(2)
+                                        .replace(".", ",")}
+                                </p>
 
-                                R$ ${Number(pedido.total)
-                                    .toFixed(2)
-                                    .replace(".", ",")}
-                            </p>
+                                <p>
+                                    📱 ${pedido.telefone}
+                                </p>
 
-                            <p>
-                                📱 ${pedido.telefone}
-                            </p>
+                                <p>
+                                    💳 ${pedido.forma_pagamento}
+                                </p>
 
-                            <p>
-                                💳 ${pedido.forma_pagamento}
-                            </p>
+                                <p>
+                                    📦 ${
+                                        pedido.tipo_entrega === "entrega"
+                                            ? "🛵 Entrega"
+                                            : "🏪 Retirada no local"
+                                    }
+                                </p>
 
-                            <p>
-                                📦 ${
+                                ${
                                     pedido.tipo_entrega === "entrega"
-                                        ? "🛵 Entrega"
-                                        : "🏪 Retirada no local"
+                                        ? `
+                                            <p>
+                                                📍 ${pedido.endereco || ""}
+                                            </p>
+                                        `
+                                        : ""
                                 }
-                            </p>
 
-                            ${
-                                pedido.tipo_entrega === "entrega"
-                                    ? `
-                                        <p>
-                                            📍 ${pedido.endereco || ""}
-                                        </p>
-                                    `
-                                    : ""
-                            }
+                                <p>
+                                    📝 ${
+                                        pedido.observacao ||
+                                        "Nenhuma observação"
+                                    }
+                                </p>
 
-                            <p>
-                                📝 ${
-                                    pedido.observacao ||
-                                    "Nenhuma observação"
+                                ${
+                                    indice === 0
+                                        ? `
+                                            <button
+                                                class="botao-iniciar"
+                                                onclick="iniciarPreparo(${pedido.id})"
+                                            >
+                                                ▶️ Iniciar preparo
+                                            </button>
+                                        `
+                                        : ""
                                 }
-                            </p>
 
-                            ${
-                                indice === 0
-                                    ? `
-                                        <button
-                                            class="botao-iniciar"
-                                            onclick="iniciarPreparo(${pedido.id})"
-                                        >
-                                            ▶️ Iniciar preparo
-                                        </button>
-                                    `
-                                    : ""
-                            }
+                            </div>
 
-                            <hr>
+                        `).join("")}
 
-                        </div>
-
-                            `).join("")}
-
-                        </div>
-                    `;
+                    </div>
+                `;
 
             } catch (erro) {
 
