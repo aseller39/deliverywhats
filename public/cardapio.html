@@ -161,8 +161,11 @@
                 pratosDisponiveis = dados.pratos;
                 const container = document.getElementById("pratos");
 
-            const comidas = dados.pratos.filter(prato =>
-                prato.categoria === "prato" ||
+            const pratos = dados.pratos.filter(prato =>
+                prato.categoria === "prato"
+            );
+
+            const porcoes = dados.pratos.filter(prato =>
                 prato.categoria === "porcao"
             );
 
@@ -172,44 +175,89 @@
 
             container.innerHTML = `
 
-                <h2 class="titulo-categoria">🍽️ Comidas</h2>
+                ${
+                    pratos.length > 0
+                        ? `
+                            <h2 class="titulo-categoria">
+                                🍽️ Pratos
+                            </h2>
 
-                <div class="grade-produtos">
+                            <div class="grade-produtos">
 
-                    ${
-                        comidas.map(prato => `
-                            <div
-                                class="card-produto"
-                                onclick="abrirProduto(${prato.id})"
-                            >
+                                ${
+                                    pratos.map(prato => `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${prato.id})"
+                                        >
 
-                                <h2>${prato.nome}</h2>
+                                            <h2>${prato.nome}</h2>
 
-                                <p>${prato.descricao || ""}</p>
+                                            <p>
+                                                ${prato.descricao || ""}
+                                            </p>
 
-                                <strong>
-                                    R$ ${
-                                        Number(
-                                            prato.categoria === "porcao"
-                                                ? prato.preco_kg
-                                                : prato.preco
-                                        )
-                                        .toFixed(2)
-                                        .replace(".", ",")
-                                    }
-                                </strong>
+                                            <strong>
+                                                R$ ${
+                                                    Number(prato.preco)
+                                                        .toFixed(2)
+                                                        .replace(".", ",")
+                                                }
+                                            </strong>
+
+                                        </div>
+                                    `).join("")
+                                }
 
                             </div>
-                        `).join("")
-                    }
+                        `
+                        : ""
+                }
 
-                </div>
+
+                ${
+                    porcoes.length > 0
+                        ? `
+                            <h2 class="titulo-categoria">
+                                🥩 Porções
+                            </h2>
+
+                            <div class="grade-produtos">
+
+                                ${
+                                    porcoes.map(porcao => `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${porcao.id})"
+                                        >
+
+                                            <h2>${porcao.nome}</h2>
+
+                                            <p>
+                                                ${porcao.descricao || ""}
+                                            </p>
+
+                                            <strong>
+                                                R$ ${
+                                                    Number(porcao.preco_kg)
+                                                        .toFixed(2)
+                                                        .replace(".", ",")
+                                                } / kg
+                                            </strong>
+
+                                        </div>
+                                    `).join("")
+                                }
+
+                            </div>
+                        `
+                        : ""
+                }
 
 
                 ${
                     bebidas.length > 0
                         ? `
-
                             <h2 class="titulo-categoria">
                                 🥤 Bebidas
                             </h2>
