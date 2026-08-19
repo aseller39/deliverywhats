@@ -256,8 +256,8 @@ function montarMensagemPedido(pedido) {
 
       detalhes =
         item.gramas === 1000
-          ? "1 kg"
-          : `${item.gramas} g`;
+          ? " - 1 kg"
+          : ` - ${item.gramas} g`;
 
     } else {
 
