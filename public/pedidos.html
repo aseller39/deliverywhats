@@ -628,7 +628,7 @@ body > h2:first-of-type {
                 }
 
                 const pedidosFila = dados.pedidos.filter(
-                    pedido => pedido.status === "novo"
+                    pedido => pedido.status === "aguardando"
                 );
 
                 const pedidosEmPreparo = dados.pedidos.filter(
@@ -912,12 +912,25 @@ body > h2:first-of-type {
                                     🖨️ Imprimir guia
                                 </button>
 
-                                <button
-                                    class="botao-finalizar"
-                                    onclick="finalizarPedido(${pedido.id})"
-                                >
-                                    📦 Finalizar pedido
-                                </button>
+                                ${
+                                    pedido.tipo_entrega === "entrega"
+                                        ? `
+                                            <button
+                                                class="botao-finalizar"
+                                                onclick="saiuParaEntrega(${pedido.id})"
+                                            >
+                                                🛵 Saiu para entrega
+                                            </button>
+                                        `
+                                        : `
+                                            <button
+                                                class="botao-finalizar"
+                                                onclick="finalizarPedido(${pedido.id})"
+                                            >
+                                                📦 Finalizar pedido
+                                            </button>
+                                        `
+                                }
 
                             </div>
 
@@ -1093,6 +1106,47 @@ body > h2:first-of-type {
                 );
             }
         }
+
+
+        async function saiuParaEntrega(pedidoId) {
+
+    try {
+
+        const resposta = await fetch(
+            `/api/pedidos/${pedidoId}/saiu-entrega`,
+            {
+                method: "PUT"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível marcar o pedido como saiu para entrega."
+            );
+
+            return;
+        }
+
+        carregarPedidos();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao marcar pedido como saiu para entrega:",
+            erro
+        );
+
+        alert(
+            "Erro de comunicação com o servidor."
+        );
+    }
+}
 
 
         async function iniciarPreparo(pedidoId) {
