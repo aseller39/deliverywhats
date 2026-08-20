@@ -811,12 +811,12 @@
                     dados.pedido.id
                 );
 
-                alert("Pedido enviado com sucesso!");
-
                 localStorage.setItem(
                     "pedidoAtual",
-                    dados.pedido.id
+                    String(dados.pedido.id)
                 );
+
+                alert("Pedido enviado com sucesso!");
 
                 localStorage.removeItem("carrinho");
 
