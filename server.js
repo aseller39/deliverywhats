@@ -1592,6 +1592,17 @@ app.get("/criar-porcao-teste", async (req, res) => {
 });
 
 
+pool.query(`
+    ALTER TABLE pedidos
+    ADD COLUMN IF NOT EXISTS nome VARCHAR(100)
+`)
+.then(() => {
+    console.log("Coluna nome verificada.");
+})
+.catch(erro => {
+    console.error("Erro ao criar coluna nome:", erro);
+});
+
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
