@@ -631,6 +631,9 @@ body > h2:first-of-type {
                     pedido => pedido.status === "aguardando"
                 );
 
+                console.log("QUANTIDADE NA FILA:", pedidosFila.length);
+                    console.log("FILA:", pedidosFila);
+
                 const pedidosEmPreparo = dados.pedidos.filter(
                     pedido => pedido.status === "em_preparo"
                 );
