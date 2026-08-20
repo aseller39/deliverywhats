@@ -124,17 +124,18 @@ app.post("/api/pedidos", async (req, res) => {
     const resultado = await pool.query(
       `
       INSERT INTO pedidos (
-        restaurante_id,
-        itens,
-        observacao,
-        telefone,
-        tipo_entrega,
-        endereco,
-        forma_pagamento,
-        total
+          restaurante_id,
+          itens,
+          observacao,
+          telefone,
+          tipo_entrega,
+          endereco,
+          forma_pagamento,
+          total,
+          status
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING id, criado_em
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id, criado_em, status
       `,
       [
         restaurante_id,
@@ -146,7 +147,8 @@ app.post("/api/pedidos", async (req, res) => {
         ? JSON.stringify(endereco)
         : null,
         forma_pagamento,
-        total
+        total,
+        "aguardando"
       ]
     );
 
@@ -199,6 +201,87 @@ app.post("/api/pedidos", async (req, res) => {
     });
   }
 });
+
+
+app.get("/api/pedidos/:id/status", async (req, res) => {
+    try {
+
+        const pedidoId = Number(req.params.id);
+
+        if (!pedidoId) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: "ID do pedido inválido."
+            });
+        }
+
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                status,
+                tipo_entrega
+            FROM pedidos
+            WHERE id = $1
+            `,
+            [pedidoId]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({
+                sucesso: false,
+                erro: "Pedido não encontrado."
+            });
+        }
+
+        const pedido = resultado.rows[0];
+
+        let posicao = null;
+
+        if (pedido.status === "aguardando") {
+
+            const fila = await pool.query(
+                `
+                SELECT COUNT(*) AS quantidade
+                FROM pedidos
+                WHERE restaurante_id = (
+                    SELECT restaurante_id
+                    FROM pedidos
+                    WHERE id = $1
+                )
+                AND status = 'aguardando'
+                AND id <= $1
+                `,
+                [pedidoId]
+            );
+
+            posicao = Number(fila.rows[0].quantidade);
+        }
+
+        res.json({
+            sucesso: true,
+            pedido: {
+                id: pedido.id,
+                status: pedido.status,
+                tipo_entrega: pedido.tipo_entrega,
+                posicao: posicao
+            }
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao consultar status do pedido:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao consultar status do pedido."
+        });
+    }
+});
+
 
 app.get("/api/pedidos", async (req, res) => {
   try {
@@ -1413,35 +1496,6 @@ app.get("/criar-porcao-teste", async (req, res) => {
   }
 });
 
-
-app.get("/debug/pedidos", async (req, res) => {
-    try {
-
-        const resultado = await pool.query(`
-            SELECT column_name, data_type
-            FROM information_schema.columns
-            WHERE table_name = 'pedidos'
-            ORDER BY ordinal_position
-        `);
-
-        console.log("ESTRUTURA DA TABELA PEDIDOS:");
-        console.table(resultado.rows);
-
-        res.json({
-            sucesso: true,
-            colunas: resultado.rows
-        });
-
-    } catch (erro) {
-
-        console.error("Erro ao consultar tabela pedidos:", erro);
-
-        res.status(500).json({
-            sucesso: false,
-            erro: erro.message
-        });
-    }
-});
 
 
 app.listen(PORT, () => {
