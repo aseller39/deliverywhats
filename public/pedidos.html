@@ -1427,7 +1427,11 @@ body > h2:first-of-type {
             `);
 
             janela.document.close();
-            janela.focus();
+
+            janela.onload = function () {
+                janela.focus();
+                janela.print();
+            };
         }
 
 
