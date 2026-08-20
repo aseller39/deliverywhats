@@ -838,6 +838,8 @@
             status.textContent =
                 "✅ Produto cadastrado com sucesso!";
 
+                await carregarProdutosPainel();
+
             document.getElementById("nomeProduto").value = "";
             document.getElementById("descricaoProduto").value = "";
 
