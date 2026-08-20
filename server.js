@@ -190,6 +190,43 @@ app.post("/api/pedidos", async (req, res) => {
 
     console.log("Pedido enviado para o WhatsApp do restaurante com sucesso.");
 
+    const mensagemCliente =
+  `🍽️ Pedido #${resultado.rows[0].id} recebido!\n\n` +
+  `Obrigado, ${nome || "cliente"}, por comprar na Gustum! ❤️\n\n` +
+  `Seu pedido já está sendo preparado. ` +
+  `Acompanhe o andamento pelo link do seu pedido.`;
+
+try {
+
+  console.log(
+    "ENVIANDO CONFIRMAÇÃO PARA O CLIENTE:",
+    telefone
+  );
+
+  const respostaCliente =
+    await enviarMensagemWhatsApp(
+      telefone,
+      mensagemCliente
+    );
+
+  console.log(
+    "RESPOSTA WHATSAPP CLIENTE:",
+    respostaCliente
+  );
+
+} catch (erroCliente) {
+
+  console.error(
+    "ERRO AO ENVIAR WHATSAPP PARA CLIENTE:",
+    erroCliente
+  );
+
+}
+
+console.log(
+  "Confirmação enviada para o WhatsApp do cliente."
+);
+
     res.status(201).json({
       sucesso: true,
       mensagem: "Pedido recebido com sucesso.",
@@ -509,12 +546,6 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
 function montarMensagemPedido(pedido) {
 
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
-
-  mensagem +=
-  `Olá, ${pedido.nome || "cliente"}! 👋\n\n`;
-
-  mensagem +=
-  `Obrigado por comprar na Gustum! ❤️\n\n`;
 
   mensagem += `Itens:\n`;
 
@@ -1599,18 +1630,6 @@ app.get("/criar-porcao-teste", async (req, res) => {
       erro: "Erro ao criar porção."
     });
   }
-});
-
-
-pool.query(`
-    ALTER TABLE pedidos
-    ADD COLUMN IF NOT EXISTS nome VARCHAR(100)
-`)
-.then(() => {
-    console.log("Coluna nome verificada.");
-})
-.catch(erro => {
-    console.error("Erro ao criar coluna nome:", erro);
 });
 
 
