@@ -100,6 +100,7 @@ app.post("/api/pedidos", async (req, res) => {
       restaurante_id,
       itens,
       observacao,
+      nome,
       telefone,
       tipo_entrega,
       endereco,
@@ -127,6 +128,7 @@ app.post("/api/pedidos", async (req, res) => {
           restaurante_id,
           itens,
           observacao,
+          nome,
           telefone,
           tipo_entrega,
           endereco,
@@ -134,13 +136,14 @@ app.post("/api/pedidos", async (req, res) => {
           total,
           status
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id, criado_em, status
       `,
       [
         restaurante_id,
         JSON.stringify(itens),
         observacao || null,
+        nome || null,
         telefone,
         tipo_entrega,
         endereco
@@ -156,6 +159,7 @@ app.post("/api/pedidos", async (req, res) => {
       id: resultado.rows[0].id,
       itens,
       observacao,
+      nome,
       telefone,
       tipo_entrega,
       endereco,
@@ -505,6 +509,12 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
 function montarMensagemPedido(pedido) {
 
   let mensagem = `🍽️ NOVO PEDIDO #${pedido.id}\n\n`;
+
+  mensagem +=
+  `Olá, ${pedido.nome || "cliente"}! 👋\n\n`;
+
+  mensagem +=
+  `Obrigado por comprar na Gustum! ❤️\n\n`;
 
   mensagem += `Itens:\n`;
 
