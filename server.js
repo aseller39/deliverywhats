@@ -1158,6 +1158,54 @@ app.get("/api/painel/produtos", async (req, res) => {
 });
 
 
+app.delete("/api/painel/produtos/:id", async (req, res) => {
+  try {
+
+    const produtoId = Number(req.params.id);
+
+    if (!produtoId) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "ID do produto inválido."
+      });
+    }
+
+    const resultado = await pool.query(
+      `
+      DELETE FROM pratos
+      WHERE id = $1
+      RETURNING id
+      `,
+      [produtoId]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Produto não encontrado."
+      });
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Produto excluído com sucesso."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao excluir produto:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao excluir produto."
+    });
+  }
+});
+
+
 app.get("/api/pratos/:id", async (req, res) => {
   try {
 

@@ -980,6 +980,11 @@
                                         : "🟢 Ativar"
                                 }
                             </button>
+                            <button 
+                                onclick="excluirProduto(${produto.id})"
+                            >
+                                🗑️ Excluir
+                            </button>
 
                         </div>
 
@@ -1081,6 +1086,54 @@
             );
         }
     }
+
+
+    async function excluirProduto(produtoId) {
+
+    const confirmar =
+        confirm("Tem certeza que deseja excluir este produto?");
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch(
+            `/api/painel/produtos/${produtoId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível excluir o produto."
+            );
+
+            return;
+        }
+
+        alert("Produto excluído com sucesso.");
+
+        carregarProdutosPainel();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao excluir produto:",
+            erro
+        );
+
+        alert(
+            "Erro de comunicação com o servidor."
+        );
+    }
+}
 
 
     async function alterarDisponibilidade(id, disponivel) {
