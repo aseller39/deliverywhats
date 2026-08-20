@@ -1445,7 +1445,7 @@ main {
             }
 
             function atualizarIconeCarrinho() {
-                const quantidade = itensPedido.reduce(
+                const quantidade = carrinho.reduce(
                     (total, item) => total + item.quantidade,
                     0
                 );
