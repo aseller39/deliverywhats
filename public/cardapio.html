@@ -1385,6 +1385,12 @@ main {
                 const container =
                     document.getElementById("acompanhamentoPedido");
 
+                container.innerHTML = `
+                    <div class="status-pedido">
+                        🛒 Seu pedido está sendo acompanhado...
+                    </div>
+                `;
+
                 if (!pedidoId) {
                     container.innerHTML = "";
                     return;
