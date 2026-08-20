@@ -1414,6 +1414,36 @@ app.get("/criar-porcao-teste", async (req, res) => {
 });
 
 
+app.get("/debug/pedidos", async (req, res) => {
+    try {
+
+        const resultado = await pool.query(`
+            SELECT column_name, data_type
+            FROM information_schema.columns
+            WHERE table_name = 'pedidos'
+            ORDER BY ordinal_position
+        `);
+
+        console.log("ESTRUTURA DA TABELA PEDIDOS:");
+        console.table(resultado.rows);
+
+        res.json({
+            sucesso: true,
+            colunas: resultado.rows
+        });
+
+    } catch (erro) {
+
+        console.error("Erro ao consultar tabela pedidos:", erro);
+
+        res.status(500).json({
+            sucesso: false,
+            erro: erro.message
+        });
+    }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
