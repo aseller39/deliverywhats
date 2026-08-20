@@ -1417,29 +1417,36 @@ main {
                     if (pedido.status === "aguardando") {
 
                         mensagem =
-                            `🛒 Seu pedido é o ${pedido.posicao}º da fila`;
+                            `📦 Pedido #${pedido.id}<br>` +
+                            `🛒 Você está em ${pedido.posicao}º lugar na fila`;
 
                     } else if (pedido.status === "em_preparo") {
 
                         mensagem =
-                            "👨‍🍳 Seu pedido está em preparo";
+                            `📦 Pedido #${pedido.id}<br>` +
+                            `👨‍🍳 Seu pedido está em preparo`;
 
                     } else if (pedido.status === "pronto") {
 
                         mensagem =
-                            "✅ Seu pedido está pronto!";
+                            `📦 Pedido #${pedido.id}<br>` +
+                            `✅ Seu pedido está pronto!`;
 
                     } else if (pedido.status === "saiu_entrega") {
 
                         mensagem =
-                            "🛵 Seu pedido saiu para entrega";
+                            `📦 Pedido #${pedido.id}<br>` +
+                            `🛵 Seu pedido saiu para entrega`;
 
                     } else if (pedido.status === "finalizado") {
 
                         mensagem =
-                            pedido.tipo_entrega === "entrega"
-                                ? "✅ Pedido entregue!"
-                                : "✅ Pedido finalizado!";
+                            `📦 Pedido #${pedido.id}<br>` +
+                            (
+                                pedido.tipo_entrega === "entrega"
+                                    ? "✅ Pedido entregue!"
+                                    : "✅ Pedido finalizado!"
+                            );
                     }
 
                     if (mensagem) {
