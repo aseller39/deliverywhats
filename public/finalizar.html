@@ -738,6 +738,15 @@
                 document.querySelector(
                     'input[name="pagamento"]:checked'
                 ).value;
+            
+            const telefone =
+                document.getElementById("telefone").value
+                    .replace(/\D/g, "");
+
+            if (telefone.length < 10 || telefone.length > 11) {
+                alert("Digite um telefone válido com DDD.");
+                return;
+            }
 
             const endereco = tipoEntrega === "entrega"
                 ? [
@@ -769,9 +778,7 @@
 
 
                 telefone:
-                    "55" +
-                    document.getElementById("telefone").value
-                        .replace(/\D/g, ""),
+                    "55" + telefone,
 
                 tipo_entrega: tipoEntrega,
 
