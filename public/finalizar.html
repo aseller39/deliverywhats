@@ -808,6 +808,11 @@
 
                 alert("Pedido enviado com sucesso!");
 
+                localStorage.setItem(
+                    "pedidoAtual",
+                    dados.pedido.id
+                );
+
                 localStorage.removeItem("carrinho");
 
                 window.location.href =

@@ -334,7 +334,7 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
       UPDATE pedidos
       SET status = 'em_preparo'
       WHERE id = $1
-        AND status = 'novo'
+        AND status = 'aguardando'
       RETURNING id, status
       `,
       [pedidoId]
@@ -450,6 +450,53 @@ app.put("/api/pedidos/:id/finalizar", async (req, res) => {
     res.status(500).json({
       sucesso: false,
       erro: "Erro ao finalizar pedido."
+    });
+  }
+});
+
+
+app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
+  try {
+
+    const pedidoId = req.params.id;
+
+    const resultado = await pool.query(
+      `
+      UPDATE pedidos
+      SET status = 'saiu_entrega'
+      WHERE id = $1
+        AND status = 'pronto'
+        AND tipo_entrega = 'entrega'
+      RETURNING id, status
+      `,
+      [pedidoId]
+    );
+
+    if (resultado.rows.length === 0) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Este pedido não está pronto para sair para entrega."
+      });
+
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Pedido saiu para entrega.",
+      pedido: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao marcar pedido como saiu para entrega:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao marcar pedido como saiu para entrega."
     });
   }
 });
