@@ -769,7 +769,9 @@
 
 
                 telefone:
-                    document.getElementById("telefone").value,
+                    "55" +
+                    document.getElementById("telefone").value
+                        .replace(/\D/g, ""),
 
                 tipo_entrega: tipoEntrega,
 
