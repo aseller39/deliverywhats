@@ -343,7 +343,78 @@
     </h1>
 
 
-    <div id="formularioProduto" style="display: none;">
+    
+
+  <h2>📢 Avisos do dia</h2>
+<div class="card-aviso">
+    <input
+        type="text"
+        id="tituloAviso"
+        placeholder="Título do aviso"
+    >
+
+    <br><br>
+
+    <textarea
+        id="mensagemAviso"
+        placeholder="Digite o aviso para os clientes"
+        rows="4"
+    ></textarea>
+
+    
+
+    <label>
+        Data de início:
+        <input type="date" id="dataInicioAviso">
+        </label>
+
+        <br><br>
+
+        <label>
+        Data de fim:
+        <input type="date" id="dataFimAviso">
+    </label>
+
+    <br><br>
+
+    <button onclick="publicarAviso()">
+        Publicar aviso
+    </button>
+</div>
+    <p id="statusAviso"></p>
+
+    <div id="avisos"></div>
+  
+
+    <hr>
+
+    
+
+<div class="cabecalho-produtos">
+
+    <button
+        class="botao-novo-produto"
+        onclick="abrirNovoProduto()"
+    >
+        ➕ Novo produto
+    </button>
+
+    <h2>
+        📋 Produtos cadastrados
+    </h2>
+
+    <button
+        class="botao-pedidos"
+        onclick="abrirPedidos()"
+    >
+        📦 Pedidos
+        <span id="contadorPedidos">0</span>
+    </button>
+
+</div>
+
+
+<div id="formularioProduto" style="display: none;">
 
         <h2>Novo produto</h2>
 
@@ -443,73 +514,6 @@
 
     </div>
 
-  <h2>📢 Avisos do dia</h2>
-<div class="card-aviso">
-    <input
-        type="text"
-        id="tituloAviso"
-        placeholder="Título do aviso"
-    >
-
-    <br><br>
-
-    <textarea
-        id="mensagemAviso"
-        placeholder="Digite o aviso para os clientes"
-        rows="4"
-    ></textarea>
-
-    
-
-    <label>
-        Data de início:
-        <input type="date" id="dataInicioAviso">
-        </label>
-
-        <br><br>
-
-        <label>
-        Data de fim:
-        <input type="date" id="dataFimAviso">
-    </label>
-
-    <br><br>
-
-    <button onclick="publicarAviso()">
-        Publicar aviso
-    </button>
-</div>
-    <p id="statusAviso"></p>
-
-    <div id="avisos"></div>
-  
-
-    <hr>
-
-    
-
-<div class="cabecalho-produtos">
-
-    <button
-        class="botao-novo-produto"
-        onclick="abrirNovoProduto()"
-    >
-        ➕ Novo produto
-    </button>
-
-    <h2>
-        📋 Produtos cadastrados
-    </h2>
-
-    <button
-        class="botao-pedidos"
-        onclick="abrirPedidos()"
-    >
-        📦 Pedidos
-        <span id="contadorPedidos">0</span>
-    </button>
-
-</div>
 
 <div id="listaProdutos"></div>
 
