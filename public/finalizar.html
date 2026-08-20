@@ -12,6 +12,406 @@
 
     <title>Finalizar pedido</title>
 
+    <style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+
+        margin: 0;
+
+        padding: 25px 15px;
+
+        min-height: 100vh;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #111827,
+                #172033
+            );
+
+        color: #ffffff;
+    }
+
+    body > h1 {
+        max-width: 700px;
+
+        margin: 10px auto 30px;
+
+        text-align: center;
+
+        font-size: 30px;
+    }
+
+    body > h2,
+    body > hr,
+    body > label,
+    body > input,
+    body > textarea,
+    body > button {
+        max-width: 700px;
+    }
+
+    #resumoPedido {
+        max-width: 700px;
+
+        margin: 0 auto;
+    }
+
+    #resumoPedido > div {
+        background: #1e293b;
+
+        border: 1px solid #334155;
+
+        border-radius: 14px;
+
+        padding: 16px 18px;
+
+        margin-bottom: 12px;
+
+        box-shadow:
+            0 5px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    #resumoPedido h3 {
+        margin: 0 0 8px;
+
+        color: #ffffff;
+    }
+
+    #resumoPedido p {
+        margin: 5px 0;
+
+        color: #cbd5e1;
+    }
+
+    #resumoPedido strong {
+        display: block;
+
+        margin-top: 10px;
+
+        color: #86efac;
+
+        font-size: 19px;
+    }
+
+    body > h2 {
+        margin: 25px auto 12px;
+    }
+
+    body > hr {
+        margin: 25px auto;
+
+        border: none;
+
+        border-top: 1px solid #334155;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+        display: block;
+
+        width: 100%;
+
+        max-width: 700px;
+
+        margin: 8px auto;
+
+        padding: 13px 14px;
+
+        border: 1px solid #475569;
+
+        border-radius: 10px;
+
+        background: #1e293b;
+
+        color: #ffffff;
+
+        font-size: 16px;
+
+        outline: none;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #94a3b8;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: #64748b;
+    }
+
+    textarea {
+        min-height: 110px;
+
+        resize: vertical;
+    }
+
+    .opcoes-entrega {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.opcao-entrega {
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    background: #1e293b;
+
+    border: 2px solid #334155;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.opcao-entrega:has(input:checked) {
+    border-color: #22c55e;
+
+    background: #172d24;
+}
+
+.opcao-entrega input {
+    width: 20px;
+
+    height: 20px;
+
+    accent-color: #22c55e;
+
+    flex-shrink: 0;
+}
+
+.opcao-entrega span {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+}
+
+.opcao-entrega strong {
+    font-size: 16px;
+}
+
+.opcao-entrega small {
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+.dados-entrega {
+    max-width: 700px;
+
+    margin: 20px auto;
+
+    padding: 20px;
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.25);
+}
+
+.dados-entrega h3 {
+    margin-top: 0;
+
+    margin-bottom: 18px;
+
+    color: #ffffff;
+}
+
+.dados-entrega input {
+    margin: 10px 0;
+}
+
+.opcoes-pagamento {
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.opcao-pagamento {
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 15px;
+
+    background: #1e293b;
+
+    border: 2px solid #334155;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.opcao-pagamento:has(input:checked) {
+    border-color: #22c55e;
+
+    background: #172d24;
+}
+
+.opcao-pagamento input {
+    width: 19px;
+
+    height: 19px;
+
+    accent-color: #22c55e;
+
+    flex-shrink: 0;
+}
+
+.opcao-pagamento span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+.opcao-pagamento strong {
+    font-size: 15px;
+}
+
+.acoes-finalizar {
+    max-width: 700px;
+
+    margin: 25px auto 10px;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.acoes-finalizar button {
+    flex: 1;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+.botao-voltar {
+    background: #334155;
+}
+
+.botao-enviar {
+    background: #16a34a;
+
+    box-shadow:
+        0 6px 18px rgba(22, 163, 74, 0.3);
+}
+
+.acoes-finalizar button:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.1);
+}
+
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 18px 12px;
+    }
+
+    body > h1 {
+        font-size: 26px;
+    }
+
+    .opcoes-entrega,
+    .opcoes-pagamento {
+        flex-direction: column;
+    }
+
+    .opcao-entrega,
+    .opcao-pagamento {
+        width: 100%;
+    }
+
+    .dados-entrega {
+        padding: 16px;
+    }
+
+    .acoes-finalizar {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .acoes-finalizar button {
+        width: 100%;
+
+        padding: 16px;
+    }
+
+}
+
+
+</style>
+
 </head>
 
 <body>
@@ -29,28 +429,45 @@
 
     <h2>Como deseja receber?</h2>
 
-    <label>
+    <div class="opcoes-entrega">
+
+    <label class="opcao-entrega">
+
         <input
             type="radio"
             name="tipoEntrega"
             value="retirada"
             checked
         >
-        Retirar no local
+
+        <span>
+            🏪
+            <strong>Retirar no local</strong>
+            <small>Vou buscar meu pedido</small>
+        </span>
+
     </label>
 
-    <br>
 
-    <label>
+    <label class="opcao-entrega">
+
         <input
             type="radio"
             name="tipoEntrega"
             value="entrega"
         >
-        Entrega
+
+        <span>
+            🛵
+            <strong>Entrega</strong>
+            <small>Receber no meu endereço</small>
+        </span>
+
     </label>
 
-    <div id="dadosEntrega" style="display: none;">
+</div>
+
+    <div id="dadosEntrega" class="dados-entrega" style="display: none;">
 
         <h3>Endereço de entrega</h3>
 
@@ -104,37 +521,57 @@
 
     <h2>Forma de pagamento</h2>
 
-    <label>
+    <div class="opcoes-pagamento">
+
+    <label class="opcao-pagamento">
+
         <input
             type="radio"
             name="pagamento"
             value="pix"
             checked
         >
-        Pix
+
+        <span>
+            💠
+            <strong>Pix</strong>
+        </span>
+
     </label>
 
-    <br>
 
-    <label>
+    <label class="opcao-pagamento">
+
         <input
             type="radio"
             name="pagamento"
             value="dinheiro"
         >
-        Dinheiro
+
+        <span>
+            💵
+            <strong>Dinheiro</strong>
+        </span>
+
     </label>
 
-    <br>
 
-    <label>
+    <label class="opcao-pagamento">
+
         <input
             type="radio"
             name="pagamento"
             value="cartao"
         >
-        Cartão
+
+        <span>
+            💳
+            <strong>Cartão</strong>
+        </span>
+
     </label>
+
+</div>
 
     <h2>Observação</h2>
 
@@ -145,13 +582,23 @@
 
     <br><br>
 
-    <button onclick="voltarCarrinho()">
+    <div class="acoes-finalizar">
+
+    <button
+        class="botao-voltar"
+        onclick="voltarCarrinho()"
+    >
         ← Voltar ao carrinho
     </button>
 
-    <button onclick="enviarPedido()">
+    <button
+        class="botao-enviar"
+        onclick="enviarPedido()"
+    >
         ✅ Enviar pedido
     </button>
+
+</div>
 
 
     <script>
