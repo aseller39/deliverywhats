@@ -830,6 +830,35 @@ app.get("/atualizar-tabela-cardapio-semana", async (req, res) => {
 });
 
 
+app.get("/corrigir-tabela-cardapio-semana", async (req, res) => {
+  try {
+
+    await pool.query(`
+      ALTER TABLE cardapio_semana
+      ALTER COLUMN opcao_1 DROP NOT NULL,
+      ALTER COLUMN opcao_2 DROP NOT NULL
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Campos antigos corrigidos."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao corrigir tabela cardapio_semana:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao corrigir tabela."
+    });
+  }
+});
+
+
 app.post("/api/cardapio-semana", async (req, res) => {
   try {
 
