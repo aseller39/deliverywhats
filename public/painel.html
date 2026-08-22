@@ -276,7 +276,7 @@
 
         .cabecalho-produtos {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            grid-template-columns: auto auto 1fr auto;
             align-items: center;
 
             margin: 30px 0;
@@ -417,20 +417,18 @@
             ➕ Novo produto
         </button>
 
-        <button
-            class="botao-novo-produto"
-            onclick="abrirCardapioSemana()"
-        >
-            📅 Cardápio da Semana
-        </button>
-
         <h2>
             📋 Produtos cadastrados
         </h2>
 
     </div>
 
-    
+    <button
+        class="botao-novo-produto"
+        onclick="abrirCardapioSemana()"
+    >
+        📅 Cardápio da Semana
+    </button>
 
     <button
         class="botao-pedidos"
