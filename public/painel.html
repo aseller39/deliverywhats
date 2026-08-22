@@ -715,7 +715,7 @@ async function carregarDiaCardapio() {
         document.getElementById("diaCardapio").value;
 
     const resposta = await fetch(
-        `/api/cardapio-semana?restaurante=1&dia=${dia}`
+        `/api/cardapio-semana?restaurante=1&dia=${encodeURIComponent(dia)}`
     );
 
     const dados = await resposta.json();
