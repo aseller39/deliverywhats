@@ -836,19 +836,30 @@ app.post("/api/cardapio-semana", async (req, res) => {
     const {
       restaurante_id,
       dia_semana,
-      opcao_1,
-      opcao_2
+      titulo,
+      descricao,
+      preco_pequena,
+      preco_media,
+      preco_grande,
+      foto_base64,
+      carne_1,
+      carne_2
     } = req.body;
 
     if (
       !restaurante_id ||
       !dia_semana ||
-      !opcao_1 ||
-      !opcao_2
+      !titulo ||
+      !descricao ||
+      !preco_pequena ||
+      !preco_media ||
+      !preco_grande ||
+      !carne_1 ||
+      !carne_2
     ) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Dia e as duas opções de carne são obrigatórios."
+        erro: "Preencha todos os campos do cardápio."
       });
     }
 
@@ -856,23 +867,44 @@ app.post("/api/cardapio-semana", async (req, res) => {
       INSERT INTO cardapio_semana (
         restaurante_id,
         dia_semana,
-        opcao_1,
-        opcao_2
+        titulo,
+        descricao,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        foto_base64,
+        carne_1,
+        carne_2
       )
-      VALUES ($1, $2, $3, $4)
+      VALUES (
+        $1,$2,$3,$4,$5,
+        $6,$7,$8,$9,$10
+      )
 
       ON CONFLICT (restaurante_id, dia_semana)
 
       DO UPDATE SET
-        opcao_1 = EXCLUDED.opcao_1,
-        opcao_2 = EXCLUDED.opcao_2
+        titulo = EXCLUDED.titulo,
+        descricao = EXCLUDED.descricao,
+        preco_pequena = EXCLUDED.preco_pequena,
+        preco_media = EXCLUDED.preco_media,
+        preco_grande = EXCLUDED.preco_grande,
+        foto_base64 = EXCLUDED.foto_base64,
+        carne_1 = EXCLUDED.carne_1,
+        carne_2 = EXCLUDED.carne_2
 
       RETURNING *
     `, [
       restaurante_id,
       dia_semana,
-      opcao_1,
-      opcao_2
+      titulo,
+      descricao,
+      preco_pequena,
+      preco_media,
+      preco_grande,
+      foto_base64 || null,
+      carne_1,
+      carne_2
     ]);
 
     res.json({
@@ -913,8 +945,14 @@ app.get("/api/cardapio-semana", async (req, res) => {
         id,
         restaurante_id,
         dia_semana,
-        opcao_1,
-        opcao_2
+        titulo,
+        descricao,
+        preco_pequena,
+        preco_media,
+        preco_grande,
+        foto_base64,
+        carne_1,
+        carne_2
       FROM cardapio_semana
       WHERE restaurante_id = $1
         AND dia_semana = $2

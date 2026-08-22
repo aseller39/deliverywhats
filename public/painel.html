@@ -542,7 +542,7 @@
     </div>
 
 
-    <div id="formularioCardapioSemana" style="display: none;">
+   <div id="formularioCardapioSemana" style="display: none;">
 
     <h2>📅 Cardápio da Semana</h2>
 
@@ -561,7 +561,74 @@
 
     <input
         type="text"
-        id="opcaoCarne1"
+        id="tituloCardapio"
+        placeholder="Título do prato"
+    >
+
+    <br><br>
+
+    <textarea
+        id="descricaoCardapio"
+        placeholder="Descrição do prato"
+        rows="4"
+    ></textarea>
+
+    <br><br>
+
+    <label>
+        Preço Pequena:
+    </label>
+
+    <input
+        type="number"
+        id="precoPequenaCardapio"
+        step="0.01"
+        placeholder="R$ 0,00"
+    >
+
+    <br><br>
+
+    <label>
+        Preço Média:
+    </label>
+
+    <input
+        type="number"
+        id="precoMediaCardapio"
+        step="0.01"
+        placeholder="R$ 0,00"
+    >
+
+    <br><br>
+
+    <label>
+        Preço Grande:
+    </label>
+
+    <input
+        type="number"
+        id="precoGrandeCardapio"
+        step="0.01"
+        placeholder="R$ 0,00"
+    >
+
+    <br><br>
+
+    <label>
+        Foto do prato:
+    </label>
+
+    <input
+        type="file"
+        id="fotoCardapio"
+        accept="image/*"
+    >
+
+    <br><br>
+
+    <input
+        type="text"
+        id="carne1Cardapio"
         placeholder="Primeira opção de carne"
     >
 
@@ -569,7 +636,7 @@
 
     <input
         type="text"
-        id="opcaoCarne2"
+        id="carne2Cardapio"
         placeholder="Segunda opção de carne"
     >
 
@@ -609,32 +676,180 @@ async function carregarDiaCardapio() {
     const dia =
         document.getElementById("diaCardapio").value;
 
-    const resposta =
-        await fetch(
-            `/api/cardapio-semana?restaurante=1&dia=${dia}`
-        );
+    const resposta = await fetch(
+        `/api/cardapio-semana?restaurante=1&dia=${dia}`
+    );
 
-    const dados =
-        await resposta.json();
+    const dados = await resposta.json();
 
-    const opcao1 =
-        document.getElementById("opcaoCarne1");
+    const titulo =
+        document.getElementById("tituloCardapio");
 
-    const opcao2 =
-        document.getElementById("opcaoCarne2");
+    const descricao =
+        document.getElementById("descricaoCardapio");
+
+    const precoPequena =
+        document.getElementById("precoPequenaCardapio");
+
+    const precoMedia =
+        document.getElementById("precoMediaCardapio");
+
+    const precoGrande =
+        document.getElementById("precoGrandeCardapio");
+
+    const carne1 =
+        document.getElementById("carne1Cardapio");
+
+    const carne2 =
+        document.getElementById("carne2Cardapio");
 
     if (dados.sucesso && dados.cardapio) {
 
-        opcao1.value =
-            dados.cardapio.opcao_1 || "";
+        const cardapio = dados.cardapio;
 
-        opcao2.value =
-            dados.cardapio.opcao_2 || "";
+        titulo.value =
+            cardapio.titulo || "";
+
+        descricao.value =
+            cardapio.descricao || "";
+
+        precoPequena.value =
+            cardapio.preco_pequena || "";
+
+        precoMedia.value =
+            cardapio.preco_media || "";
+
+        precoGrande.value =
+            cardapio.preco_grande || "";
+
+        carne1.value =
+            cardapio.carne_1 || "";
+
+        carne2.value =
+            cardapio.carne_2 || "";
 
     } else {
 
-        opcao1.value = "";
-        opcao2.value = "";
+        titulo.value = "";
+        descricao.value = "";
+        precoPequena.value = "";
+        precoMedia.value = "";
+        precoGrande.value = "";
+        carne1.value = "";
+        carne2.value = "";
+    }
+}
+
+
+async function salvarCardapioSemana() {
+
+    const dia =
+        document.getElementById("diaCardapio").value;
+
+    const titulo =
+        document.getElementById("tituloCardapio").value.trim();
+
+    const descricao =
+        document.getElementById("descricaoCardapio").value.trim();
+
+    const precoPequena =
+        Number(
+            document.getElementById("precoPequenaCardapio").value
+        );
+
+    const precoMedia =
+        Number(
+            document.getElementById("precoMediaCardapio").value
+        );
+
+    const precoGrande =
+        Number(
+            document.getElementById("precoGrandeCardapio").value
+        );
+
+    const carne1 =
+        document.getElementById("carne1Cardapio").value.trim();
+
+    const carne2 =
+        document.getElementById("carne2Cardapio").value.trim();
+
+    const status =
+        document.getElementById("statusCardapioSemana");
+
+    if (
+        !titulo ||
+        !descricao ||
+        !precoPequena ||
+        !precoMedia ||
+        !precoGrande ||
+        !carne1 ||
+        !carne2
+    ) {
+
+        status.textContent =
+            "❌ Preencha todos os campos.";
+
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch(
+            "/api/cardapio-semana",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    restaurante_id: 1,
+
+                    dia_semana: Number(dia),
+
+                    titulo: titulo,
+
+                    descricao: descricao,
+
+                    preco_pequena: precoPequena,
+
+                    preco_media: precoMedia,
+
+                    preco_grande: precoGrande,
+
+                    carne_1: carne1,
+
+                    carne_2: carne2
+
+                })
+            }
+        );
+
+        const dados =
+            await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            status.textContent =
+                `❌ ${dados.erro || "Erro ao salvar."}`;
+
+            return;
+        }
+
+        status.textContent =
+            "✅ Cardápio salvo com sucesso!";
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao salvar cardápio:",
+            erro
+        );
+
+        status.textContent =
+            "❌ Erro de comunicação com o servidor.";
     }
 }
 
