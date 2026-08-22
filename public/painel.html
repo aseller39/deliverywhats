@@ -983,6 +983,15 @@
                 return `
                     <div class="card-produto-painel">
 
+                        ${produto.foto_url
+                            ? `<img
+                                src="${produto.foto_url}"
+                                class="foto-produto-painel"
+                                alt="${produto.nome}"
+                            >`
+                            : ""
+                        }
+
                         <div class="topo-card-produto">
 
                             <h3>${produto.nome}</h3>
