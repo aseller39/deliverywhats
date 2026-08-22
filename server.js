@@ -1216,6 +1216,7 @@ app.get("/api/painel/produtos", async (req, res) => {
         preco_grande,
         preco_kg,
         categoria,
+        foto_url,
         disponivel,
         criado_em
       FROM pratos
