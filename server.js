@@ -871,6 +871,11 @@ app.post("/api/pratos", async (req, res) => {
       foto_base64
     } = req.body;
 
+    console.log(
+  "SERVIDOR RECEBEU FOTO:",
+  foto_base64 ? "SIM" : "NÃO"
+);
+
     if (!restaurante_id || !nome || !categoria) {
       return res.status(400).json({
         sucesso: false,
