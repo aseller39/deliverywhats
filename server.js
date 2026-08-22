@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 const pool = require("./config/database");
+const multer = require("multer");
+
+const upload = multer({
+  dest: "public/uploads/produtos/"
+});
 
 
 app.use(express.static("public"));
@@ -796,6 +801,43 @@ app.get("/cadastrar-arrumadinho", async (req, res) => {
 });
 
 
+app.post(
+  "/api/upload-produto",
+  upload.single("foto"),
+  (req, res) => {
+
+    try {
+
+      if (!req.file) {
+        return res.status(400).json({
+          sucesso: false,
+          erro: "Nenhuma foto enviada."
+        });
+      }
+
+      const fotoUrl =
+        `/uploads/produtos/${req.file.filename}`;
+
+      res.json({
+        sucesso: true,
+        foto_url: fotoUrl
+      });
+
+    } catch (erro) {
+
+      console.error("Erro ao enviar foto:", erro);
+
+      res.status(500).json({
+        sucesso: false,
+        erro: "Erro ao enviar foto."
+      });
+
+    }
+
+  }
+);
+
+
 app.post("/api/pratos", async (req, res) => {
   try {
 
@@ -808,7 +850,8 @@ app.post("/api/pratos", async (req, res) => {
       preco_pequena,
       preco_media,
       preco_grande,
-      preco_kg
+      preco_kg,
+      foto_url
     } = req.body;
 
     if (!restaurante_id || !nome || !categoria) {
@@ -829,9 +872,10 @@ app.post("/api/pratos", async (req, res) => {
         preco_media,
         preco_grande,
         categoria,
-        preco_kg
+        preco_kg,
+        foto_url
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
       RETURNING *
       `,
       [
@@ -843,7 +887,8 @@ app.post("/api/pratos", async (req, res) => {
         preco_media || null,
         preco_grande || null,
         categoria,
-        preco_kg || null
+        preco_kg || null,
+        foto_url || null
       ]
     );
 

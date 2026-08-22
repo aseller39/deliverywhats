@@ -435,6 +435,17 @@
         <br><br>
 
         <label>
+            📷 Foto do produto:
+            <input
+                type="file"
+                id="fotoProduto"
+                accept="image/*"
+            >
+        </label>
+
+        <br><br>
+
+        <label>
             Categoria:
             <select id="categoriaProduto" onchange="alterarCamposProduto()">
                 <option value="prato">Prato</option>
@@ -763,7 +774,8 @@
             preco_pequena: null,
             preco_media: null,
             preco_grande: null,
-            preco_kg: null
+            preco_kg: null,
+            foto_url: null
         };
 
         if (categoria === "prato") {
@@ -809,6 +821,39 @@
             return;
         }
 
+        let fotoUrl = null;
+
+        const arquivoFoto =
+            document.getElementById("fotoProduto").files[0];
+
+        if (arquivoFoto) {
+
+            const formularioFoto = new FormData();
+
+            formularioFoto.append("foto", arquivoFoto);
+
+            const respostaFoto =
+                await fetch("/api/upload-produto", {
+                    method: "POST",
+                    body: formularioFoto
+                });
+
+            const dadosFoto =
+                await respostaFoto.json();
+
+            if (!respostaFoto.ok || !dadosFoto.sucesso) {
+
+                status.textContent =
+                    `❌ ${dadosFoto.erro || "Erro ao enviar foto."}`;
+
+                return;
+            }
+
+            fotoUrl = dadosFoto.foto_url;
+
+            dadosProduto.foto_url = fotoUrl;
+        }
+
         try {
 
             const resposta = await fetch("/api/pratos", {
@@ -842,6 +887,8 @@
 
             document.getElementById("nomeProduto").value = "";
             document.getElementById("descricaoProduto").value = "";
+
+            document.getElementById("fotoProduto").value = "";
 
             document.getElementById("precoPequena").value = "";
             document.getElementById("precoMedia").value = "";
