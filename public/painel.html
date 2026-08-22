@@ -275,17 +275,24 @@
         }
 
         .cabecalho-produtos {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
 
             margin: 30px 0;
             gap: 20px;
         }
 
+        .grupo-produtos {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
         .cabecalho-produtos h2 {
             margin: 0;
-            text-align: center;
+            text-align: left;
             color: #ffffff;
             font-size: 28px;
         }
@@ -401,12 +408,20 @@
 
 <div class="cabecalho-produtos">
 
-    <button
-        class="botao-novo-produto"
-        onclick="abrirNovoProduto()"
-    >
-        ➕ Novo produto
-    </button>
+    <div class="grupo-produtos">
+
+        <button
+            class="botao-novo-produto"
+            onclick="abrirNovoProduto()"
+        >
+            ➕ Novo produto
+        </button>
+
+        <h2>
+            📋 Produtos cadastrados
+        </h2>
+
+    </div>
 
     <button
         class="botao-novo-produto"
@@ -414,10 +429,6 @@
     >
         📅 Cardápio da Semana
     </button>
-
-    <h2>
-        📋 Produtos cadastrados
-    </h2>
 
     <button
         class="botao-pedidos"
