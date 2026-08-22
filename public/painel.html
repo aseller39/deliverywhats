@@ -854,6 +854,11 @@
 
         dadosProduto.foto_base64 = fotoBase64;
 
+        console.log(
+            "FOTO BASE64:",
+            fotoBase64
+        );
+
         try {
 
             const resposta = await fetch("/api/pratos", {
