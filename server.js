@@ -1560,6 +1560,11 @@ app.get("/atualizar-tabela-pratos-categoria", async (req, res) => {
       mensagem: "Categoria adicionada à tabela pratos."
     });
 
+    await pool.query(`
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS foto_url TEXT
+    `);
+
   } catch (erro) {
     console.error("Erro ao adicionar categoria:", erro);
 
