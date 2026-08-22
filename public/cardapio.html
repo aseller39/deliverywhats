@@ -784,6 +784,16 @@ main {
                                             onclick="abrirProduto(${prato.id})"
                                         >
 
+                                        ${
+                                            prato.foto_base64
+                                                ? `<img
+                                                    src="${prato.foto_base64}"
+                                                    class="foto-produto-cardapio"
+                                                    alt="${prato.nome}"
+                                                >`
+                                                : ""
+                                        }
+
                                             <h2>${prato.nome}</h2>
 
                                             <p>
