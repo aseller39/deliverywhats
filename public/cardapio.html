@@ -798,118 +798,85 @@ main {
                             <div class="grade-produtos">
 
                                 ${
-                                    pratos.map(prato => `
-                                        <div
-                                            class="card-produto"
-                                            onclick="abrirProduto(${prato.id})"
-                                        >
+                                    pratos.map(prato => {
 
-                                        ${
-                                            prato.foto_base64
-                                                ? `<img
-                                                    src="${prato.foto_base64}"
-                                                    class="foto-produto-cardapio"
-                                                    alt="${prato.nome}"
-                                                >`
-                                                : ""
+                                        let cardsPrato = "";
+
+                                        if (prato.preco_pequena) {
+                                            cardsPrato += `
+                                                <div
+                                                    class="card-produto"
+                                                    onclick="abrirProduto(${prato.id}, 'pequena')"
+                                                >
+                                                    ${prato.foto_base64
+                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                        : ""
+                                                    }
+
+                                                    <h2>${prato.nome} Pequena</h2>
+
+                                                    <p>${prato.descricao || ""}</p>
+
+                                                    <strong>
+                                                        R$ ${Number(prato.preco_pequena)
+                                                            .toFixed(2)
+                                                            .replace(".", ",")}
+                                                    </strong>
+                                                </div>
+                                            `;
                                         }
 
-                                            <h2>${prato.nome}</h2>
+                                        if (prato.preco_media) {
+                                            cardsPrato += `
+                                                <div
+                                                    class="card-produto"
+                                                    onclick="abrirProduto(${prato.id}, 'media')"
+                                                >
+                                                    ${prato.foto_base64
+                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                        : ""
+                                                    }
 
-                                            <p>
-                                                ${prato.descricao || ""}
-                                            </p>
+                                                    <h2>${prato.nome} Média</h2>
 
-                                            <strong>
-                                                R$ ${
-                                                    Number(prato.preco)
-                                                        .toFixed(2)
-                                                        .replace(".", ",")
-                                                }
-                                            </strong>
+                                                    <p>${prato.descricao || ""}</p>
 
-                                        </div>
-                                    `).join("")
-                                }
+                                                    <strong>
+                                                        R$ ${Number(prato.preco_media)
+                                                            .toFixed(2)
+                                                            .replace(".", ",")}
+                                                    </strong>
+                                                </div>
+                                            `;
+                                        }
 
-                            </div>
-                        `
-                        : ""
-                }
+                                        if (prato.preco_grande) {
+                                            cardsPrato += `
+                                                <div
+                                                    class="card-produto"
+                                                    onclick="abrirProduto(${prato.id}, 'grande')"
+                                                >
+                                                    ${prato.foto_base64
+                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                        : ""
+                                                    }
 
+                                                    <h2>${prato.nome} Grande</h2>
 
-                ${
-                    porcoes.length > 0
-                        ? `
-                            <h2 class="titulo-categoria">
-                                🥩 Porções
-                            </h2>
+                                                    <p>${prato.descricao || ""}</p>
 
-                            <div class="grade-produtos">
+                                                    <strong>
+                                                        R$ ${Number(prato.preco_grande)
+                                                            .toFixed(2)
+                                                            .replace(".", ",")}
+                                                    </strong>
+                                                </div>
+                                            `;
+                                        }
 
-                                ${
-                                    porcoes.map(porcao => `
-                                        <div
-                                            class="card-produto"
-                                            onclick="abrirProduto(${porcao.id})"
-                                        >
+                                        return cardsPrato;
 
-                                            <h2>${porcao.nome}</h2>
-
-                                            <p>
-                                                ${porcao.descricao || ""}
-                                            </p>
-
-                                            <strong>
-                                                R$ ${
-                                                    Number(porcao.preco_kg)
-                                                        .toFixed(2)
-                                                        .replace(".", ",")
-                                                } / kg
-                                            </strong>
-
-                                        </div>
-                                    `).join("")
-                                }
-
-                            </div>
-                        `
-                        : ""
-                }
-
-
-                ${
-                    bebidas.length > 0
-                        ? `
-                            <h2 class="titulo-categoria">
-                                🥤 Bebidas
-                            </h2>
-
-                            <div class="grade-produtos">
-
-                                ${
-                                    bebidas.map(bebida => `
-                                        <div
-                                            class="card-produto"
-                                            onclick="abrirProduto(${bebida.id})"
-                                        >
-
-                                            <h2>${bebida.nome}</h2>
-
-                                            <p>
-                                                ${bebida.descricao || ""}
-                                            </p>
-
-                                            <strong>
-                                                R$ ${
-                                                    Number(bebida.preco)
-                                                        .toFixed(2)
-                                                        .replace(".", ",")
-                                                }
-                                            </strong>
-
-                                        </div>
-                                    `).join("")
+                                    }).join("")
                                 }
 
                             </div>
