@@ -1203,6 +1203,7 @@ app.get("/api/cardapio", async (req, res) => {
         preco_grande,
         preco_kg,
         categoria,
+        foto_base64,
         disponivel
       FROM pratos
       WHERE restaurante_id = $1
