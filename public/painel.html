@@ -350,12 +350,47 @@
         }
 
         .card-cardapio-semana {
-    background: #ffffff;
+    background: #1e293b;
+    color: #f8fafc;
+
+    border: 1px solid #334155;
     border-radius: 16px;
+
     padding: 20px;
-    margin: 20px 0;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    max-width: 500px;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card-cardapio-semana:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.card-cardapio-semana h3 {
+    color: #ffffff;
+    font-size: 22px;
+    margin: 0 0 10px;
+}
+
+.card-cardapio-semana p {
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.card-cardapio-semana .precos-cardapio-semana {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.card-cardapio-semana strong {
+    color: #ffffff;
+    font-size: 18px;
 }
 
 #listaCardapioSemanaPainel {
