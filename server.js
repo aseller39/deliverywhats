@@ -868,7 +868,7 @@ app.post("/api/pratos", async (req, res) => {
       preco_media,
       preco_grande,
       preco_kg,
-      foto_url
+      foto_base64
     } = req.body;
 
     if (!restaurante_id || !nome || !categoria) {
@@ -890,7 +890,7 @@ app.post("/api/pratos", async (req, res) => {
         preco_grande,
         categoria,
         preco_kg,
-        foto_url
+        foto_base64
       )
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
       RETURNING *
@@ -905,7 +905,7 @@ app.post("/api/pratos", async (req, res) => {
         preco_grande || null,
         categoria,
         preco_kg || null,
-        foto_url || null
+        foto_base64 || null
       ]
     );
 
@@ -1233,7 +1233,7 @@ app.get("/api/painel/produtos", async (req, res) => {
         preco_grande,
         preco_kg,
         categoria,
-        foto_url,
+        foto_base64,
         disponivel,
         criado_em
       FROM pratos

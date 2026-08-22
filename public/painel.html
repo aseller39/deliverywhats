@@ -784,8 +784,10 @@
             preco_media: null,
             preco_grande: null,
             preco_kg: null,
-            foto_url: null
+            foto_base64: null
         };
+
+        dadosProduto.foto_base64 = fotoBase64;
 
         if (categoria === "prato") {
 
@@ -830,38 +832,27 @@
             return;
         }
 
-        let fotoUrl = null;
+        let fotoBase64 = null;
 
         const arquivoFoto =
             document.getElementById("fotoProduto").files[0];
 
         if (arquivoFoto) {
 
-            const formularioFoto = new FormData();
+            fotoBase64 = await new Promise((resolve, reject) => {
 
-            formularioFoto.append("foto", arquivoFoto);
+                const leitor = new FileReader();
 
-            const respostaFoto =
-                await fetch("/api/upload-produto", {
-                    method: "POST",
-                    body: formularioFoto
-                });
+                leitor.onload = () => resolve(leitor.result);
 
-            const dadosFoto =
-                await respostaFoto.json();
+                leitor.onerror = () =>
+                    reject(new Error("Erro ao ler a foto."));
 
-            if (!respostaFoto.ok || !dadosFoto.sucesso) {
-
-                status.textContent =
-                    `❌ ${dadosFoto.erro || "Erro ao enviar foto."}`;
-
-                return;
-            }
-
-            fotoUrl = dadosFoto.foto_url;
-
-            dadosProduto.foto_url = fotoUrl;
+                leitor.readAsDataURL(arquivoFoto);
+            });
         }
+
+        
 
         try {
 
@@ -992,7 +983,7 @@
                 return `
                     <div class="card-produto-painel">
 
-                        ${produto.foto_url
+                        ${produto.foto_base64
                             ? `<img
                                 src="${produto.foto_url}"
                                 class="foto-produto-painel"
