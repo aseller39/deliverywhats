@@ -684,6 +684,7 @@
 
 </div>
 
+<div id="listaCardapioSemanaPainel"></div>
 
 <div id="listaProdutos"></div>
 
@@ -1267,204 +1268,291 @@ async function salvarCardapioSemana() {
     }
 
 
-    async function carregarProdutosPainel() {
+async function carregarProdutosPainel() {
 
-        const resposta =
-            await fetch("/api/painel/produtos?restaurante=1");
+    const resposta =
+        await fetch("/api/painel/produtos?restaurante=1");
 
-        const dados =
-            await resposta.json();
+    const dados =
+        await resposta.json();
 
-        const container =
-            document.getElementById("listaProdutos");
+    const container =
+        document.getElementById("listaProdutos");
 
-        if (!dados.sucesso || !dados.pratos.length) {
+    if (!dados.sucesso || !dados.pratos.length) {
 
-            container.innerHTML =
-                "<p>Nenhum produto cadastrado.</p>";
+        container.innerHTML =
+            "<p>Nenhum produto cadastrado.</p>";
 
-            return;
-        }
+        return;
+    }
 
-        const pratos = dados.pratos.filter(
-            produto => produto.categoria === "prato"
-        );
+    const pratos = dados.pratos.filter(
+        produto => produto.categoria === "prato"
+    );
 
-        const porcoes = dados.pratos.filter(
-            produto => produto.categoria === "porcao"
-        );
+    const porcoes = dados.pratos.filter(
+        produto => produto.categoria === "porcao"
+    );
 
-        const bebidas = dados.pratos.filter(
-            produto => produto.categoria === "bebida"
-        );
+    const bebidas = dados.pratos.filter(
+        produto => produto.categoria === "bebida"
+    );
 
 
-        function criarCards(lista) {
+    function criarCards(lista) {
 
-            return lista.map(produto => {
+        return lista.map(produto => {
 
-                let preco = "";
+            let preco = "";
 
-                if (produto.categoria === "prato") {
+            if (produto.categoria === "prato") {
 
-                    preco = `
-                        <div class="precos-produto">
-                            <span>P: R$ ${Number(produto.preco_pequena)
-                                .toFixed(2).replace(".", ",")}</span>
+                preco = `
+                    <div class="precos-produto">
+                        <span>P: R$ ${Number(produto.preco_pequena)
+                            .toFixed(2).replace(".", ",")}</span>
 
-                            <span>M: R$ ${Number(produto.preco_media)
-                                .toFixed(2).replace(".", ",")}</span>
+                        <span>M: R$ ${Number(produto.preco_media)
+                            .toFixed(2).replace(".", ",")}</span>
 
-                            <span>G: R$ ${Number(produto.preco_grande)
-                                .toFixed(2).replace(".", ",")}</span>
-                        </div>
-                    `;
-
-                } else if (produto.categoria === "porcao") {
-
-                    preco = `
-                        <strong>
-                            R$ ${Number(produto.preco_kg)
-                                .toFixed(2).replace(".", ",")} / kg
-                        </strong>
-                    `;
-
-                } else {
-
-                    preco = `
-                        <strong>
-                            R$ ${Number(produto.preco)
-                                .toFixed(2).replace(".", ",")}
-                        </strong>
-                    `;
-                }
-
-                return `
-                    <div class="card-produto-painel">
-
-                        ${produto.foto_base64
-                            ? `<img
-                                src="${produto.foto_base64}"
-                                class="foto-produto-painel"
-                                alt="${produto.nome}"
-                            >`
-                            : ""
-                        }
-
-                        <div class="topo-card-produto">
-
-                            <h3>${produto.nome}</h3>
-
-                            <span class="${
-                                produto.disponivel
-                                    ? "status-disponivel"
-                                    : "status-indisponivel"
-                            }">
-
-                                ${
-                                    produto.disponivel
-                                        ? "🟢 Disponível"
-                                        : "🔴 Indisponível"
-                                }
-
-                            </span>
-
-                        </div>
-
-                        <p class="descricao-produto">
-                            ${produto.descricao || ""}
-                        </p>
-
-                        ${preco}
-
-                        <div class="acoes-produto">
-
-                            <button
-                                onclick="editarProduto(${produto.id})"
-                            >
-                                ✏️ Editar
-                            </button>
-
-                            <button
-                                onclick="alterarDisponibilidade(
-                                    ${produto.id},
-                                    ${!produto.disponivel}
-                                )"
-                            >
-                                ${
-                                    produto.disponivel
-                                        ? "🔴 Desativar"
-                                        : "🟢 Ativar"
-                                }
-                            </button>
-                            <button 
-                                onclick="excluirProduto(${produto.id})"
-                            >
-                                🗑️ Excluir
-                            </button>
-
-                        </div>
-
+                        <span>G: R$ ${Number(produto.preco_grande)
+                            .toFixed(2).replace(".", ",")}</span>
                     </div>
                 `;
 
-            }).join("");
-        }
+            } else if (produto.categoria === "porcao") {
 
+                preco = `
+                    <strong>
+                        R$ ${Number(produto.preco_kg)
+                            .toFixed(2).replace(".", ",")} / kg
+                    </strong>
+                `;
 
-        let html = "";
+            } else {
 
+                preco = `
+                    <strong>
+                        R$ ${Number(produto.preco)
+                            .toFixed(2).replace(".", ",")}
+                    </strong>
+                `;
+            }
 
-        if (pratos.length > 0) {
+            return `
+                <div class="card-produto-painel">
 
-            html += `
-                <section class="secao-produtos">
+                    ${produto.foto_base64
+                        ? `<img
+                            src="${produto.foto_base64}"
+                            class="foto-produto-painel"
+                            alt="${produto.nome}"
+                        >`
+                        : ""
+                    }
 
-                    <h2>🍽️ Pratos</h2>
+                    <div class="topo-card-produto">
 
-                    <div class="grade-produtos-painel">
-                        ${criarCards(pratos)}
+                        <h3>${produto.nome}</h3>
+
+                        <span class="${
+                            produto.disponivel
+                                ? "status-disponivel"
+                                : "status-indisponivel"
+                        }">
+
+                            ${
+                                produto.disponivel
+                                    ? "🟢 Disponível"
+                                    : "🔴 Indisponível"
+                            }
+
+                        </span>
+
                     </div>
 
-                </section>
-            `;
-        }
+                    <p class="descricao-produto">
+                        ${produto.descricao || ""}
+                    </p>
 
+                    ${preco}
 
-        if (porcoes.length > 0) {
+                    <div class="acoes-produto">
 
-            html += `
-                <section class="secao-produtos">
+                        <button
+                            onclick="editarProduto(${produto.id})"
+                        >
+                            ✏️ Editar
+                        </button>
 
-                    <h2>🥩 Porções</h2>
+                        <button
+                            onclick="alterarDisponibilidade(
+                                ${produto.id},
+                                ${!produto.disponivel}
+                            )"
+                        >
+                            ${
+                                produto.disponivel
+                                    ? "🔴 Desativar"
+                                    : "🟢 Ativar"
+                            }
+                        </button>
+                        <button 
+                            onclick="excluirProduto(${produto.id})"
+                        >
+                            🗑️ Excluir
+                        </button>
 
-                    <div class="grade-produtos-painel">
-                        ${criarCards(porcoes)}
                     </div>
 
-                </section>
+                </div>
             `;
-        }
 
-
-        if (bebidas.length > 0) {
-
-            html += `
-                <section class="secao-produtos">
-
-                    <h2>🥤 Bebidas</h2>
-
-                    <div class="grade-produtos-painel">
-                        ${criarCards(bebidas)}
-                    </div>
-
-                </section>
-            `;
-        }
-
-
-        container.innerHTML = html;
+        }).join("");
     }
+
+
+    let html = "";
+
+
+    if (pratos.length > 0) {
+
+        html += `
+            <section class="secao-produtos">
+
+                <h2>🍽️ Pratos</h2>
+
+                <div class="grade-produtos-painel">
+                    ${criarCards(pratos)}
+                </div>
+
+            </section>
+        `;
+    }
+
+
+    if (porcoes.length > 0) {
+
+        html += `
+            <section class="secao-produtos">
+
+                <h2>🥩 Porções</h2>
+
+                <div class="grade-produtos-painel">
+                    ${criarCards(porcoes)}
+                </div>
+
+            </section>
+        `;
+    }
+
+
+    if (bebidas.length > 0) {
+
+        html += `
+            <section class="secao-produtos">
+
+                <h2>🥤 Bebidas</h2>
+
+                <div class="grade-produtos-painel">
+                    ${criarCards(bebidas)}
+                </div>
+
+            </section>
+        `;
+    }
+
+
+    container.innerHTML = html;
+}
+
+
+async function carregarCardapioSemanaPainel() {
+
+    const container =
+        document.getElementById("listaCardapioSemanaPainel");
+
+    if (!container) {
+        return;
+    }
+
+    const resposta = await fetch(
+        "/api/cardapio-semana?restaurante=1&dia=1"
+    );
+
+    const dados = await resposta.json();
+
+    if (!dados.sucesso || !dados.cardapio) {
+
+        container.innerHTML =
+            "<p>Nenhum cardápio cadastrado.</p>";
+
+        return;
+    }
+
+    const cardapio = dados.cardapio;
+
+    container.innerHTML = `
+
+        <div class="card-cardapio-semana">
+
+            ${
+                cardapio.foto_base64
+                    ? `
+                        <img
+                            src="${cardapio.foto_base64}"
+                            class="foto-cardapio-semana"
+                            alt="${cardapio.titulo}"
+                        >
+                    `
+                    : ""
+            }
+
+            <h3>
+                ${cardapio.titulo}
+            </h3>
+
+            <p>
+                ${cardapio.descricao || ""}
+            </p>
+
+            <div class="precos-cardapio-semana">
+
+                <span>
+                    P: R$
+                    ${Number(cardapio.preco_pequena)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                </span>
+
+                <span>
+                    M: R$
+                    ${Number(cardapio.preco_media)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                </span>
+
+                <span>
+                    G: R$
+                    ${Number(cardapio.preco_grande)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                </span>
+
+            </div>
+
+            <p>
+                🥩 ${cardapio.carne_1}
+            </p>
+
+            <p>
+                🍗 ${cardapio.carne_2}
+            </p>
+
+        </div>
+    `;
+}
 
 
     async function atualizarContadorPedidos() {
@@ -1767,6 +1855,7 @@ async function salvarCardapioSemana() {
             fecharModalEditar();
 
             carregarProdutosPainel();
+            carregarCardapioSemanaPainel();
 
             
 
