@@ -883,6 +883,11 @@ app.post("/api/pratos", async (req, res) => {
       });
     }
 
+    console.log(
+  "TAMANHO DA FOTO:",
+  foto_base64 ? foto_base64.length : 0
+);
+
     const resultado = await pool.query(
       `
       INSERT INTO pratos (
