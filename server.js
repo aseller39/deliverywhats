@@ -3,8 +3,25 @@ const app = express();
 const pool = require("./config/database");
 const multer = require("multer");
 
+const storage = multer.diskStorage({
+  destination: "public/uploads/produtos/",
+  filename: (req, file, cb) => {
+    const extensao = file.originalname
+      .split(".")
+      .pop();
+
+    const nomeArquivo =
+      Date.now() + "-" +
+      Math.round(Math.random() * 1E9) +
+      "." +
+      extensao;
+
+    cb(null, nomeArquivo);
+  }
+});
+
 const upload = multer({
-  dest: "public/uploads/produtos/"
+  storage: storage
 });
 
 
