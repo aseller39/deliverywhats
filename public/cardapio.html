@@ -744,6 +744,7 @@ main {
             let itensPedido = [];
             let pratosDisponiveis = [];
             let produtoSelecionadoId = null;
+            let tamanhoEscolhidoAtual = null;
             let carrinho = [];
             const carrinhoSalvo = localStorage.getItem("carrinho");
 
@@ -895,6 +896,7 @@ function abrirProduto(id, tamanhoEscolhido = null) {
         return;
     }
     produtoSelecionadoId = id;
+    tamanhoEscolhidoAtual = tamanhoEscolhido;
 
     let precoSelecionado = Number(produto.preco);
 
@@ -1107,27 +1109,57 @@ function abrirProduto(id, tamanhoEscolhido = null) {
     document.getElementById("modalProduto").style.display = "flex";
 }
 
-            function alterarQuantidadeProduto(valor) {
-                const elemento = document.getElementById("quantidadeProduto");
 
-                let quantidade = Number(elemento.textContent);
+function alterarQuantidadeProduto(valor) {
 
-                quantidade += valor;
+    const elemento =
+        document.getElementById("quantidadeProduto");
 
-                if (quantidade < 1) {
-                    quantidade = 1;
-                }
+    let quantidade =
+        Number(elemento.textContent);
 
-                elemento.textContent = quantidade;
+    quantidade += valor;
 
-                const produto = pratosDisponiveis.find(
-                    p => p.id === produtoSelecionadoId
-                );
+    if (quantidade < 1) {
+        quantidade = 1;
+    }
 
-                if (produto) {
-                    atualizarTotalProduto(produto);
-                }
-            }
+    elemento.textContent = quantidade;
+
+    const produto =
+        pratosDisponiveis.find(
+            p => p.id === produtoSelecionadoId
+        );
+
+    if (!produto) {
+        return;
+    }
+
+    let preco = Number(produto.preco);
+
+    if (
+        produto.categoria === "prato" &&
+        tamanhoEscolhidoAtual
+    ) {
+
+        if (tamanhoEscolhidoAtual === "pequena") {
+            preco = Number(produto.preco_pequena);
+        }
+
+        if (tamanhoEscolhidoAtual === "media") {
+            preco = Number(produto.preco_media);
+        }
+
+        if (tamanhoEscolhidoAtual === "grande") {
+            preco = Number(produto.preco_grande);
+        }
+    }
+
+    const total = preco * quantidade;
+
+    document.getElementById("totalProduto").textContent =
+        total.toFixed(2).replace(".", ",");
+}
 
 
             function alterarQuantidadePorcao(valor) {
