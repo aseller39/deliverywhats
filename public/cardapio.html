@@ -888,218 +888,224 @@ main {
             }
 
 
-function abrirProduto(id) {
-                const produto = pratosDisponiveis.find(p => p.id === id);
+function abrirProduto(id, tamanhoEscolhido = null) {
+    const produto = pratosDisponiveis.find(p => p.id === id);
 
-                if (!produto) {
-                    return;
-                }
-                produtoSelecionadoId = id;
+    if (!produto) {
+        return;
+    }
+    produtoSelecionadoId = id;
 
-                const detalhes = document.getElementById("detalhesProduto");
+    let precoSelecionado = Number(produto.preco);
 
-                if (produto.categoria === "prato" && produto.preco_pequena) {
+    if (produto.categoria === "prato" && tamanhoEscolhido) {
 
-                    detalhes.innerHTML = `
-                        ${
-                            produto.foto_base64
-                                ? `<img
-                                    src="${produto.foto_base64}"
-                                    class="foto-produto-detalhe"
-                                    alt="${produto.nome}"
-                                >`
-                                : ""
-                        }
+        if (tamanhoEscolhido === "pequena") {
+            precoSelecionado = Number(produto.preco_pequena);
+        }
 
-                        <h2>${produto.nome}</h2>
+        if (tamanhoEscolhido === "media") {
+            precoSelecionado = Number(produto.preco_media);
+        }
 
-                        <p>${produto.descricao}</p>
+        if (tamanhoEscolhido === "grande") {
+            precoSelecionado = Number(produto.preco_grande);
+        }
+    }
 
-                        <h3>Tamanho</h3>
+    const detalhes = document.getElementById("detalhesProduto");
 
-                        <label>
-                            <input type="radio" name="tamanhoProduto" value="pequena" checked>
-                            Pequena — R$ ${Number(produto.preco_pequena).toFixed(2).replace(".", ",")}
-                        </label>
+    if (produto.categoria === "prato" && tamanhoEscolhido) {
 
-                        <br>
-
-                        <label>
-                            <input type="radio" name="tamanhoProduto" value="media">
-                            Média — R$ ${Number(produto.preco_media).toFixed(2).replace(".", ",")}
-                        </label>
-
-                        <br>
-
-                        <label>
-                            <input type="radio" name="tamanhoProduto" value="grande">
-                            Grande — R$ ${Number(produto.preco_grande).toFixed(2).replace(".", ",")}
-                        </label>
-
-                        <h3>Quantidade</h3>
-
-                        <div class="controle-quantidade">
-
-                            <button
-                                class="botao-quantidade"
-                                onclick="alterarQuantidadeProduto(-1)"
-                            >
-                                −
-                            </button>
-
-                            <span id="quantidadeProduto">1</span>
-
-                            <button
-                                class="botao-quantidade"
-                                onclick="alterarQuantidadeProduto(1)"
-                            >
-                                +
-                            </button>
-
-                        </div>
-
-                        <div class="total-produto">
-
-                            <span>Total</span>
-
-                            <strong>
-                                R$ <span id="totalProduto">
-                                    ${Number(produto.preco_pequena)
-                                        .toFixed(2)
-                                        .replace(".", ",")}
-                                </span>
-                            </strong>
-
-                        </div>
-
-                        <button
-                            class="botao-adicionar-carrinho"
-                            onclick="adicionarProdutoCarrinho(${produto.id})"
-                        >
-                            🛒 Adicionar ao carrinho
-                        </button>
-                    `;
-
-                    document
-                        .querySelectorAll('input[name="tamanhoProduto"]')
-                        .forEach(radio => {
-                            radio.addEventListener("change", () => {
-                                atualizarTotalProduto(produto);
-                            });
-                        });
-
-                    } else if (produto.categoria === "porcao") {
-
-                        detalhes.innerHTML = `
-                            <h2>${produto.nome}</h2>
-                            <p>${produto.descricao}</p>
-
-                            <h3>
-                                R$ ${Number(produto.preco_kg).toFixed(2).replace(".", ",")} / kg
-                            </h3>
-
-                            <h3>Quantidade</h3>
-
-                            <div class="controle-quantidade">
-
-                                <button
-                                    class="botao-quantidade"
-                                    onclick="alterarQuantidadePorcao(-100)"
-                                >
-                                    −
-                                </button>
-
-                                <span id="quantidadePorcao">100 g</span>
-
-                                <button
-                                    class="botao-quantidade"
-                                    onclick="alterarQuantidadePorcao(100)"
-                                >
-                                    +
-                                </button>
-
-                            </div>
-
-                            <div class="total-produto">
-
-                                <span>Total</span>
-
-                                <strong>
-                                    R$ <span id="totalProduto">
-                                        ${(Number(produto.preco_kg) / 10)
-                                            .toFixed(2)
-                                            .replace(".", ",")}
-                                    </span>
-                                </strong>
-
-                            </div>
-
-                            <button
-                                class="botao-adicionar-carrinho"
-                                onclick="adicionarPorcaoCarrinho(${produto.id})"
-                            >
-                                🛒 Adicionar ao carrinho
-                            </button>
-                        `;
-
-                    } else {
-
-                        detalhes.innerHTML = `
-                            <h2>${produto.nome}</h2>
-                            <p>${produto.descricao}</p>
-
-                            <h3>
-                                R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}
-                            </h3>
-
-                            <h3>Quantidade</h3>
-
-                            <div class="controle-quantidade">
-
-                                <button
-                                    class="botao-quantidade"
-                                    onclick="alterarQuantidadeProduto(-1)"
-                                >
-                                    −
-                                </button>
-
-                                <span id="quantidadeProduto">1</span>
-
-                                <button
-                                    class="botao-quantidade"
-                                    onclick="alterarQuantidadeProduto(1)"
-                                >
-                                    +
-                                </button>
-
-                            </div>
-
-                            <div class="total-produto">
-
-                                <span>Total</span>
-
-                                <strong>
-                                    R$ <span id="totalProduto">
-                                        ${Number(produto.preco)
-                                            .toFixed(2)
-                                            .replace(".", ",")}
-                                    </span>
-                                </strong>
-
-                            </div>
-
-                            <button
-                                class="botao-adicionar-carrinho"
-                                onclick="adicionarProdutoCarrinho(${produto.id})"
-                            >
-                                🛒 Adicionar ao carrinho
-                            </button>
-                        `;
-
-                    }
-
-                document.getElementById("modalProduto").style.display = "flex";
+        detalhes.innerHTML = `
+            ${
+                produto.foto_base64
+                    ? `<img
+                        src="${produto.foto_base64}"
+                        class="foto-produto-detalhe"
+                        alt="${produto.nome}"
+                    >`
+                    : ""
             }
+
+            <h2>${produto.nome}</h2>
+
+            <p>${produto.descricao}</p>
+
+            <h3>
+                ${
+                    tamanhoEscolhido === "pequena"
+                        ? "Marmitex Pequena"
+                        : tamanhoEscolhido === "media"
+                            ? "Marmitex Média"
+                            : "Marmitex Grande"
+                }
+            </h3>
+
+            <p>
+                <strong>
+                    R$ ${precoSelecionado.toFixed(2).replace(".", ",")}
+                </strong>
+            </p>
+
+            <h3>Quantidade</h3>
+
+            <div class="controle-quantidade">
+
+                <button
+                    class="botao-quantidade"
+                    onclick="alterarQuantidadeProduto(-1)"
+                >
+                    −
+                </button>
+
+                <span id="quantidadeProduto">1</span>
+
+                <button
+                    class="botao-quantidade"
+                    onclick="alterarQuantidadeProduto(1)"
+                >
+                    +
+                </button>
+
+            </div>
+
+            <div class="total-produto">
+
+                <span>Total</span>
+
+                <strong>
+                    R$ <span id="totalProduto">
+                        ${Number(produto.preco_pequena)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </span>
+                </strong>
+
+            </div>
+
+            <button
+                class="botao-adicionar-carrinho"
+                onclick="adicionarProdutoCarrinho(${produto.id})"
+            >
+                🛒 Adicionar ao carrinho
+            </button>
+        `;
+
+        
+
+        } else if (produto.categoria === "porcao") {
+
+            detalhes.innerHTML = `
+                <h2>${produto.nome}</h2>
+                <p>${produto.descricao}</p>
+
+                <h3>
+                    R$ ${Number(produto.preco_kg).toFixed(2).replace(".", ",")} / kg
+                </h3>
+
+                <h3>Quantidade</h3>
+
+                <div class="controle-quantidade">
+
+                    <button
+                        class="botao-quantidade"
+                        onclick="alterarQuantidadePorcao(-100)"
+                    >
+                        −
+                    </button>
+
+                    <span id="quantidadePorcao">100 g</span>
+
+                    <button
+                        class="botao-quantidade"
+                        onclick="alterarQuantidadePorcao(100)"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+                <div class="total-produto">
+
+                    <span>Total</span>
+
+                    <strong>
+                        R$ <span id="totalProduto">
+                            ${(Number(produto.preco_kg) / 10)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </span>
+                    </strong>
+
+                </div>
+
+                <button
+                    class="botao-adicionar-carrinho"
+                    onclick="adicionarPorcaoCarrinho(${produto.id})"
+                >
+                    🛒 Adicionar ao carrinho
+                </button>
+            `;
+
+        } else {
+
+            detalhes.innerHTML = `
+                <h2>${produto.nome}</h2>
+                <p>${produto.descricao}</p>
+
+                <h3>
+                    R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}
+                </h3>
+
+                <h3>Quantidade</h3>
+
+                <div class="controle-quantidade">
+
+                    <button
+                        class="botao-quantidade"
+                        onclick="alterarQuantidadeProduto(-1)"
+                    >
+                        −
+                    </button>
+
+                    <span id="quantidadeProduto">1</span>
+
+                    <button
+                        class="botao-quantidade"
+                        onclick="alterarQuantidadeProduto(1)"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+                <div class="total-produto">
+
+                    <span>Total</span>
+
+                    <strong>
+                        R$ <span id="totalProduto">
+                            ${Number(produto.preco)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </span>
+                    </strong>
+
+                </div>
+
+                <button
+                    class="botao-adicionar-carrinho"
+                    onclick="adicionarProdutoCarrinho(${produto.id})"
+                >
+                    🛒 Adicionar ao carrinho
+                </button>
+            `;
+
+        }
+
+    document.getElementById("modalProduto").style.display = "flex";
+}
 
             function alterarQuantidadeProduto(valor) {
                 const elemento = document.getElementById("quantidadeProduto");
