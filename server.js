@@ -1628,6 +1628,11 @@ app.get("/atualizar-tabela-pratos-categoria", async (req, res) => {
       ADD COLUMN IF NOT EXISTS foto_url TEXT
     `);
 
+    await pool.query(`
+      ALTER TABLE pratos
+      ADD COLUMN IF NOT EXISTS foto_base64 TEXT
+    `);
+
   } catch (erro) {
     console.error("Erro ao adicionar categoria:", erro);
 
