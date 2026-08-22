@@ -759,6 +759,190 @@ app.get("/criar-tabela-pratos", async (req, res) => {
   }
 });
 
+
+app.get("/criar-tabela-cardapio-semana", async (req, res) => {
+  try {
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS cardapio_semana (
+        id SERIAL PRIMARY KEY,
+        restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
+        dia_semana INTEGER NOT NULL,
+        opcao_1 VARCHAR(150) NOT NULL,
+        opcao_2 VARCHAR(150) NOT NULL,
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (restaurante_id, dia_semana)
+      )
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela cardapio_semana criada."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao criar tabela cardapio_semana:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao criar tabela."
+    });
+  }
+});
+
+
+app.get("/atualizar-tabela-cardapio-semana", async (req, res) => {
+  try {
+
+    await pool.query(`
+      ALTER TABLE cardapio_semana
+      ADD COLUMN IF NOT EXISTS titulo VARCHAR(150),
+      ADD COLUMN IF NOT EXISTS descricao TEXT,
+      ADD COLUMN IF NOT EXISTS preco_pequena NUMERIC(10,2),
+      ADD COLUMN IF NOT EXISTS preco_media NUMERIC(10,2),
+      ADD COLUMN IF NOT EXISTS preco_grande NUMERIC(10,2),
+      ADD COLUMN IF NOT EXISTS foto_base64 TEXT,
+      ADD COLUMN IF NOT EXISTS carne_1 VARCHAR(150),
+      ADD COLUMN IF NOT EXISTS carne_2 VARCHAR(150)
+    `);
+
+    res.json({
+      sucesso: true,
+      mensagem: "Tabela cardapio_semana atualizada."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao atualizar tabela cardapio_semana:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao atualizar tabela."
+    });
+  }
+});
+
+
+app.post("/api/cardapio-semana", async (req, res) => {
+  try {
+
+    const {
+      restaurante_id,
+      dia_semana,
+      opcao_1,
+      opcao_2
+    } = req.body;
+
+    if (
+      !restaurante_id ||
+      !dia_semana ||
+      !opcao_1 ||
+      !opcao_2
+    ) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Dia e as duas opções de carne são obrigatórios."
+      });
+    }
+
+    const resultado = await pool.query(`
+      INSERT INTO cardapio_semana (
+        restaurante_id,
+        dia_semana,
+        opcao_1,
+        opcao_2
+      )
+      VALUES ($1, $2, $3, $4)
+
+      ON CONFLICT (restaurante_id, dia_semana)
+
+      DO UPDATE SET
+        opcao_1 = EXCLUDED.opcao_1,
+        opcao_2 = EXCLUDED.opcao_2
+
+      RETURNING *
+    `, [
+      restaurante_id,
+      dia_semana,
+      opcao_1,
+      opcao_2
+    ]);
+
+    res.json({
+      sucesso: true,
+      cardapio: resultado.rows[0]
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao salvar cardápio da semana:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao salvar cardápio da semana."
+    });
+  }
+});
+
+
+app.get("/api/cardapio-semana", async (req, res) => {
+  try {
+
+    const restauranteId = req.query.restaurante;
+    const diaSemana = req.query.dia;
+
+    if (!restauranteId || !diaSemana) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Restaurante e dia são obrigatórios."
+      });
+    }
+
+    const resultado = await pool.query(`
+      SELECT
+        id,
+        restaurante_id,
+        dia_semana,
+        opcao_1,
+        opcao_2
+      FROM cardapio_semana
+      WHERE restaurante_id = $1
+        AND dia_semana = $2
+    `, [
+      restauranteId,
+      diaSemana
+    ]);
+
+    res.json({
+      sucesso: true,
+      cardapio: resultado.rows[0] || null
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao consultar cardápio da semana:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar cardápio da semana."
+    });
+  }
+});
+
+
 app.get("/teste-pratos", async (req, res) => {
   try {
     const resultado = await pool.query(`

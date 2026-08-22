@@ -408,6 +408,13 @@
         ➕ Novo produto
     </button>
 
+    <button
+        class="botao-novo-produto"
+        onclick="abrirCardapioSemana()"
+    >
+        📅 Cardápio da Semana
+    </button>
+
     <h2>
         📋 Produtos cadastrados
     </h2>
@@ -535,9 +542,103 @@
     </div>
 
 
+    <div id="formularioCardapioSemana" style="display: none;">
+
+    <h2>📅 Cardápio da Semana</h2>
+
+    <label>
+        Dia da semana:
+        <select id="diaCardapio" onchange="carregarDiaCardapio()">
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terça-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
+        </select>
+    </label>
+
+    <br><br>
+
+    <input
+        type="text"
+        id="opcaoCarne1"
+        placeholder="Primeira opção de carne"
+    >
+
+    <br><br>
+
+    <input
+        type="text"
+        id="opcaoCarne2"
+        placeholder="Segunda opção de carne"
+    >
+
+    <br><br>
+
+    <button onclick="salvarCardapioSemana()">
+        💾 Salvar dia
+    </button>
+
+    <button onclick="fecharCardapioSemana()">
+        Cancelar
+    </button>
+
+    <p id="statusCardapioSemana"></p>
+
+</div>
+
+
 <div id="listaProdutos"></div>
 
   <script>
+
+
+function abrirCardapioSemana() {
+
+    document.getElementById("formularioProduto").style.display = "none";
+    document.getElementById("listaProdutos").style.display = "none";
+
+    document.getElementById("formularioCardapioSemana").style.display = "block";
+
+    carregarDiaCardapio();
+}
+
+
+async function carregarDiaCardapio() {
+
+    const dia =
+        document.getElementById("diaCardapio").value;
+
+    const resposta =
+        await fetch(
+            `/api/cardapio-semana?restaurante=1&dia=${dia}`
+        );
+
+    const dados =
+        await resposta.json();
+
+    const opcao1 =
+        document.getElementById("opcaoCarne1");
+
+    const opcao2 =
+        document.getElementById("opcaoCarne2");
+
+    if (dados.sucesso && dados.cardapio) {
+
+        opcao1.value =
+            dados.cardapio.opcao_1 || "";
+
+        opcao2.value =
+            dados.cardapio.opcao_2 || "";
+
+    } else {
+
+        opcao1.value = "";
+        opcao2.value = "";
+    }
+}
+
+
     async function carregarPratos() {
         const resposta = await fetch("/api/cardapio?restaurante=1");
         const dados = await resposta.json();
