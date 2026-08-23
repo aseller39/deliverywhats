@@ -2015,6 +2015,7 @@ function alterarQuantidadeProduto(valor) {
 
 function adicionarProdutoCarrinho(id) {
     const produto = pratosDisponiveis.find(p => p.id === id);
+    console.log("PRODUTO SELECIONADO:", produto);
 
     if (!produto) {
         return;
