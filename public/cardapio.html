@@ -766,127 +766,202 @@ main {
 
             
 
-            async function carregarCardapio() {
-                const parametros = new URLSearchParams(window.location.search);
-                const restauranteId = parametros.get("restaurante");
+async function carregarCardapio() {
+    const parametros = new URLSearchParams(window.location.search);
+    const restauranteId = parametros.get("restaurante");
 
-                const resposta = await fetch(`/api/cardapio?restaurante=${restauranteId}`);
-                const dados = await resposta.json();
-                pratosDisponiveis = dados.pratos;
-                const container = document.getElementById("pratos");
+    const resposta = await fetch(`/api/cardapio?restaurante=${restauranteId}`);
+    const dados = await resposta.json();
+    pratosDisponiveis = dados.pratos;
+    const cardapioDia = dados.cardapio_dia;
+    const container = document.getElementById("pratos");
 
-            const pratos = dados.pratos.filter(prato =>
-                prato.categoria === "prato"
-            );
+    const pratos = dados.pratos.filter(prato =>
+        prato.categoria === "prato"
+    );
 
-            const porcoes = dados.pratos.filter(prato =>
-                prato.categoria === "porcao"
-            );
+    const porcoes = dados.pratos.filter(prato =>
+        prato.categoria === "porcao"
+    );
 
-            const bebidas = dados.pratos.filter(prato =>
-                prato.categoria === "bebida"
-            );
+    const bebidas = dados.pratos.filter(prato =>
+        prato.categoria === "bebida"
+    );
 
-            container.innerHTML = `
+    let htmlCardapioDia = "";
 
-                ${
-                    pratos.length > 0
-                        ? `
-                            <h2 class="titulo-categoria">
-                                🍽️ Pratos
-                            </h2>
+    if (cardapioDia) {
 
-                            <div class="grade-produtos">
+        htmlCardapioDia = `
+            <section class="secao-cardapio-dia">
 
-                                ${
-                                    pratos.map(prato => {
+                <h2 class="titulo-categoria">
+                    📅 Cardápio de hoje
+                </h2>
 
-                                        let cardsPrato = "";
+                <div class="card-produto card-cardapio-dia">
 
-                                        if (prato.preco_pequena) {
-                                            cardsPrato += `
-                                                <div
-                                                    class="card-produto"
-                                                    onclick="abrirProduto(${prato.id}, 'pequena')"
-                                                >
-                                                    ${prato.foto_base64
-                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
-                                                        : ""
-                                                    }
+                    ${
+                        cardapioDia.foto_base64
+                            ? `
+                                <img
+                                    src="${cardapioDia.foto_base64}"
+                                    class="foto-produto-cardapio"
+                                    alt="${cardapioDia.titulo}"
+                                >
+                            `
+                            : ""
+                    }
 
-                                                    <h2>${prato.nome} Pequena</h2>
+                    <h2>
+                        ${cardapioDia.titulo}
+                    </h2>
 
-                                                    <p>${prato.descricao || ""}</p>
+                    <p>
+                        ${cardapioDia.descricao || ""}
+                    </p>
 
-                                                    <strong>
-                                                        R$ ${Number(prato.preco_pequena)
-                                                            .toFixed(2)
-                                                            .replace(".", ",")}
-                                                    </strong>
-                                                </div>
-                                            `;
-                                        }
+                    <div class="precos-produto">
 
-                                        if (prato.preco_media) {
-                                            cardsPrato += `
-                                                <div
-                                                    class="card-produto"
-                                                    onclick="abrirProduto(${prato.id}, 'media')"
-                                                >
-                                                    ${prato.foto_base64
-                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
-                                                        : ""
-                                                    }
+                        <span>
+                            P:
+                            R$ ${Number(cardapioDia.preco_pequena)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </span>
 
-                                                    <h2>${prato.nome} Média</h2>
+                        <span>
+                            M:
+                            R$ ${Number(cardapioDia.preco_media)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </span>
 
-                                                    <p>${prato.descricao || ""}</p>
+                        <span>
+                            G:
+                            R$ ${Number(cardapioDia.preco_grande)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </span>
 
-                                                    <strong>
-                                                        R$ ${Number(prato.preco_media)
-                                                            .toFixed(2)
-                                                            .replace(".", ",")}
-                                                    </strong>
-                                                </div>
-                                            `;
-                                        }
+                    </div>
 
-                                        if (prato.preco_grande) {
-                                            cardsPrato += `
-                                                <div
-                                                    class="card-produto"
-                                                    onclick="abrirProduto(${prato.id}, 'grande')"
-                                                >
-                                                    ${prato.foto_base64
-                                                        ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
-                                                        : ""
-                                                    }
+                    <p>
+                        🥩 ${cardapioDia.carne_1}
+                    </p>
 
-                                                    <h2>${prato.nome} Grande</h2>
+                    <p>
+                        🍗 ${cardapioDia.carne_2}
+                    </p>
 
-                                                    <p>${prato.descricao || ""}</p>
+                </div>
 
-                                                    <strong>
-                                                        R$ ${Number(prato.preco_grande)
-                                                            .toFixed(2)
-                                                            .replace(".", ",")}
-                                                    </strong>
-                                                </div>
-                                            `;
-                                        }
+            </section>
+        `;
+    }
 
-                                        return cardsPrato;
+    container.innerHTML = `
 
-                                    }).join("")
+    ${htmlCardapioDia}
+
+        ${
+            pratos.length > 0
+                ? `
+                    <h2 class="titulo-categoria">
+                        🍽️ Pratos
+                    </h2>
+
+                    <div class="grade-produtos">
+
+                        ${
+                            pratos.map(prato => {
+
+                                let cardsPrato = "";
+
+                                if (prato.preco_pequena) {
+                                    cardsPrato += `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${prato.id}, 'pequena')"
+                                        >
+                                            ${prato.foto_base64
+                                                ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                : ""
+                                            }
+
+                                            <h2>${prato.nome} Pequena</h2>
+
+                                            <p>${prato.descricao || ""}</p>
+
+                                            <strong>
+                                                R$ ${Number(prato.preco_pequena)
+                                                    .toFixed(2)
+                                                    .replace(".", ",")}
+                                            </strong>
+                                        </div>
+                                    `;
                                 }
 
-                            </div>
-                        `
-                        : ""
-                }
+                                if (prato.preco_media) {
+                                    cardsPrato += `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${prato.id}, 'media')"
+                                        >
+                                            ${prato.foto_base64
+                                                ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                : ""
+                                            }
 
-            `;
-            }
+                                            <h2>${prato.nome} Média</h2>
+
+                                            <p>${prato.descricao || ""}</p>
+
+                                            <strong>
+                                                R$ ${Number(prato.preco_media)
+                                                    .toFixed(2)
+                                                    .replace(".", ",")}
+                                            </strong>
+                                        </div>
+                                    `;
+                                }
+
+                                if (prato.preco_grande) {
+                                    cardsPrato += `
+                                        <div
+                                            class="card-produto"
+                                            onclick="abrirProduto(${prato.id}, 'grande')"
+                                        >
+                                            ${prato.foto_base64
+                                                ? '<img src="' + prato.foto_base64 + '" class="foto-produto-cardapio" alt="' + prato.nome + '">'
+                                                : ""
+                                            }
+
+                                            <h2>${prato.nome} Grande</h2>
+
+                                            <p>${prato.descricao || ""}</p>
+
+                                            <strong>
+                                                R$ ${Number(prato.preco_grande)
+                                                    .toFixed(2)
+                                                    .replace(".", ",")}
+                                            </strong>
+                                        </div>
+                                    `;
+                                }
+
+                                return cardsPrato;
+
+                            }).join("")
+                        }
+
+                    </div>
+                `
+                : ""
+        }
+
+    `;
+}
 
 
 function abrirProduto(id, tamanhoEscolhido = null) {

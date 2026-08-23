@@ -1443,6 +1443,14 @@ app.get("/api/cardapio", async (req, res) => {
   try {
     const restauranteId = req.query.restaurante;
 
+    const hoje = new Date(
+      new Date().toLocaleString("en-US", {
+        timeZone: "America/Fortaleza"
+      })
+    );
+
+    const diaSemana = hoje.getDay();
+
     const resultado = await pool.query(`
       SELECT
         id,
@@ -1462,9 +1470,31 @@ app.get("/api/cardapio", async (req, res) => {
       ORDER BY id
     `, [restauranteId]);
 
+    const resultadoCardapio = await pool.query(`
+        SELECT
+            id,
+            dia_semana,
+            titulo,
+            descricao,
+            preco_pequena,
+            preco_media,
+            preco_grande,
+            foto_base64,
+            carne_1,
+            carne_2
+        FROM cardapio_semana
+        WHERE restaurante_id = $1
+          AND dia_semana = $2
+        LIMIT 1
+    `, [
+        restauranteId,
+        diaSemana
+    ]);
+
     res.json({
       sucesso: true,
-      pratos: resultado.rows
+      pratos: resultado.rows,
+      cardapio_dia: resultadoCardapio.rows[0] || null
     });
 
   } catch (erro) {
