@@ -700,12 +700,18 @@ body > h2:first-of-type {
 
                                 <ul>
 
+                                    ${pedido.itens.map(item => {
+
+                                        console.log("ITEM DO PEDIDO:", item);
+
+                                        return `
+
                                     ${pedido.itens.map(item => `
                                         <li>
                                            <strong> ${item.quantidade}x
                                             ${
                                                 item.categoria === "bebida"
-                                                    ? `<strong class="nome-bebida">${item.bebida}</strong>`
+                                                    ? `<strong class="nome-bebida">${item.nome}</strong>`
                                                     : item.nome
                                             }
 
