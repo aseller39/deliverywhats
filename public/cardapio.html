@@ -2085,6 +2085,8 @@ function adicionarProdutoCarrinho(id) {
         subtotal: preco * quantidade
     };
 
+    console.log("ITEM CRIADO:", item);
+
     carrinho.push(item);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
