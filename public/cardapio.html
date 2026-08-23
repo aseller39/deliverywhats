@@ -764,6 +764,7 @@ main {
         <script>
             let itensPedido = [];
             let pratosDisponiveis = [];
+            let cardapioDiaSelecionado = null;
             let produtoSelecionadoId = null;
             let tamanhoEscolhidoAtual = null;
             let carrinho = [];
@@ -795,6 +796,7 @@ async function carregarCardapio() {
     const dados = await resposta.json();
     pratosDisponiveis = dados.pratos;
     const cardapioDia = dados.cardapio_dia;
+    cardapioDiaSelecionado = cardapioDia;
     const diaNaoTrabalhamos = dados.dia_nao_trabalhamos;
     const container = document.getElementById("pratos");
 
@@ -823,17 +825,21 @@ async function carregarCardapio() {
 
     let htmlCardapioDia = "";
 
-    if (cardapioDia) {
+if (cardapioDia) {
 
-        htmlCardapioDia = `
-            <section class="secao-cardapio-dia">
+    htmlCardapioDia = `
+        <section class="secao-cardapio-dia">
 
-                <h2 class="titulo-categoria">
-                    📅 Cardápio de hoje
-                </h2>
+            <h2 class="titulo-categoria">
+                📅 Cardápio de hoje
+            </h2>
 
-                <div class="card-produto card-cardapio-dia">
-                    onclick="console.log('CLIQUE NO CARDAPIO DIA')"
+            <div class="grade-produtos">
+
+                <div
+                    class="card-produto"
+                    onclick="abrirCardapioDia('pequena')"
+                >
 
                     ${
                         cardapioDia.foto_base64
@@ -848,51 +854,97 @@ async function carregarCardapio() {
                     }
 
                     <h2>
-                        ${cardapioDia.titulo}
+                        ${cardapioDia.titulo} Pequena
                     </h2>
 
                     <p>
                         ${cardapioDia.descricao || ""}
                     </p>
 
-                    <div class="precos-produto">
-
-                        <span>
-                            P:
-                            R$ ${Number(cardapioDia.preco_pequena)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                        </span>
-
-                        <span>
-                            M:
-                            R$ ${Number(cardapioDia.preco_media)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                        </span>
-
-                        <span>
-                            G:
-                            R$ ${Number(cardapioDia.preco_grande)
-                                .toFixed(2)
-                                .replace(".", ",")}
-                        </span>
-
-                    </div>
-
-                    <p>
-                        🥩 ${cardapioDia.carne_1}
-                    </p>
-
-                    <p>
-                        🍗 ${cardapioDia.carne_2}
-                    </p>
+                    <strong>
+                        R$
+                        ${Number(cardapioDia.preco_pequena)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </strong>
 
                 </div>
 
-            </section>
-        `;
-    }
+
+                <div
+                    class="card-produto"
+                    onclick="abrirCardapioDia('media')"
+                >
+
+                    ${
+                        cardapioDia.foto_base64
+                            ? `
+                                <img
+                                    src="${cardapioDia.foto_base64}"
+                                    class="foto-produto-cardapio"
+                                    alt="${cardapioDia.titulo}"
+                                >
+                            `
+                            : ""
+                    }
+
+                    <h2>
+                        ${cardapioDia.titulo} Média
+                    </h2>
+
+                    <p>
+                        ${cardapioDia.descricao || ""}
+                    </p>
+
+                    <strong>
+                        R$
+                        ${Number(cardapioDia.preco_media)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </strong>
+
+                </div>
+
+
+                <div
+                    class="card-produto"
+                    onclick="abrirCardapioDia('grande')"
+                >
+
+                    ${
+                        cardapioDia.foto_base64
+                            ? `
+                                <img
+                                    src="${cardapioDia.foto_base64}"
+                                    class="foto-produto-cardapio"
+                                    alt="${cardapioDia.titulo}"
+                                >
+                            `
+                            : ""
+                    }
+
+                    <h2>
+                        ${cardapioDia.titulo} Grande
+                    </h2>
+
+                    <p>
+                        ${cardapioDia.descricao || ""}
+                    </p>
+
+                    <strong>
+                        R$
+                        ${Number(cardapioDia.preco_grande)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+    `;
+}
 
     container.innerHTML = `
 
@@ -1369,6 +1421,182 @@ function abrirProduto(id, tamanhoEscolhido = null) {
             `;
 
         }
+
+    document.getElementById("modalProduto").style.display = "flex";
+}
+
+
+function abrirCardapioDia(tamanho) {
+
+    const titulo =
+        cardapioDiaSelecionado.titulo;
+
+    const descricao =
+        cardapioDiaSelecionado.descricao || "";
+
+    let preco = 0;
+
+    if (tamanho === "pequena") {
+        preco = Number(
+            cardapioDiaSelecionado.preco_pequena
+        );
+    }
+
+    if (tamanho === "media") {
+        preco = Number(
+            cardapioDiaSelecionado.preco_media
+        );
+    }
+
+    if (tamanho === "grande") {
+        preco = Number(
+            cardapioDiaSelecionado.preco_grande
+        );
+    }
+
+    const detalhes =
+        document.getElementById("detalhesProduto");
+
+    detalhes.innerHTML = `
+
+        ${
+            cardapioDiaSelecionado.foto_base64
+                ? `
+                    <img
+                        src="${cardapioDiaSelecionado.foto_base64}"
+                        class="foto-produto-detalhe"
+                        alt="${titulo}"
+                    >
+                `
+                : ""
+        }
+
+        <h2>
+            ${titulo}
+        </h2>
+
+        <p>
+            ${descricao}
+        </p>
+
+        <h3>
+            ${
+                tamanho === "pequena"
+                    ? "Marmitex Pequena"
+                    : tamanho === "media"
+                        ? "Marmitex Média"
+                        : "Marmitex Grande"
+            }
+        </h3>
+
+        <p>
+            <strong>
+                R$ ${preco.toFixed(2).replace(".", ",")}
+            </strong>
+        </p>
+
+        <h3>
+            🥩 Escolha suas carnes
+        </h3>
+
+        <div class="opcoes-carne">
+
+            <label>
+                <input
+                    type="radio"
+                    name="opcaoCarne"
+                    value="2_carne_1"
+                >
+
+                2 pedaços de
+                ${cardapioDiaSelecionado.carne_1}
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="opcaoCarne"
+                    value="2_carne_2"
+                >
+
+                2 pedaços de
+                ${cardapioDiaSelecionado.carne_2}
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="opcaoCarne"
+                    value="1_cada"
+                >
+
+                1 pedaço de cada
+            </label>
+
+        </div>
+
+        <div class="observacao-produto">
+
+            <label for="observacaoProduto">
+                📝 Observação
+            </label>
+
+            <textarea
+                id="observacaoProduto"
+                placeholder="Ex.: sem cebola, pouco feijão..."
+                rows="3"
+            ></textarea>
+
+        </div>
+
+        <h3>
+            Quantidade
+        </h3>
+
+        <div class="controle-quantidade">
+
+            <button
+                class="botao-quantidade"
+                onclick="alterarQuantidadeProduto(-1)"
+            >
+                −
+            </button>
+
+            <span id="quantidadeProduto">
+                1
+            </span>
+
+            <button
+                class="botao-quantidade"
+                onclick="alterarQuantidadeProduto(1)"
+            >
+                +
+            </button>
+
+        </div>
+
+        <div class="total-produto">
+
+            <span>
+                Total
+            </span>
+
+            <strong>
+                R$
+                <span id="totalProduto">
+                    ${preco.toFixed(2).replace(".", ",")}
+                </span>
+            </strong>
+
+        </div>
+
+        <button
+            class="botao-adicionar-carrinho"
+            onclick="adicionarCardapioDiaCarrinho('${tamanho}')"
+        >
+            🛒 Adicionar ao carrinho
+        </button>
+    `;
 
     document.getElementById("modalProduto").style.display = "flex";
 }
