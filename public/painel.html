@@ -884,6 +884,28 @@ async function salvarCardapioSemana() {
     const carne2 =
         document.getElementById("carne2Cardapio").value.trim();
 
+    const fotoInput =
+        document.getElementById("fotoCardapio");
+
+    const arquivoFoto =
+        fotoInput.files[0];
+
+    let fotoBase64 = null;
+
+    if (arquivoFoto) {
+
+        fotoBase64 = await new Promise((resolve, reject) => {
+
+            const leitor = new FileReader();
+
+            leitor.onload = () => resolve(leitor.result);
+
+            leitor.onerror = reject;
+
+            leitor.readAsDataURL(arquivoFoto);
+        });
+    }
+
     const status =
         document.getElementById("statusCardapioSemana");
 
@@ -932,7 +954,9 @@ async function salvarCardapioSemana() {
 
                     carne_1: carne1,
 
-                    carne_2: carne2
+                    carne_2: carne2,
+
+                    foto_base64: fotoBase64
 
                 })
             }
