@@ -722,6 +722,13 @@ body > h2:first-of-type {
                                                         .replace(".", ",")}`
                                                     : ""
                                             }
+
+                                            ${
+                                                item.tipo === "cardapio_dia" && item.observacao
+                                                    ? ` — <strong>📝 OBS: ${item.observacao}</strong>`
+                                                    : ""
+                                            }
+
                                         </li>
                                     `).join("")}
                                 </ul>
