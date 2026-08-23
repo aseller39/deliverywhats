@@ -130,6 +130,8 @@ app.post("/api/pedidos", async (req, res) => {
       total
     } = req.body;
 
+    console.log("ITENS RECEBIDOS NO SERVIDOR:", itens);
+
     if (
       !restaurante_id ||
       !itens ||
