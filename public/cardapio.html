@@ -1603,6 +1603,97 @@ function abrirCardapioDia(tamanho) {
 }
 
 
+function adicionarCardapioDiaCarrinho(tamanho) {
+
+    if (!cardapioDiaSelecionado) {
+        return;
+    }
+
+    const opcaoCarne =
+        document.querySelector(
+            'input[name="opcaoCarne"]:checked'
+        );
+
+    if (!opcaoCarne) {
+
+        alert("⚠️ Escolha uma opção de carne.");
+
+        return;
+    }
+
+    const observacao =
+        document.getElementById("observacaoProduto")?.value.trim() || "";
+
+    const quantidade =
+        Number(
+            document.getElementById("quantidadeProduto").textContent
+        );
+
+    let preco = 0;
+
+    if (tamanho === "pequena") {
+        preco =
+            Number(cardapioDiaSelecionado.preco_pequena);
+    }
+
+    if (tamanho === "media") {
+        preco =
+            Number(cardapioDiaSelecionado.preco_media);
+    }
+
+    if (tamanho === "grande") {
+        preco =
+            Number(cardapioDiaSelecionado.preco_grande);
+    }
+
+    const item = {
+
+        tipo: "cardapio_dia",
+
+        nome:
+            cardapioDiaSelecionado.titulo,
+
+        tamanho:
+            tamanho,
+
+        preco:
+            preco,
+
+        quantidade:
+            quantidade,
+
+        opcaoCarne:
+            opcaoCarne.value,
+
+        carne1:
+            cardapioDiaSelecionado.carne_1,
+
+        carne2:
+            cardapioDiaSelecionado.carne_2,
+
+        observacao:
+            observacao,
+
+        subtotal:
+            preco * quantidade
+    };
+
+    carrinho.push(item);
+
+    localStorage.setItem(
+        "carrinho",
+        JSON.stringify(carrinho)
+    );
+
+    console.log(
+        "CARDÁPIO DO DIA ADICIONADO:",
+        item
+    );
+
+    fecharProduto();
+}
+
+
 function alterarQuantidadeProduto(valor) {
 
     const elemento =
