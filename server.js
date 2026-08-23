@@ -357,6 +357,7 @@ app.get("/api/pedidos", async (req, res) => {
         restaurante_id,
         itens,
         observacao,
+        nome,
         telefone,
         tipo_entrega,
         endereco,
