@@ -960,6 +960,114 @@ async function carregarCardapio() {
                 : ""
         }
 
+
+        ${
+            porcoes.length > 0
+                ? `
+                    <h2 class="titulo-categoria">
+                        🥩 Porções
+                    </h2>
+
+                    <div class="grade-produtos">
+
+                        ${
+                            porcoes.map(porcao => `
+                                <div
+                                    class="card-produto"
+                                    onclick="abrirProduto(${porcao.id}, 'porcao')"
+                                >
+
+                                    ${
+                                        porcao.foto_base64
+                                            ? `
+                                                <img
+                                                    src="${porcao.foto_base64}"
+                                                    class="foto-produto-cardapio"
+                                                    alt="${porcao.nome}"
+                                                >
+                                            `
+                                            : ""
+                                    }
+
+                                    <h2>
+                                        ${porcao.nome}
+                                    </h2>
+
+                                    <p>
+                                        ${porcao.descricao || ""}
+                                    </p>
+
+                                    <strong>
+                                        R$
+                                        ${Number(porcao.preco_kg)
+                                            .toFixed(2)
+                                            .replace(".", ",")}
+                                        / kg
+                                    </strong>
+
+                                </div>
+                            `).join("")
+                        }
+
+                    </div>
+                `
+                : ""
+        }
+
+
+        ${
+            bebidas.length > 0
+                ? `
+                    <h2 class="titulo-categoria">
+                        🥤 Bebidas
+                    </h2>
+
+                    <div class="grade-produtos">
+
+                        ${
+                            bebidas.map(bebida => `
+                                <div
+                                    class="card-produto"
+                                    onclick="abrirProduto(${bebida.id}, 'bebida')"
+                                >
+
+                                    ${
+                                        bebida.foto_base64
+                                            ? `
+                                                <img
+                                                    src="${bebida.foto_base64}"
+                                                    class="foto-produto-cardapio"
+                                                    alt="${bebida.nome}"
+                                                >
+                                            `
+                                            : ""
+                                    }
+
+                                    <h2>
+                                        ${bebida.nome}
+                                    </h2>
+
+                                    <p>
+                                        ${bebida.descricao || ""}
+                                    </p>
+
+                                    <strong>
+                                        R$
+                                        ${Number(bebida.preco)
+                                            .toFixed(2)
+                                            .replace(".", ",")}
+                                    </strong>
+
+                                </div>
+                            `).join("")
+                        }
+
+                    </div>
+                `
+                : ""
+        }
+
+
     `;
 }
 
