@@ -1624,6 +1624,13 @@ function adicionarCardapioDiaCarrinho(tamanho) {
     const observacao =
         document.getElementById("observacaoProduto")?.value.trim() || "";
 
+        if (!observacao) {
+
+            alert("⚠️ Digite uma observação para o pedido.");
+
+            return;
+        }
+
     const quantidade =
         Number(
             document.getElementById("quantidadeProduto").textContent
