@@ -1773,8 +1773,8 @@ function adicionarCardapioDiaCarrinho(tamanho) {
             observacao,
 
         subtotal:
-            (preco * quantidade) +
-            (opcaoGarfo.value === "sim" ? 1 : 0)
+            (preco + (opcaoGarfo.value === "sim" ? 1 : 0))
+            * quantidade
     };
 
     carrinho.push(item);
@@ -1986,7 +1986,18 @@ function alterarQuantidadeProduto(valor) {
                     }
                 }
 
-                const total = preco * quantidade;
+                const opcaoGarfo =
+                    document.querySelector(
+                        'input[name="opcaoGarfo"]:checked'
+                    );
+
+                const valorGarfo =
+                    opcaoGarfo && opcaoGarfo.value === "sim"
+                        ? 1
+                        : 0;
+
+                const total =
+                    (preco + valorGarfo) * quantidade;
 
                 document.getElementById("totalProduto").textContent =
                     total.toFixed(2).replace(".", ",");
