@@ -1370,7 +1370,7 @@ body > h2:first-of-type {
                                     .replace(".", ",")}
 
                                 ${
-                                    item.observacao
+                                    item.tipo === "cardapio_dia" && item.observacao
                                         ? ` — <strong>📝 OBS: ${item.observacao}</strong>`
                                         : ""
                                 }
