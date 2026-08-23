@@ -480,6 +480,11 @@ body > h2:first-of-type {
     opacity: 0.9;
 }
 
+.nome-bebida {
+    color: #d97706;
+    font-weight: bold;
+}
+
 
 @media (max-width: 600px) {
 
@@ -700,7 +705,7 @@ body > h2:first-of-type {
                                            <strong> ${item.quantidade}x
                                             ${
                                                 item.categoria === "bebida"
-                                                    ? `<strong style="color: red;">${item.nome}</strong>`
+                                                    ? `<strong class="nome-bebida">${item.nome}</strong>`
                                                     : item.nome
                                             }
 
