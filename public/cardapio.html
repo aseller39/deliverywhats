@@ -1427,6 +1427,7 @@ function abrirProduto(id, tamanhoEscolhido = null) {
 
 
 function abrirCardapioDia(tamanho) {
+    tamanhoEscolhidoAtual = tamanho;
 
     const titulo =
         cardapioDiaSelecionado.titulo;
@@ -1618,6 +1619,44 @@ function alterarQuantidadeProduto(valor) {
 
     elemento.textContent = quantidade;
 
+
+    // Cardápio do dia
+    if (cardapioDiaSelecionado) {
+
+        const tamanho =
+            tamanhoEscolhidoAtual;
+
+        let preco = 0;
+
+        if (tamanho === "pequena") {
+            preco =
+                Number(cardapioDiaSelecionado.preco_pequena);
+        }
+
+        if (tamanho === "media") {
+            preco =
+                Number(cardapioDiaSelecionado.preco_media);
+        }
+
+        if (tamanho === "grande") {
+            preco =
+                Number(cardapioDiaSelecionado.preco_grande);
+        }
+
+        if (preco > 0) {
+
+            const total =
+                preco * quantidade;
+
+            document.getElementById("totalProduto").textContent =
+                total.toFixed(2).replace(".", ",");
+        }
+
+        return;
+    }
+
+
+    // Produto normal
     const produto =
         pratosDisponiveis.find(
             p => p.id === produtoSelecionadoId
@@ -1647,7 +1686,8 @@ function alterarQuantidadeProduto(valor) {
         }
     }
 
-    const total = preco * quantidade;
+    const total =
+        preco * quantidade;
 
     document.getElementById("totalProduto").textContent =
         total.toFixed(2).replace(".", ",");
