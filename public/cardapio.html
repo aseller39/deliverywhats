@@ -1651,6 +1651,31 @@ function abrirCardapioDia(tamanho) {
     `;
 
     document.getElementById("modalProduto").style.display = "flex";
+
+    const radiosGarfo =
+    document.querySelectorAll(
+        'input[name="opcaoGarfo"]'
+    );
+
+    radiosGarfo.forEach(radio => {
+
+        radio.addEventListener("change", () => {
+
+            let total =
+                preco;
+
+            if (radio.value === "sim") {
+                total += 1;
+            }
+
+            document.getElementById("totalProduto")
+                .textContent =
+                    total.toFixed(2)
+                        .replace(".", ",");
+        });
+
+    });
+
 }
 
 
