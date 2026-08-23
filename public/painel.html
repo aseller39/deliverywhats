@@ -952,6 +952,8 @@ async function salvarCardapioSemana() {
         status.textContent =
             "✅ Cardápio salvo com sucesso!";
 
+        await carregarCardapioSemanaPainel();
+
     } catch (erro) {
 
         console.error(
@@ -1634,6 +1636,12 @@ async function carregarCardapioSemanaPainel() {
                     🍗 ${cardapio.carne_2}
                 </p>
 
+                <button
+                    onclick="editarCardapioSemana(${dia})"
+                >
+                    ✏️ Editar
+                </button>
+
             </div>
         `;
     }
@@ -1648,6 +1656,21 @@ async function carregarCardapioSemanaPainel() {
 
     container.innerHTML = html;
 }
+
+
+async function editarCardapioSemana(dia) {
+
+    document.getElementById(
+        "formularioCardapioSemana"
+    ).style.display = "block";
+
+    document.getElementById(
+        "diaCardapio"
+    ).value = dia;
+
+    await carregarDiaCardapio();
+}
+
 
     async function atualizarContadorPedidos() {
 
