@@ -621,86 +621,86 @@
         }
 
 
-        function carregarResumo() {
+function carregarResumo() {
 
-            const container =
-                document.getElementById("resumoPedido");
+    const container =
+        document.getElementById("resumoPedido");
 
-            let total = 0;
+    let total = 0;
 
-            container.innerHTML =
-                carrinho.map(item => {
+    container.innerHTML =
+        carrinho.map(item => {
 
-                    total += Number(item.subtotal);
+            total += Number(item.subtotal);
 
-                    let descricao = "";
+            let descricao = "";
 
-                    if (item.tipo === "porcao") {
+            if (item.tipo === "porcao") {
 
-                        descricao =
-                            item.gramas === 1000
-                                ? "1 kg"
-                                : `${item.gramas} g`;
+                descricao =
+                    item.gramas === 1000
+                        ? "1 kg"
+                        : `${item.gramas} g`;
 
-                    } else if (item.tamanho) {
+            } else if (item.tamanho) {
 
-                        descricao = item.tamanho;
+                descricao = item.tamanho;
+            }
+
+            return `
+                <div>
+
+                    <h3>${item.nome}</h3>
+
+                    ${
+                        descricao
+                            ? `<p>${descricao}</p>`
+                            : ""
                     }
 
-                    return `
-                        <div>
+                    <p>
+                        Quantidade:
+                        ${item.quantidade}
+                    </p>
 
-                            <h3>${item.nome}</h3>
+                    <strong>
+                        R$
+                        ${Number(item.subtotal)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </strong>
 
-                            ${
-                                descricao
-                                    ? `<p>${descricao}</p>`
-                                    : ""
-                            }
+                </div>
+            `;
 
-                            <p>
-                                Quantidade:
-                                ${item.quantidade}
-                            </p>
+        }).join("");
 
-                            <strong>
-                                R$
-                                ${Number(item.subtotal)
-                                    .toFixed(2)
-                                    .replace(".", ",")}
-                            </strong>
-
-                        </div>
-                    `;
-
-                }).join("");
-
-            document.getElementById("totalPedido")
-                .textContent =
-                    total.toFixed(2)
-                        .replace(".", ",");
-        }
+    document.getElementById("totalPedido")
+        .textContent =
+            total.toFixed(2)
+                .replace(".", ",");
+}
 
 
-        document
-            .querySelectorAll('input[name="tipoEntrega"]')
-            .forEach(input => {
+document
+    .querySelectorAll('input[name="tipoEntrega"]')
+    .forEach(input => {
 
-                input.addEventListener("change", () => {
+        input.addEventListener("change", () => {
 
-                    const entrega =
-                        document.querySelector(
-                            'input[name="tipoEntrega"]:checked'
-                        ).value;
+            const entrega =
+                document.querySelector(
+                    'input[name="tipoEntrega"]:checked'
+                ).value;
 
-                    document.getElementById("dadosEntrega")
-                        .style.display =
-                            entrega === "entrega"
-                                ? "block"
-                                : "none";
-                });
+            document.getElementById("dadosEntrega")
+                .style.display =
+                    entrega === "entrega"
+                        ? "block"
+                        : "none";
+        });
 
-            });
+    });
 
 
         function voltarCarrinho() {

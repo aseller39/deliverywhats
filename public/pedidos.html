@@ -1363,6 +1363,17 @@ body > h2:first-of-type {
                                         : ""
                                 }
 
+                                — R$
+                                ${Number(item.subtotal)
+                                    .toFixed(2)
+                                    .replace(".", ",")}
+
+                                ${
+                                    item.observacao
+                                        ? ` — <strong>📝 OBS: ${item.observacao}</strong>`
+                                        : ""
+                                }
+
                             </li>
 
                         `).join("")}
