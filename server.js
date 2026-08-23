@@ -1451,6 +1451,9 @@ app.get("/api/cardapio", async (req, res) => {
 
     const diaSemana = hoje.getDay();
 
+    const diaNaoTrabalhamos =
+      diaSemana === 0 || diaSemana === 6;
+
     const resultado = await pool.query(`
       SELECT
         id,
@@ -1494,7 +1497,8 @@ app.get("/api/cardapio", async (req, res) => {
     res.json({
       sucesso: true,
       pratos: resultado.rows,
-      cardapio_dia: resultadoCardapio.rows[0] || null
+      cardapio_dia: resultadoCardapio.rows[0] || null,
+      dia_nao_trabalhamos: diaNaoTrabalhamos
     });
 
   } catch (erro) {

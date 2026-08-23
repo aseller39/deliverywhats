@@ -704,6 +704,27 @@ main {
 }
 
 
+.mensagem-nao-trabalhamos {
+    background: #1e293b;
+    color: #ffffff;
+
+    border: 1px solid #334155;
+    border-radius: 16px;
+
+    padding: 30px;
+    margin: 30px auto;
+
+    max-width: 600px;
+
+    text-align: center;
+
+    font-size: 22px;
+    font-weight: bold;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
     </style>
 
 </head>
@@ -774,7 +795,19 @@ async function carregarCardapio() {
     const dados = await resposta.json();
     pratosDisponiveis = dados.pratos;
     const cardapioDia = dados.cardapio_dia;
+    const diaNaoTrabalhamos = dados.dia_nao_trabalhamos;
     const container = document.getElementById("pratos");
+
+    if (diaNaoTrabalhamos) {
+
+        container.innerHTML = `
+            <div class="mensagem-nao-trabalhamos">
+                🔴 Hoje não trabalhamos.
+            </div>
+        `;
+
+        return;
+    }
 
     const pratos = dados.pratos.filter(prato =>
         prato.categoria === "prato"
