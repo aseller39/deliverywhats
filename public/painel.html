@@ -1642,6 +1642,12 @@ async function carregarCardapioSemanaPainel() {
                     ✏️ Editar
                 </button>
 
+                <button
+                    onclick="excluirCardapioSemana(${dia})"
+                >
+                    🗑️ Excluir
+                </button>
+
             </div>
         `;
     }
@@ -1669,6 +1675,55 @@ async function editarCardapioSemana(dia) {
     ).value = dia;
 
     await carregarDiaCardapio();
+}
+
+
+async function excluirCardapioSemana(dia) {
+
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir o cardápio deste dia?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch(
+            `/api/cardapio-semana/${dia}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível excluir o cardápio."
+            );
+
+            return;
+        }
+
+        alert("✅ Cardápio excluído com sucesso.");
+
+        await carregarCardapioSemanaPainel();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao excluir cardápio:",
+            erro
+        );
+
+        alert(
+            "Erro de comunicação com o servidor."
+        );
+    }
 }
 
 

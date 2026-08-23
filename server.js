@@ -1572,6 +1572,61 @@ app.delete("/api/painel/produtos/:id", async (req, res) => {
 });
 
 
+app.delete("/api/cardapio-semana/:dia", async (req, res) => {
+
+  try {
+
+    const dia = Number(req.params.dia);
+
+    if (!dia || dia < 1 || dia > 5) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Dia da semana inválido."
+      });
+
+    }
+
+    const resultado = await pool.query(
+      `
+      DELETE FROM cardapio_semana
+      WHERE restaurante_id = $1
+        AND dia_semana = $2
+      RETURNING id
+      `,
+      [1, dia]
+    );
+
+    if (resultado.rows.length === 0) {
+
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Cardápio do dia não encontrado."
+      });
+
+    }
+
+    res.json({
+      sucesso: true,
+      mensagem: "Cardápio do dia excluído com sucesso."
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao excluir cardápio:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao excluir cardápio."
+    });
+
+  }
+});
+
+
 app.get("/api/pratos/:id", async (req, res) => {
   try {
 
