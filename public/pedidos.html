@@ -621,303 +621,103 @@ body > h2:first-of-type {
     <script>
         let pedidosCache = [];
 
-        async function carregarPedidos() {
+async function carregarPedidos() {
 
-            const container =
-                document.getElementById("pedidos");
+    const container =
+        document.getElementById("pedidos");
 
-            try {
+    try {
 
-                const resposta =
-                    await fetch("/api/pedidos?restaurante=1");
+        const resposta =
+            await fetch("/api/pedidos?restaurante=1");
 
-                const dados =
-                    await resposta.json();
+        const dados =
+            await resposta.json();
 
-                    pedidosCache = dados.pedidos;
+            pedidosCache = dados.pedidos;
 
-                if (!dados.sucesso) {
-                    container.innerHTML =
-                        "<p>Erro ao carregar pedidos.</p>";
-                    return;
-                }
+        if (!dados.sucesso) {
+            container.innerHTML =
+                "<p>Erro ao carregar pedidos.</p>";
+            return;
+        }
 
-                if (dados.pedidos.length === 0) {
+        if (dados.pedidos.length === 0) {
 
-                    container.innerHTML =
-                        "<p>📭 Nenhum pedido recebido.</p>";
+            container.innerHTML =
+                "<p>📭 Nenhum pedido recebido.</p>";
 
-                    return;
-                }
+            return;
+        }
 
-                const pedidosFila = dados.pedidos.filter(
-                    pedido => pedido.status === "aguardando"
-                );
+        const pedidosFila = dados.pedidos.filter(
+            pedido => pedido.status === "aguardando"
+        );
 
-                console.log("QUANTIDADE NA FILA:", pedidosFila.length);
-                    console.log("FILA:", pedidosFila);
+        console.log("QUANTIDADE NA FILA:", pedidosFila.length);
+            console.log("FILA:", pedidosFila);
 
-                const pedidosEmPreparo = dados.pedidos.filter(
-                    pedido => pedido.status === "em_preparo"
-                );
+        const pedidosEmPreparo = dados.pedidos.filter(
+            pedido => pedido.status === "em_preparo"
+        );
 
-                const pedidosProntos = dados.pedidos.filter(
-                    pedido => pedido.status === "pronto"
-                );
+        const pedidosProntos = dados.pedidos.filter(
+            pedido => pedido.status === "pronto"
+        );
 
-                const containerPreparo =
-                    document.getElementById("pedidosEmPreparo");
+        const containerPreparo =
+            document.getElementById("pedidosEmPreparo");
 
-                if (pedidosEmPreparo.length === 0) {
+        if (pedidosEmPreparo.length === 0) {
 
-                    containerPreparo.innerHTML = `
-                        <div class="mensagem-vazia">
-                            👨‍🍳<br>
-                            Nenhum pedido em preparo.
-                        </div>
-                    `;
+            containerPreparo.innerHTML = `
+                <div class="mensagem-vazia">
+                    👨‍🍳<br>
+                    Nenhum pedido em preparo.
+                </div>
+            `;
 
-                } else {
+        } else {
 
-                    containerPreparo.innerHTML =
-                        pedidosEmPreparo.map(pedido => `
+            containerPreparo.innerHTML =
+                pedidosEmPreparo.map(pedido => `
 
-                            <div class="card-pedido">
+                    <div class="card-pedido">
 
-                                <h2>
-                                    🍽️ Pedido #${pedido.id}
-                                </h2>
+                        <h2>
+                            🍽️ Pedido #${pedido.id}
+                        </h2>
 
-                                <p>
-                                    <strong>Status:</strong>
+                        <p>
+                            <strong>Status:</strong>
 
-                                    <span class="status-pedido status-preparo">
-                                        👨‍🍳 Em preparo
-                                    </span>
-                                </p>
+                            <span class="status-pedido status-preparo">
+                                👨‍🍳 Em preparo
+                            </span>
+                        </p>
 
-                                <h3>Itens</h3>
+                        <h3>Itens</h3>
 
-                                <ul>
+                        <ul>
 
 
-                                        
-
-                                    ${pedido.itens.map(item => {
-
-                                        console.log("ITEM DO PEDIDO:", item);
-
-                                        return `
-                                            <li>
-
-                                                <strong>
-                                                    ${item.quantidade}x
-
-                                                    ${
-                                                        item.categoria === "bebida"
-                                                            ? `<span class="nome-bebida">${item.nome}</span>`
-                                                            : item.nome
-                                                    }
-
-                                                    ${
-                                                        item.tamanho
-                                                            ? ` — ${item.tamanho}`
-                                                            : ""
-                                                    }
-
-                                                    ${
-                                                        item.tipo === "porcao"
-                                                            ? ` — ${
-                                                                item.gramas === 1000
-                                                                    ? "1 kg"
-                                                                    : item.gramas + " g"
-                                                            }`
-                                                            : ""
-                                                    }
-
-                                                    ${
-                                                        item.subtotal !== undefined
-                                                            ? ` — R$ ${Number(item.subtotal)
-                                                                .toFixed(2)
-                                                                .replace(".", ",")}`
-                                                            : ""
-                                                    }
-                                                </strong>
-
-                                                ${
-                                                    item.tipo === "cardapio_dia" && item.observacao
-                                                        ? ` — <strong>📝 OBSERVAÇÃO: ${item.observacao}</strong>`
-                                                        : ""
-                                                }
-
-                                                ${
-                                                    item.tipo === "cardapio_dia" && item.garfo
-                                                        ? ` — <strong>Cliente quer ${item.quantidade} garfo(s) 🍴</strong>`
-                                                        : ""
-                                                }
-
-                                            </li>
-                                        `;
-
-                                    }).join("")}
-                                </ul>
-
-                                <p class="total-pedido">
-                                    <strong>Total:</strong>
-                                    R$ ${Number(pedido.total)
-                                        .toFixed(2)
-                                        .replace(".", ",")}
-                                </p>
                                 
-                                <div class="info-cliente">
 
-                                    <p>
-                                        👤 <strong>Cliente:</strong>
-                                        ${pedido.nome}
-                                    </p>
+                            ${pedido.itens.map(item => {
 
-                                    <p>
-                                        📱 <strong>Telefone:</strong>
-                                        ${pedido.telefone}
-                                    </p>
+                                console.log("ITEM DO PEDIDO:", item);
 
-                                    <p>
-                                        💳 <strong>Pagamento:</strong>
-                                        ${
-                                            pedido.forma_pagamento === "pix"
-                                                ? "Pix"
-                                                : pedido.forma_pagamento === "dinheiro"
-                                                    ? "Dinheiro"
-                                                    : "Cartão"
-                                        }
-                                    </p>
+                                return `
+                                    <li>
 
-                                    <p>
-                                        📦 <strong>Recebimento:</strong>
-                                        ${
-                                            pedido.tipo_entrega === "entrega"
-                                                ? "🛵 Entrega"
-                                                : "🏪 Retirada no local"
-                                        }
-                                    </p>
-
-                                </div>
-
-                                ${
-                                    pedido.tipo_entrega === "entrega"
-                                        ? (() => {
-
-                                            let endereco = pedido.endereco;
-
-                                            try {
-                                                if (typeof endereco === "string") {
-                                                    endereco = JSON.parse(endereco);
-                                                }
-                                            } catch (erro) {
-                                                endereco = null;
-                                            }
-
-                                            if (endereco && typeof endereco === "object") {
-
-                                                return `
-                                                    <div class="endereco-pedido">
-
-                                                        <h3>📍 Endereço de entrega</h3>
-
-                                                        <p>
-                                                            <strong>Rua:</strong>
-                                                            ${endereco.rua || "-"}
-                                                        </p>
-
-                                                        <p>
-                                                            <strong>Número:</strong>
-                                                            ${endereco.numero || "-"}
-                                                        </p>
-
-                                                        <p>
-                                                            <strong>Bairro:</strong>
-                                                            ${endereco.bairro || "-"}
-                                                        </p>
-
-                                                        <p>
-                                                            <strong>Complemento:</strong>
-                                                            ${endereco.complemento || "-"}
-                                                        </p>
-
-                                                        <p>
-                                                            <strong>Ponto de referência:</strong>
-                                                            ${endereco.referencia || "-"}
-                                                        </p>
-
-                                                    </div>
-                                                `;
-
-                                            }
-
-                                            return `
-                                                <p>
-                                                    📍 <strong>Endereço:</strong>
-                                                    ${pedido.endereco || "Não informado"}
-                                                </p>
-                                            `;
-
-                                        })()
-                                        : ""
-                                }
-
-                                <p>
-                                    📝 ${
-                                        pedido.observacao ||
-                                        "Nenhuma observação"
-                                    }
-                                </p>
-
-                                <button
-                                    class="botao-pronto"
-                                    onclick="marcarComoPronto(${pedido.id})"
-                                >
-                                    ✅ Marcar como pronto
-                                </button>
-
-
-                            </div>
-
-                        `).join("");
-                }
-
-                const containerProntos =
-                    document.getElementById("pedidosProntos");
-
-                if (pedidosProntos.length === 0) {
-
-                    containerProntos.innerHTML =
-                        "<p>Nenhum pedido pronto.</p>";
-
-                } else {
-
-                    containerProntos.innerHTML =
-                        pedidosProntos.map(pedido => `
-
-                            <div class="card-pedido">
-
-                                <h2>
-                                    🍽️ Pedido #${pedido.id}
-                                </h2>
-
-                                <p>
-                                    <strong>Status:</strong>
-                                   
-                                    ✅ Pronto
-                                    
-                                </p>
-
-                                <h3>Itens</h3>
-
-                                <ul>
-                                    ${pedido.itens.map(item => `
-                                        <li>
+                                        <strong>
                                             ${item.quantidade}x
-                                            ${item.nome}
+
+                                            ${
+                                                item.categoria === "bebida"
+                                                    ? `<span class="nome-bebida">${item.nome}</span>`
+                                                    : item.nome
+                                            }
 
                                             ${
                                                 item.tamanho
@@ -934,199 +734,399 @@ body > h2:first-of-type {
                                                     }`
                                                     : ""
                                             }
-                                        </li>
-                                    `).join("")}
-                                </ul>
 
-                                <p class="total-pedido">
-                                    <strong>Total:</strong>
-                                    R$ ${Number(pedido.total)
-                                        .toFixed(2)
-                                        .replace(".", ",")}
-                                </p>
+                                            ${
+                                                item.subtotal !== undefined
+                                                    ? ` — R$ ${Number(item.subtotal)
+                                                        .toFixed(2)
+                                                        .replace(".", ",")}`
+                                                    : ""
+                                            }
+                                        </strong>
 
-                                <p>
-                                    📱 ${pedido.telefone}
-                                </p>
+                                        ${
+                                            item.tipo === "cardapio_dia" && item.observacao
+                                                ? ` — <strong>📝 OBSERVAÇÃO: ${item.observacao}</strong>`
+                                                : ""
+                                        }
 
-                                <p>
-                                    💳 ${
-                                        pedido.forma_pagamento === "pix"
-                                            ? "Pix"
-                                            : pedido.forma_pagamento === "dinheiro"
-                                                ? "Dinheiro"
-                                                : "Cartão"
-                                    }
-                                </p>
+                                        ${
+                                            item.tipo === "cardapio_dia" && item.garfo
+                                                ? ` — <strong>Cliente quer ${item.quantidade} garfo(s) 🍴</strong>`
+                                                : ""
+                                        }
 
-                                <p>
-                                    📦 ${
-                                        pedido.tipo_entrega === "entrega"
-                                            ? "🛵 Entrega"
-                                            : "🏪 Retirada no local"
-                                    }
-                                </p>
+                                    </li>
+                                `;
 
-                                <button
-                                    class="botao-imprimir"
-                                    onclick="imprimirGuia(${pedido.id})"
-                                >
-                                    🖨️ Imprimir guia
-                                </button>
+                            }).join("")}
+                        </ul>
 
+                        <p class="total-pedido">
+                            <strong>Total:</strong>
+                            R$ ${Number(pedido.total)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </p>
+                        
+                        <div class="info-cliente">
+
+                            <p>
+                                👤 <strong>Cliente:</strong>
+                                ${pedido.nome}
+                            </p>
+
+                            <p>
+                                📱 <strong>Telefone:</strong>
+                                ${pedido.telefone}
+                            </p>
+
+                            <p>
+                                💳 <strong>Pagamento:</strong>
+                                ${
+                                    pedido.forma_pagamento === "pix"
+                                        ? "Pix"
+                                        : pedido.forma_pagamento === "dinheiro"
+                                            ? "Dinheiro"
+                                            : "Cartão"
+                                }
+                            </p>
+
+                            <p>
+                                📦 <strong>Recebimento:</strong>
                                 ${
                                     pedido.tipo_entrega === "entrega"
-                                        ? `
-                                            <button
-                                                class="botao-finalizar"
-                                                onclick="saiuParaEntrega(${pedido.id})"
-                                            >
-                                                🛵 Saiu para entrega
-                                            </button>
-                                        `
-                                        : `
-                                            <button
-                                                class="botao-finalizar"
-                                                onclick="finalizarPedido(${pedido.id})"
-                                            >
-                                                📦 Finalizar pedido
-                                            </button>
-                                        `
+                                        ? "🛵 Entrega"
+                                        : "🏪 Retirada no local"
                                 }
+                            </p>
 
-                            </div>
-
-                        `).join("");
-                }
-
-                if (pedidosFila.length === 0) {
-
-                    container.innerHTML = `
-                        <div class="mensagem-vazia">
-                            📭<br>
-                            Nenhum pedido aguardando.
                         </div>
-                    `;
 
-                    return;
-                }
+                        ${
+                            pedido.tipo_entrega === "entrega"
+                                ? (() => {
 
-                container.innerHTML = `
-                    <div class="baralho">
+                                    let endereco = pedido.endereco;
 
-                        ${pedidosFila.map((pedido, indice) => `
-
-                            <div class="card-pedido">
-
-                                <h2>
-                                    🍽️ Pedido #${pedido.id}
-                                </h2>
-
-                               <p>
-                                    <strong>Status:</strong>
-
-                                    <span class="status-pedido status-novo">
-                                        🟡 Novo
-                                    </span>
-                                </p>
-
-                                <h3>Itens</h3>
-
-                                <ul>
-
-                                    ${pedido.itens.map(item => `
-                                        <li>
-                                            ${item.quantidade}x
-                                            ${item.nome}
-                                        </li>
-                                    `).join("")}
-
-                                </ul>
-
-                                <p class="total-pedido">
-                                    Total:
-                                    R$ ${Number(pedido.total)
-                                        .toFixed(2)
-                                        .replace(".", ",")}
-                                </p>
-
-                                <div class="info-cliente">
-
-                                    <p>
-                                        📱 <strong>Telefone:</strong>
-                                        ${pedido.telefone}
-                                    </p>
-
-                                    <p>
-                                        💳 <strong>Pagamento:</strong>
-                                        ${
-                                            pedido.forma_pagamento === "pix"
-                                                ? "Pix"
-                                                : pedido.forma_pagamento === "dinheiro"
-                                                    ? "Dinheiro"
-                                                    : "Cartão"
+                                    try {
+                                        if (typeof endereco === "string") {
+                                            endereco = JSON.parse(endereco);
                                         }
-                                    </p>
-
-                                    <p>
-                                        📦 <strong>Recebimento:</strong>
-                                        ${
-                                            pedido.tipo_entrega === "entrega"
-                                                ? "🛵 Entrega"
-                                                : "🏪 Retirada no local"
-                                        }
-                                    </p>
-
-                                </div>
-
-                                ${
-                                    pedido.tipo_entrega === "entrega"
-                                        ? `
-                                            <p>
-                                                📍 ${pedido.endereco || ""}
-                                            </p>
-                                        `
-                                        : ""
-                                }
-
-                                <p>
-                                    📝 ${
-                                        pedido.observacao ||
-                                        "Nenhuma observação"
+                                    } catch (erro) {
+                                        endereco = null;
                                     }
-                                </p>
 
-                                ${
-                                    indice === 0
-                                        ? `
-                                            <button
-                                                class="botao-iniciar"
-                                                onclick="iniciarPreparo(${pedido.id})"
-                                            >
-                                                ▶️ Iniciar preparo
-                                            </button>
-                                        `
-                                        : ""
-                                }
+                                    if (endereco && typeof endereco === "object") {
 
-                            </div>
+                                        return `
+                                            <div class="endereco-pedido">
 
-                        `).join("")}
+                                                <h3>📍 Endereço de entrega</h3>
+
+                                                <p>
+                                                    <strong>Rua:</strong>
+                                                    ${endereco.rua || "-"}
+                                                </p>
+
+                                                <p>
+                                                    <strong>Número:</strong>
+                                                    ${endereco.numero || "-"}
+                                                </p>
+
+                                                <p>
+                                                    <strong>Bairro:</strong>
+                                                    ${endereco.bairro || "-"}
+                                                </p>
+
+                                                <p>
+                                                    <strong>Complemento:</strong>
+                                                    ${endereco.complemento || "-"}
+                                                </p>
+
+                                                <p>
+                                                    <strong>Ponto de referência:</strong>
+                                                    ${endereco.referencia || "-"}
+                                                </p>
+
+                                            </div>
+                                        `;
+
+                                    }
+
+                                    return `
+                                        <p>
+                                            📍 <strong>Endereço:</strong>
+                                            ${pedido.endereco || "Não informado"}
+                                        </p>
+                                    `;
+
+                                })()
+                                : ""
+                        }
+
+                        <p>
+                            📝 ${
+                                pedido.observacao ||
+                                "Nenhuma observação"
+                            }
+                        </p>
+
+                        <button
+                            class="botao-pronto"
+                            onclick="marcarComoPronto(${pedido.id})"
+                        >
+                            ✅ Marcar como pronto
+                        </button>
+
 
                     </div>
-                `;
 
-            } catch (erro) {
-
-                console.error(
-                    "Erro ao carregar pedidos:",
-                    erro
-                );
-
-                container.innerHTML =
-                    "<p>Erro de comunicação com o servidor.</p>";
-            }
+                `).join("");
         }
+
+        const containerProntos =
+            document.getElementById("pedidosProntos");
+
+        if (pedidosProntos.length === 0) {
+
+            containerProntos.innerHTML =
+                "<p>Nenhum pedido pronto.</p>";
+
+        } else {
+
+            containerProntos.innerHTML =
+                pedidosProntos.map(pedido => `
+
+                    <div class="card-pedido">
+
+                        <h2>
+                            🍽️ Pedido #${pedido.id}
+                        </h2>
+
+                        <p>
+                            <strong>Status:</strong>
+                            
+                            ✅ Pronto
+                            
+                        </p>
+
+                        <h3>Itens</h3>
+
+                        <ul>
+                            ${pedido.itens.map(item => `
+                                <li>
+                                    ${item.quantidade}x
+                                    ${item.nome}
+
+                                    ${
+                                        item.tamanho
+                                            ? ` — ${item.tamanho}`
+                                            : ""
+                                    }
+
+                                    ${
+                                        item.tipo === "porcao"
+                                            ? ` — ${
+                                                item.gramas === 1000
+                                                    ? "1 kg"
+                                                    : item.gramas + " g"
+                                            }`
+                                            : ""
+                                    }
+                                </li>
+                            `).join("")}
+                        </ul>
+
+                        <p class="total-pedido">
+                            <strong>Total:</strong>
+                            R$ ${Number(pedido.total)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </p>
+
+                        <p>
+                            📱 ${pedido.telefone}
+                        </p>
+
+                        <p>
+                            💳 ${
+                                pedido.forma_pagamento === "pix"
+                                    ? "Pix"
+                                    : pedido.forma_pagamento === "dinheiro"
+                                        ? "Dinheiro"
+                                        : "Cartão"
+                            }
+                        </p>
+
+                        <p>
+                            📦 ${
+                                pedido.tipo_entrega === "entrega"
+                                    ? "🛵 Entrega"
+                                    : "🏪 Retirada no local"
+                            }
+                        </p>
+
+                        <button
+                            class="botao-imprimir"
+                            onclick="imprimirGuia(${pedido.id})"
+                        >
+                            🖨️ Imprimir guia
+                        </button>
+
+                        ${
+                            pedido.tipo_entrega === "entrega"
+                                ? `
+                                    <button
+                                        class="botao-finalizar"
+                                        onclick="saiuParaEntrega(${pedido.id})"
+                                    >
+                                        🛵 Saiu para entrega
+                                    </button>
+                                `
+                                : `
+                                    <button
+                                        class="botao-finalizar"
+                                        onclick="finalizarPedido(${pedido.id})"
+                                    >
+                                        📦 Finalizar pedido
+                                    </button>
+                                `
+                        }
+
+                    </div>
+
+                `).join("");
+        }
+
+        if (pedidosFila.length === 0) {
+
+            container.innerHTML = `
+                <div class="mensagem-vazia">
+                    📭<br>
+                    Nenhum pedido aguardando.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="baralho">
+
+                ${pedidosFila.map((pedido, indice) => `
+
+                    <div class="card-pedido">
+
+                        <h2>
+                            🍽️ Pedido #${pedido.id}
+                        </h2>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            <span class="status-pedido status-novo">
+                                🟡 Novo
+                            </span>
+                        </p>
+
+                        <h3>Itens</h3>
+
+                        <ul>
+
+                            ${pedido.itens.map(item => `
+                                <li>
+                                    ${item.quantidade}x
+                                    ${item.nome}
+                                </li>
+                            `).join("")}
+
+                        </ul>
+
+                        <p class="total-pedido">
+                            Total:
+                            R$ ${Number(pedido.total)
+                                .toFixed(2)
+                                .replace(".", ",")}
+                        </p>
+
+                        <div class="info-cliente">
+
+                            <p>
+                                📱 <strong>Telefone:</strong>
+                                ${pedido.telefone}
+                            </p>
+
+                            <p>
+                                💳 <strong>Pagamento:</strong>
+                                ${
+                                    pedido.forma_pagamento === "pix"
+                                        ? "Pix"
+                                        : pedido.forma_pagamento === "dinheiro"
+                                            ? "Dinheiro"
+                                            : "Cartão"
+                                }
+                            </p>
+
+                            <p>
+                                📦 <strong>Recebimento:</strong>
+                                ${
+                                    pedido.tipo_entrega === "entrega"
+                                        ? "🛵 Entrega"
+                                        : "🏪 Retirada no local"
+                                }
+                            </p>
+
+                        </div>
+
+                        ${
+                            pedido.tipo_entrega === "entrega"
+                                ? `
+                                    <p>
+                                        📍 ${pedido.endereco || ""}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                        <p>
+                            📝 ${
+                                pedido.observacao ||
+                                "Nenhuma observação"
+                            }
+                        </p>
+
+                        ${
+                            indice === 0
+                                ? `
+                                    <button
+                                        class="botao-iniciar"
+                                        onclick="iniciarPreparo(${pedido.id})"
+                                    >
+                                        ▶️ Iniciar preparo
+                                    </button>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                `).join("")}
+
+            </div>
+        `;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar pedidos:",
+            erro
+        );
+
+        container.innerHTML =
+            "<p>Erro de comunicação com o servidor.</p>";
+    }
+}
 
 
         async function finalizarPedido(pedidoId) {
