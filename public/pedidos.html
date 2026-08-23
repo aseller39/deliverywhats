@@ -705,7 +705,7 @@ body > h2:first-of-type {
                                            <strong> ${item.quantidade}x
                                             ${
                                                 item.categoria === "bebida"
-                                                    ? `<strong class="nome-bebida">${item.nome}</strong>`
+                                                    ? `<strong class="nome-bebida">${item.bebida}</strong>`
                                                     : item.nome
                                             }
 
@@ -735,7 +735,7 @@ body > h2:first-of-type {
 
                                             ${
                                                 item.tipo === "cardapio_dia" && item.observacao
-                                                    ? ` — <strong>📝 OBS: ${item.observacao}</strong>`
+                                                    ? ` — <strong>📝 OBSERVAÇÃO: ${item.observacao}</strong>`
                                                     : ""
                                             }
 
