@@ -697,7 +697,11 @@ body > h2:first-of-type {
                                     ${pedido.itens.map(item => `
                                         <li>
                                             ${item.quantidade}x
-                                            ${item.nome}
+                                            ${
+                                                item.categoria === "bebida"
+                                                    ? `<strong>${item.nome}</strong>`
+                                                    : item.nome
+                                            }
 
                                             ${
                                                 item.tamanho
