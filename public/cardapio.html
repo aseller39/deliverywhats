@@ -1835,8 +1835,18 @@ function alterarQuantidadeProduto(valor) {
 
         if (preco > 0) {
 
+            const opcaoGarfo =
+                document.querySelector(
+                    'input[name="opcaoGarfo"]:checked'
+                );
+
+            const valorGarfo =
+                opcaoGarfo && opcaoGarfo.value === "sim"
+                    ? 1
+                    : 0;
+
             const total =
-                preco * quantidade;
+                (preco + valorGarfo) * quantidade;
 
             document.getElementById("totalProduto").textContent =
                 total.toFixed(2).replace(".", ",");
