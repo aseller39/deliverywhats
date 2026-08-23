@@ -1773,7 +1773,8 @@ function adicionarCardapioDiaCarrinho(tamanho) {
             observacao,
 
         subtotal:
-            preco * quantidade
+            (preco * quantidade) +
+            (opcaoGarfo.value === "sim" ? 1 : 0)
     };
 
     carrinho.push(item);
