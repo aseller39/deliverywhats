@@ -700,59 +700,66 @@ body > h2:first-of-type {
 
                                 <ul>
 
+
+                                        
+
                                     ${pedido.itens.map(item => {
 
                                         console.log("ITEM DO PEDIDO:", item);
 
                                         return `
+                                            <li>
 
-                                    ${pedido.itens.map(item => `
-                                        <li>
-                                           <strong> ${item.quantidade}x
-                                            ${
-                                                item.categoria === "bebida"
-                                                    ? `<strong class="nome-bebida">${item.nome}</strong>`
-                                                    : item.nome
-                                            }
+                                                <strong>
+                                                    ${item.quantidade}x
 
-                                            ${
-                                                item.tamanho
-                                                    ? ` — ${item.tamanho}`
-                                                    : ""
-                                            }
+                                                    ${
+                                                        item.categoria === "bebida"
+                                                            ? `<span class="nome-bebida">${item.nome}</span>`
+                                                            : item.nome
+                                                    }
 
-                                            ${
-                                                item.tipo === "porcao"
-                                                    ? ` — ${
-                                                        item.gramas === 1000
-                                                            ? "1 kg"
-                                                            : item.gramas + " g"
-                                                    }`
-                                                    : ""
-                                            }
+                                                    ${
+                                                        item.tamanho
+                                                            ? ` — ${item.tamanho}`
+                                                            : ""
+                                                    }
 
-                                            ${
-                                                item.subtotal !== undefined
-                                                    ? ` — R$ ${Number(item.subtotal)
-                                                        .toFixed(2)
-                                                        .replace(".", ",")}`
-                                                    : ""
-                                            }</strong>
+                                                    ${
+                                                        item.tipo === "porcao"
+                                                            ? ` — ${
+                                                                item.gramas === 1000
+                                                                    ? "1 kg"
+                                                                    : item.gramas + " g"
+                                                            }`
+                                                            : ""
+                                                    }
 
-                                            ${
-                                                item.tipo === "cardapio_dia" && item.observacao
-                                                    ? ` — <strong>📝 OBSERVAÇÃO: ${item.observacao}</strong>`
-                                                    : ""
-                                            }
+                                                    ${
+                                                        item.subtotal !== undefined
+                                                            ? ` — R$ ${Number(item.subtotal)
+                                                                .toFixed(2)
+                                                                .replace(".", ",")}`
+                                                            : ""
+                                                    }
+                                                </strong>
 
-                                            ${
-                                                item.tipo === "cardapio_dia" && item.garfo
-                                                    ? ` — <strong> Cliente quer ${item.quantidade} garfo(s)🍴</strong>`
-                                                    : ""
-                                            }
+                                                ${
+                                                    item.tipo === "cardapio_dia" && item.observacao
+                                                        ? ` — <strong>📝 OBSERVAÇÃO: ${item.observacao}</strong>`
+                                                        : ""
+                                                }
 
-                                        </li>
-                                    `).join("")}
+                                                ${
+                                                    item.tipo === "cardapio_dia" && item.garfo
+                                                        ? ` — <strong>Cliente quer ${item.quantidade} garfo(s) 🍴</strong>`
+                                                        : ""
+                                                }
+
+                                            </li>
+                                        `;
+
+                                    }).join("")}
                                 </ul>
 
                                 <p class="total-pedido">
