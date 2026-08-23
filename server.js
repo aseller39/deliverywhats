@@ -1449,7 +1449,7 @@ app.get("/api/cardapio", async (req, res) => {
       })
     );
 
-    const diaSemana = hoje.getDay();
+    const diaSemana = 2;
 
     const resultado = await pool.query(`
       SELECT
