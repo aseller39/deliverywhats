@@ -1150,6 +1150,39 @@ function abrirProduto(id, tamanhoEscolhido = null) {
 
             <p>${produto.descricao}</p>
 
+            <h3>🥩 Escolha suas carnes</h3>
+
+                <div class="opcoes-carne">
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="opcaoCarne"
+                            value="2_carne_1"
+                        >
+                        2 pedaços de ${produto.carne_1 || "Carne 1"}
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="opcaoCarne"
+                            value="2_carne_2"
+                        >
+                        2 pedaços de ${produto.carne_2 || "Carne 2"}
+                    </label>
+
+                    <label>
+                        <input
+                            type="radio"
+                            name="opcaoCarne"
+                            value="1_cada"
+                        >
+                        1 pedaço de cada
+                    </label>
+
+                </div>
+
             <h3>
                 ${
                     tamanhoEscolhido === "pequena"
@@ -1199,6 +1232,20 @@ function abrirProduto(id, tamanhoEscolhido = null) {
                             .replace(".", ",")}
                     </span>
                 </strong>
+
+            </div>
+
+            <div class="observacao-produto">
+
+                <label for="observacaoProduto">
+                    📝 Observação
+                </label>
+
+                <textarea
+                    id="observacaoProduto"
+                    placeholder="Ex.: sem cebola, pouco feijão..."
+                    rows="3"
+                ></textarea>
 
             </div>
 
@@ -1486,56 +1533,83 @@ function alterarQuantidadeProduto(valor) {
                     total.toFixed(2).replace(".", ",");
             }
 
-            function adicionarProdutoCarrinho(id) {
-                const produto = pratosDisponiveis.find(p => p.id === id);
+function adicionarProdutoCarrinho(id) {
+    const produto = pratosDisponiveis.find(p => p.id === id);
 
-                if (!produto) {
-                    return;
-                }
+    if (!produto) {
+        return;
+    }
 
-                const quantidade = Number(
-                    document.getElementById("quantidadeProduto").textContent
-                );
+    const quantidade = Number(
+        document.getElementById("quantidadeProduto").textContent
+    );
 
-                let tamanho = null;
-                let preco = Number(produto.preco);
+    let tamanho = null;
+    let preco = Number(produto.preco);
 
-                const tamanhoSelecionado = document.querySelector(
-                    'input[name="tamanhoProduto"]:checked'
-                );
+    const tamanhoSelecionado = document.querySelector(
+        'input[name="tamanhoProduto"]:checked'
+    );
 
-                if (tamanhoSelecionado) {
-                    tamanho = tamanhoSelecionado.value;
+    if (tamanhoSelecionado) {
+        tamanho = tamanhoSelecionado.value;
 
-                    if (tamanho === "pequena") {
-                        preco = Number(produto.preco_pequena);
-                    }
+        if (tamanho === "pequena") {
+            preco = Number(produto.preco_pequena);
+        }
 
-                    if (tamanho === "media") {
-                        preco = Number(produto.preco_media);
-                    }
+        if (tamanho === "media") {
+            preco = Number(produto.preco_media);
+        }
 
-                    if (tamanho === "grande") {
-                        preco = Number(produto.preco_grande);
-                    }
-                }
+        if (tamanho === "grande") {
+            preco = Number(produto.preco_grande);
+        }
+    }
 
-                const item = {
-                    id: produto.id,
-                    nome: produto.nome,
-                    tamanho: tamanho,
-                    preco: preco,
-                    quantidade: quantidade,
-                    subtotal: preco * quantidade
-                };
+    const opcaoCarneSelecionada = document.querySelector(
+        'input[name="opcaoCarne"]:checked'
+    );
 
-                carrinho.push(item);
-                localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    const observacaoElemento =
+        document.getElementById("observacaoProduto");
 
-                console.log("CARRINHO:", carrinho);
+    const opcaoCarne =
+        opcaoCarneSelecionada
+            ? opcaoCarneSelecionada.value
+            : null;
 
-                fecharProduto();
-            }
+        if (
+            produto.categoria === "prato" &&
+            !opcaoCarne
+        ) {
+            alert("⚠️ Escolha uma opção de carne.");
+            return;
+        }
+
+    const observacao =
+        observacaoElemento
+            ? observacaoElemento.value.trim()
+            : "";
+
+    const item = {
+        id: produto.id,
+        nome: produto.nome,
+        tamanho: tamanho,
+        preco: preco,
+        quantidade: quantidade,
+        opcaoCarne: opcaoCarne,
+        observacao: observacao,
+        subtotal: preco * quantidade
+    };
+
+    carrinho.push(item);
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+    console.log("CARRINHO:", carrinho);
+
+    fecharProduto();
+}
 
 
             function fecharProduto() {
