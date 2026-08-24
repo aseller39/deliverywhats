@@ -705,6 +705,27 @@ async function obterCoordenadas(endereco) {
 }
 
 
+obterCoordenadas(
+    "83430-633, 370 B, Campina Grande do Sul, Paraná, Brasil"
+)
+.then(coordenadas => {
+
+    console.log(
+        "📍 COORDENADAS DO RESTAURANTE:",
+        coordenadas
+    );
+
+})
+.catch(erro => {
+
+    console.error(
+        "❌ ERRO AO LOCALIZAR RESTAURANTE:",
+        erro
+    );
+
+});
+
+
 app.get("/teste-banco", async (req, res) => {
   try {
     const resultado = await pool.query("SELECT NOW()");
