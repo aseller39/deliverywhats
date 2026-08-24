@@ -720,10 +720,29 @@ async function obterCoordenadas(endereco) {
             dadosCep
         );
 
+        const enderecoRestaurante =
+            `${dadosCep.logradouro}, 370 B, ` +
+            `${dadosCep.bairro}, ` +
+            `${dadosCep.localidade}, ` +
+            `${dadosCep.uf}, Brasil`;
+
+        const coordenadas =
+            await obterCoordenadas(enderecoRestaurante);
+
+        console.log(
+            "📍 ENDEREÇO ENVIADO PARA GEOLOCALIZAÇÃO:",
+            enderecoRestaurante
+        );
+
+        console.log(
+            "📍 COORDENADAS DO RESTAURANTE:",
+            coordenadas
+        );
+
     } catch (erro) {
 
         console.error(
-            "❌ ERRO AO CONSULTAR CEP:",
+            "❌ ERRO:",
             erro
         );
 
