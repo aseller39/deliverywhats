@@ -720,9 +720,10 @@ async function obterCoordenadas(endereco) {
     if (dados.status !== "OK" || !dados.results.length) {
 
         console.log(
-            "❌ Google Maps não encontrou o endereço:",
-            dados.status
-        );
+    "❌ ERRO GOOGLE MAPS:",
+    dados.status,
+    dados.error_message || "Sem detalhes"
+);
 
         return null;
     }
