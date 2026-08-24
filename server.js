@@ -672,6 +672,39 @@ async function enviarMensagemWhatsApp(numero, texto) {
 }
 
 
+async function obterCoordenadas(endereco) {
+
+    const url =
+        "https://nominatim.openstreetmap.org/search?" +
+        new URLSearchParams({
+            q: endereco,
+            format: "json",
+            limit: "1"
+        });
+
+    const resposta = await fetch(url, {
+        headers: {
+            "User-Agent": "DeliveryWhats/1.0"
+        }
+    });
+
+    if (!resposta.ok) {
+        throw new Error("Erro ao consultar localização.");
+    }
+
+    const dados = await resposta.json();
+
+    if (!dados.length) {
+        return null;
+    }
+
+    return {
+        latitude: Number(dados[0].lat),
+        longitude: Number(dados[0].lon)
+    };
+}
+
+
 app.get("/teste-banco", async (req, res) => {
   try {
     const resultado = await pool.query("SELECT NOW()");

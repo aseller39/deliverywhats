@@ -2198,121 +2198,126 @@ function adicionarProdutoCarrinho(id) {
             }
 
 
-            async function atualizarAcompanhamentoPedido() {
+async function atualizarAcompanhamentoPedido() {
 
-                const pedidoId =
-                    localStorage.getItem("pedidoAtual");
+    const pedidoId =
+        localStorage.getItem("pedidoAtual");
 
-                const container =
-                    document.getElementById("acompanhamentoPedido");
+    const container =
+        document.getElementById("acompanhamentoPedido");
 
-                container.innerHTML = `
-                    <div class="status-pedido">
-                        🛒 Seu pedido está sendo acompanhado...
-                    </div>
-                `;
+    container.innerHTML = `
+        <div class="status-pedido">
+            🛒 Seu pedido está sendo acompanhado...
+        </div>
+    `;
 
-                if (!pedidoId) {
-                    container.innerHTML = "";
-                    return;
-                }
+    if (!pedidoId) {
+        container.innerHTML = "";
+        return;
+    }
 
-                try {
+    try {
 
-                    const resposta =
-                        await fetch(`/api/pedidos/${pedidoId}/status`);
+        const resposta =
+            await fetch(`/api/pedidos/${pedidoId}/status`);
 
-                    const dados =
-                        await resposta.json();
+        const dados =
+            await resposta.json();
 
-                    if (!dados.sucesso) {
-                        container.innerHTML = "";
-                        return;
-                    }
+        if (!dados.sucesso) {
+            container.innerHTML = "";
+            return;
+        }
 
-                    const pedido = dados.pedido;
+        const pedido = dados.pedido;
 
-                    let mensagem = "";
+        let mensagem = "";
 
-                    if (pedido.status === "aguardando") {
+        if (pedido.status === "aguardando") {
 
-                        mensagem =
-                            `📦 Pedido #${pedido.id}<br>` +
-                            `🛒 Você está em ${pedido.posicao}º lugar na fila`;
+            mensagem =
+                `📦 Pedido #${pedido.id}<br>` +
+                `🛒 Você está em ${pedido.posicao}º lugar na fila`;
 
-                    } else if (pedido.status === "em_preparo") {
+        } else if (pedido.status === "em_preparo") {
 
-                        if (pedido.tipo_entrega === "retirada") {
+            if (pedido.tipo_entrega === "retirada") {
 
-                            const inicio =
-                                new Date(pedido.inicio_preparo).getTime();
+                const inicio =
+                    new Date(pedido.inicio_preparo).getTime();
 
-                            const agora =
-                                Date.now();
+                const agora =
+                    Date.now();
 
-                            const fim =
-                                inicio + (15 * 60 * 1000);
+                const fim =
+                    inicio + (15 * 60 * 1000);
 
-                            const minutos =
-                                Math.max(
-                                    0,
-                                    Math.ceil((fim - agora) / 60000)
-                                );
-
-                            mensagem =
-                                `📦 Pedido #${pedido.id}<br>` +
-                                `👨‍🍳 Seu pedido está em preparo<br>` +
-                                `🕐 pedido pronto em ${minutos} min.`;
-
-                        } else {
-
-                            mensagem =
-                                `📦 Pedido #${pedido.id}<br>` +
-                                `👨‍🍳 Seu pedido está em preparo`;
-
-                        }
-
-                    } else if (pedido.status === "pronto") {
-
-                        mensagem =
-                            `📦 Pedido #${pedido.id}<br>` +
-                            `✅ Seu pedido está pronto!`;
-
-                    } else if (pedido.status === "saiu_entrega") {
-
-                        mensagem =
-                            `📦 Pedido #${pedido.id}<br>` +
-                            `🛵 Seu pedido saiu para entrega`;
-
-                    } else if (pedido.status === "finalizado") {
-
-                        mensagem =
-                            `📦 Pedido #${pedido.id}<br>` +
-                            (
-                                pedido.tipo_entrega === "entrega"
-                                    ? "✅ Pedido entregue!"
-                                    : "✅ Pedido finalizado!"
-                            );
-                    }
-
-                    if (mensagem) {
-
-                        container.innerHTML = `
-                            <div class="status-pedido">
-                                ${mensagem}
-                            </div>
-                        `;
-
-                    }
-
-                } catch (erro) {
-
-                    console.error(
-                        "Erro ao atualizar pedido:",
-                        erro
+                const minutos =
+                    Math.max(
+                        0,
+                        Math.ceil((fim - agora) / 60000)
                     );
-                }
+
+                mensagem =
+                    `📦 Pedido #${pedido.id}<br>` +
+                    `👨‍🍳 Seu pedido está em preparo<br>` +
+                    `🕐 pedido pronto em ${minutos} min.`;
+
+            } else {
+
+                mensagem =
+                    `📦 Pedido #${pedido.id}<br>` +
+                    `👨‍🍳 Seu pedido está em preparo`;
+
             }
+
+        } else if (pedido.status === "pronto") {
+
+            mensagem =
+                `📦 Pedido #${pedido.id}<br>` +
+                `✅ Seu pedido está pronto!`;
+
+        } else if (pedido.status === "saiu_entrega") {
+
+            mensagem =
+                `📦 Pedido #${pedido.id}<br>` +
+                `🛵 Seu pedido saiu para entrega`;
+
+        } else if (pedido.status === "finalizado") {
+
+            mensagem =
+                `📦 Pedido #${pedido.id}<br>` +
+                (
+                    pedido.tipo_entrega === "entrega"
+                        ? "✅ Pedido entregue!"
+                        : "✅ Pedido finalizado!"
+                );
+        }
+
+        if (mensagem) {
+
+            container.innerHTML = `
+                <div class="status-pedido">
+                    ${mensagem}
+                </div>
+            `;
+
+        }
+
+        } catch (erro) {
+
+        console.error(
+            "Erro ao atualizar pedido:",
+            erro
+        );
+    }
+
+    setTimeout(
+        atualizarAcompanhamentoPedido,
+        1000
+    );
+}
 
 
 
