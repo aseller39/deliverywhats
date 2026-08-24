@@ -701,32 +701,38 @@ async function enviarMensagemWhatsApp(numero, texto) {
 async function obterCoordenadas(endereco) {
 
     const url =
-        "https://nominatim.openstreetmap.org/search?" +
+        "https://maps.googleapis.com/maps/api/geocode/json?" +
         new URLSearchParams({
-            q: endereco,
-            format: "json",
-            limit: "1"
+            address: endereco,
+            key: process.env.GOOGLE_MAPS_API_KEY
         });
 
-    const resposta = await fetch(url, {
-        headers: {
-            "User-Agent": "DeliveryWhats/1.0"
-        }
-    });
+    const resposta = await fetch(url);
 
     if (!resposta.ok) {
-        throw new Error("Erro ao consultar localização.");
+        throw new Error(
+            "Erro ao consultar Google Maps."
+        );
     }
 
     const dados = await resposta.json();
 
-    if (!dados.length) {
+    if (dados.status !== "OK" || !dados.results.length) {
+
+        console.log(
+            "❌ Google Maps não encontrou o endereço:",
+            dados.status
+        );
+
         return null;
     }
 
+    const localizacao =
+        dados.results[0].geometry.location;
+
     return {
-        latitude: Number(dados[0].lat),
-        longitude: Number(dados[0].lon)
+        latitude: localizacao.lat,
+        longitude: localizacao.lng
     };
 }
 
