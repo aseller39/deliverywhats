@@ -146,7 +146,7 @@ app.post("/api/pedidos", async (req, res) => {
         enderecoCompleto
     );
 
-    if (enderecoCompleto) {
+    if (enderecoCompleto && tipo_entrega === "entrega") {
 
     const coordenadasCliente =
         await obterCoordenadas(enderecoCompleto);
@@ -155,6 +155,21 @@ app.post("/api/pedidos", async (req, res) => {
         "📍 COORDENADAS DO CLIENTE:",
         coordenadasCliente
     );
+
+    if (coordenadasCliente) {
+
+        const tempoEntrega =
+            await calcularTempoEntrega(
+                coordenadasCliente.latitude,
+                coordenadasCliente.longitude
+            );
+
+        console.log(
+            "🛵 TEMPO DE ENTREGA:",
+            tempoEntrega
+        );
+
+    }
 
 }
 
