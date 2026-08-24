@@ -146,6 +146,18 @@ app.post("/api/pedidos", async (req, res) => {
         enderecoCompleto
     );
 
+    if (enderecoCompleto) {
+
+    const coordenadasCliente =
+        await obterCoordenadas(enderecoCompleto);
+
+    console.log(
+        "📍 COORDENADAS DO CLIENTE:",
+        coordenadasCliente
+    );
+
+}
+
     if (
       !restaurante_id ||
       !itens ||
