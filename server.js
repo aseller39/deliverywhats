@@ -738,6 +738,101 @@ async function obterCoordenadas(endereco) {
 }
 
 
+async function calcularTempoEntrega(latitudeCliente, longitudeCliente) {
+
+    const resposta = await fetch(
+        "https://routes.googleapis.com/directions/v2:computeRoutes",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key":
+                    process.env.GOOGLE_MAPS_API_KEY,
+                "X-Goog-FieldMask":
+                    "routes.duration,routes.distanceMeters"
+            },
+
+            body: JSON.stringify({
+
+                origin: {
+                    location: {
+                        latLng: {
+                            latitude:
+                                restauranteCoordenadas.latitude,
+                            longitude:
+                                restauranteCoordenadas.longitude
+                        }
+                    }
+                },
+
+                destination: {
+                    location: {
+                        latLng: {
+                            latitude:
+                                latitudeCliente,
+                            longitude:
+                                longitudeCliente
+                        }
+                    }
+                },
+
+                travelMode: "DRIVE",
+
+                routingPreference:
+                    "TRAFFIC_AWARE"
+
+            })
+        }
+    );
+
+    if (!resposta.ok) {
+
+        const erro =
+            await resposta.text();
+
+        console.error(
+            "❌ ERRO GOOGLE ROUTES:",
+            erro
+        );
+
+        return null;
+    }
+
+    const dados =
+        await resposta.json();
+
+    if (
+        !dados.routes ||
+        !dados.routes.length
+    ) {
+
+        return null;
+    }
+
+    const rota =
+        dados.routes[0];
+
+    const segundos =
+        parseInt(
+            rota.duration.replace("s", "")
+        );
+
+    const minutos =
+        Math.ceil(
+            segundos / 60
+        );
+
+    return {
+        minutos,
+        distanciaKm:
+            Number(
+                rota.distanceMeters / 1000
+            ).toFixed(2)
+    };
+}
+
+
 function montarEnderecoCompleto(endereco) {
 
     if (!endereco) {
