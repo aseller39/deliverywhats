@@ -1211,45 +1211,45 @@ async function carregarPedidos() {
 }
 
 
-        async function iniciarPreparo(pedidoId) {
+async function iniciarPreparo(pedidoId) {
 
-            try {
+    try {
 
-                const resposta = await fetch(
-                    `/api/pedidos/${pedidoId}/iniciar-preparo`,
-                    {
-                        method: "PUT"
-                    }
-                );
-
-                const dados = await resposta.json();
-
-                console.log(dados);
-
-                if (!resposta.ok || !dados.sucesso) {
-
-                    alert(
-                        dados.erro ||
-                        "Não foi possível iniciar o preparo."
-                    );
-
-                    return;
-                }
-
-                carregarPedidos();
-
-            } catch (erro) {
-
-                console.error(
-                    "Erro ao iniciar preparo:",
-                    erro
-                );
-
-                alert(
-                    "Erro de comunicação com o servidor."
-                );
+        const resposta = await fetch(
+            `/api/pedidos/${pedidoId}/iniciar-preparo`,
+            {
+                method: "PUT"
             }
+        );
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível iniciar o preparo."
+            );
+
+            return;
         }
+
+        carregarPedidos();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao iniciar preparo:",
+            erro
+        );
+
+        alert(
+            "Erro de comunicação com o servidor."
+        );
+    }
+}
 
 
         async function marcarComoPronto(pedidoId) {

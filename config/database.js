@@ -8,3 +8,13 @@ const pool = new Pool({
 });
 
 module.exports = pool;
+
+
+async function prepararBanco() {
+    await pool.query(`
+        ALTER TABLE pedidos
+        ADD COLUMN IF NOT EXISTS inicio_preparo TIMESTAMP;
+    `);
+}
+
+prepararBanco().catch(console.error);
