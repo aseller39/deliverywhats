@@ -706,7 +706,7 @@ async function obterCoordenadas(endereco) {
 
 
 obterCoordenadas(
-    "83430-633, 370 B, Campina Grande do Sul, Paraná, Brasil"
+    "Rua Monica Lenira Corleto Coradim, 370 B, Campina Grande do Sul, PR, Brasil"
 )
 .then(coordenadas => {
 
