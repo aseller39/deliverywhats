@@ -705,25 +705,31 @@ async function obterCoordenadas(endereco) {
 }
 
 
-obterCoordenadas(
-    "Rua Monica Lenira Corleto Coradim, 370 B, Campina Grande do Sul, PR, Brasil"
-)
-.then(coordenadas => {
+(async () => {
 
-    console.log(
-        "📍 COORDENADAS DO RESTAURANTE:",
-        coordenadas
-    );
+    try {
 
-})
-.catch(erro => {
+        const respostaCep = await fetch(
+            "https://viacep.com.br/ws/83430633/json/"
+        );
 
-    console.error(
-        "❌ ERRO AO LOCALIZAR RESTAURANTE:",
-        erro
-    );
+        const dadosCep = await respostaCep.json();
 
-});
+        console.log(
+            "📍 ENDEREÇO PELO CEP:",
+            dadosCep
+        );
+
+    } catch (erro) {
+
+        console.error(
+            "❌ ERRO AO CONSULTAR CEP:",
+            erro
+        );
+
+    }
+
+})();
 
 
 app.get("/teste-banco", async (req, res) => {
