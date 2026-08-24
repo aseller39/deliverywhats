@@ -285,7 +285,8 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
             SELECT
                 id,
                 status,
-                tipo_entrega
+                tipo_entrega,
+                inicio_preparo
             FROM pedidos
             WHERE id = $1
             `,
@@ -329,6 +330,7 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
                 id: pedido.id,
                 status: pedido.status,
                 tipo_entrega: pedido.tipo_entrega,
+                inicio_preparo: pedido.inicio_preparo,
                 posicao: posicao
             }
         });
@@ -366,6 +368,7 @@ app.get("/api/pedidos", async (req, res) => {
         forma_pagamento,
         total,
         status,
+        inicio_preparo,
         criado_em
       FROM pedidos
       WHERE restaurante_id = $1
@@ -398,7 +401,8 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
     const resultado = await pool.query(
       `
       UPDATE pedidos
-      SET status = 'em_preparo'
+      SET status = 'em_preparo',
+          inicio_preparo = NOW()
       WHERE id = $1
         AND status = 'aguardando'
       RETURNING id, status

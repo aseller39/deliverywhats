@@ -2242,9 +2242,35 @@ function adicionarProdutoCarrinho(id) {
 
                     } else if (pedido.status === "em_preparo") {
 
-                        mensagem =
-                            `📦 Pedido #${pedido.id}<br>` +
-                            `👨‍🍳 Seu pedido está em preparo`;
+                        if (pedido.tipo_entrega === "retirada") {
+
+                            const inicio =
+                                new Date(pedido.inicio_preparo).getTime();
+
+                            const agora =
+                                Date.now();
+
+                            const fim =
+                                inicio + (15 * 60 * 1000);
+
+                            const minutos =
+                                Math.max(
+                                    0,
+                                    Math.ceil((fim - agora) / 60000)
+                                );
+
+                            mensagem =
+                                `📦 Pedido #${pedido.id}<br>` +
+                                `👨‍🍳 Seu pedido está em preparo<br>` +
+                                `🕐 pedido pronto em ${minutos} min.`;
+
+                        } else {
+
+                            mensagem =
+                                `📦 Pedido #${pedido.id}<br>` +
+                                `👨‍🍳 Seu pedido está em preparo`;
+
+                        }
 
                     } else if (pedido.status === "pronto") {
 
