@@ -571,6 +571,77 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
 
     const pedidoId = req.params.id;
 
+    const pedido = await pool.query(
+      `
+      SELECT
+        id,
+        status,
+        tipo_entrega,
+        endereco
+      FROM pedidos
+      WHERE id = $1
+      `,
+      [pedidoId]
+    );
+
+    if (pedido.rows.length === 0) {
+
+      return res.status(404).json({
+        sucesso: false,
+        erro: "Pedido não encontrado."
+      });
+
+    }
+
+    const dadosPedido = pedido.rows[0];
+
+    if (
+      dadosPedido.status !== "pronto" ||
+      dadosPedido.tipo_entrega !== "entrega"
+    ) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Este pedido não está pronto para sair para entrega."
+      });
+
+    }
+
+    const enderecoCompleto =
+      montarEnderecoCompleto(dadosPedido.endereco);
+
+    const coordenadasCliente =
+      await obterCoordenadas(enderecoCompleto);
+
+    if (!coordenadasCliente) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Não foi possível localizar o endereço do cliente."
+      });
+
+    }
+
+    const tempoEntrega =
+      await calcularTempoEntrega(
+        coordenadasCliente.latitude,
+        coordenadasCliente.longitude
+      );
+
+    if (!tempoEntrega) {
+
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Não foi possível calcular o tempo da entrega."
+      });
+
+    }
+
+    console.log(
+      "🛵 TEMPO DA ENTREGA:",
+      tempoEntrega
+    );
+
     const resultado = await pool.query(
       `
       UPDATE pedidos
@@ -595,7 +666,8 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
     res.json({
       sucesso: true,
       mensagem: "Pedido saiu para entrega.",
-      pedido: resultado.rows[0]
+      pedido: resultado.rows[0],
+      tempoEntrega: tempoEntrega
     });
 
   } catch (erro) {
