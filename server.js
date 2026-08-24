@@ -1,6 +1,12 @@
 const express = require("express");
 const app = express();
 const pool = require("./config/database");
+
+const restauranteCoordenadas = {
+    latitude: -25.350002702451427,
+    longitude: -49.11049111577534
+};
+
 const multer = require("multer");
 
 const storage = multer.diskStorage({
@@ -131,6 +137,14 @@ app.post("/api/pedidos", async (req, res) => {
     } = req.body;
 
     console.log("ITENS RECEBIDOS NO SERVIDOR:", itens);
+
+    const enderecoCompleto =
+        montarEnderecoCompleto(endereco);
+
+    console.log(
+        "📍 ENDEREÇO DO CLIENTE:",
+        enderecoCompleto
+    );
 
     if (
       !restaurante_id ||
@@ -705,50 +719,23 @@ async function obterCoordenadas(endereco) {
 }
 
 
-(async () => {
+function montarEnderecoCompleto(endereco) {
 
-    try {
-
-        const respostaCep = await fetch(
-            "https://viacep.com.br/ws/83430633/json/"
-        );
-
-        const dadosCep = await respostaCep.json();
-
-        console.log(
-            "📍 ENDEREÇO PELO CEP:",
-            dadosCep
-        );
-
-        const enderecoRestaurante =
-            `${dadosCep.logradouro}, 370 B, ` +
-            `${dadosCep.bairro}, ` +
-            `${dadosCep.localidade}, ` +
-            `${dadosCep.uf}, Brasil`;
-
-        const coordenadas =
-            await obterCoordenadas(enderecoRestaurante);
-
-        console.log(
-            "📍 ENDEREÇO ENVIADO PARA GEOLOCALIZAÇÃO:",
-            enderecoRestaurante
-        );
-
-        console.log(
-            "📍 COORDENADAS DO RESTAURANTE:",
-            coordenadas
-        );
-
-    } catch (erro) {
-
-        console.error(
-            "❌ ERRO:",
-            erro
-        );
-
+    if (!endereco) {
+        return null;
     }
 
-})();
+    return [
+        endereco.rua,
+        endereco.numero,
+        endereco.bairro,
+        "Campina Grande do Sul",
+        "PR",
+        "Brasil"
+    ]
+        .filter(Boolean)
+        .join(", ");
+}
 
 
 app.get("/teste-banco", async (req, res) => {
