@@ -656,13 +656,23 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
     const resultado = await pool.query(
       `
       UPDATE pedidos
-      SET status = 'saiu_entrega'
+      SET
+        status = 'saiu_entrega',
+        inicio_entrega = NOW(),
+        tempo_entrega = $2
       WHERE id = $1
         AND status = 'pronto'
         AND tipo_entrega = 'entrega'
-      RETURNING id, status
+      RETURNING
+        id,
+        status,
+        inicio_entrega,
+        tempo_entrega
       `,
-      [pedidoId]
+      [
+        pedidoId,
+        tempoEntrega.minutos
+      ]
     );
 
     if (resultado.rows.length === 0) {
