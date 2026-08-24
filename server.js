@@ -2,6 +2,17 @@ const express = require("express");
 const app = express();
 const pool = require("./config/database");
 
+async function prepararBanco() {
+
+    await pool.query(`
+        ALTER TABLE pedidos
+        ADD COLUMN IF NOT EXISTS inicio_entrega TIMESTAMP,
+        ADD COLUMN IF NOT EXISTS tempo_entrega INTEGER
+    `);
+
+    console.log("✅ Estrutura da tabela pedidos verificada.");
+}
+
 const restauranteCoordenadas = {
     latitude: -25.350002702451427,
     longitude: -49.11049111577534
@@ -2331,6 +2342,21 @@ app.get("/criar-porcao-teste", async (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+prepararBanco()
+    .then(() => {
+
+        app.listen(PORT, () => {
+            console.log(
+                `Servidor rodando na porta ${PORT}`
+            );
+        });
+
+    })
+    .catch((erro) => {
+
+        console.error(
+            "❌ Erro ao preparar banco:",
+            erro
+        );
+
+    });
