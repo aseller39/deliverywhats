@@ -2296,9 +2296,11 @@ async function atualizarAcompanhamentoPedido() {
                 );
 
             mensagem =
-                `📦 Pedido #${pedido.id}<br>` +
+                `📦 Pedido #${pedido.id}<br><br>` +
                 `🛵 Seu pedido saiu para entrega<br>` +
-                `🕐 Chega em aproximadamente ${minutos} min.`;
+                `<span id="tempoEntregaPedido">` +
+                `🕐 Chega em aproximadamente ${minutos} min.` +
+                `</span>`;
 
         } else if (pedido.status === "finalizado") {
 
@@ -2313,11 +2315,44 @@ async function atualizarAcompanhamentoPedido() {
 
         if (mensagem) {
 
-            container.innerHTML = `
-                <div class="status-pedido">
-                    ${mensagem}
-                </div>
-            `;
+            if (
+                pedido.status === "saiu_entrega" &&
+                document.getElementById("tempoEntregaPedido")
+            ) {
+
+                const elemento =
+                    document.getElementById("tempoEntregaPedido");
+
+                const inicio =
+                    new Date(pedido.inicio_entrega).getTime();
+
+                const agora =
+                    Date.now();
+
+                const fim =
+                    inicio +
+                    (pedido.tempo_entrega * 60 * 1000);
+
+                const minutos =
+                    Math.max(
+                        0,
+                        Math.ceil(
+                            (fim - agora) / 60000
+                        )
+                    );
+
+                elemento.innerHTML =
+                    `🕐 Chega em aproximadamente ${minutos} min.`;
+
+            } else {
+
+                container.innerHTML = `
+                    <div class="status-pedido">
+                        ${mensagem}
+                    </div>
+                `;
+
+            }
 
         }
 
