@@ -725,6 +725,23 @@ main {
         0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
+
+.entrega-mobile {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    .entrega-desktop {
+        display: none;
+    }
+
+    .entrega-mobile {
+        display: block;
+    }
+
+}
+
     </style>
 
 </head>
@@ -2198,6 +2215,8 @@ function adicionarProdutoCarrinho(id) {
             }
 
 
+let ultimoStatusPedido = null;
+
 async function atualizarAcompanhamentoPedido() {
 
     const pedidoId =
@@ -2206,11 +2225,7 @@ async function atualizarAcompanhamentoPedido() {
     const container =
         document.getElementById("acompanhamentoPedido");
 
-    container.innerHTML = `
-        <div class="status-pedido">
-            🛒 Seu pedido está sendo acompanhado...
-        </div>
-    `;
+    
 
     if (!pedidoId) {
         container.innerHTML = "";
@@ -2287,7 +2302,8 @@ async function atualizarAcompanhamentoPedido() {
                 Date.now();
 
             const fim =
-                inicio + (pedido.tempo_entrega * 60 * 1000);
+                inicio +
+                (pedido.tempo_entrega * 60 * 1000);
 
             const minutos =
                 Math.max(
@@ -2296,11 +2312,20 @@ async function atualizarAcompanhamentoPedido() {
                 );
 
             mensagem =
+                `<div class="entrega-desktop">` +
                 `📦 Pedido #${pedido.id}<br><br>` +
                 `🛵 Seu pedido saiu para entrega<br>` +
                 `<span id="tempoEntregaPedido">` +
                 `🕐 Chega em aproximadamente ${minutos} min.` +
-                `</span>`;
+                `</span>` +
+                `</div>` +
+
+                `<div class="entrega-mobile">` +
+                `📦 Pedido #${pedido.id}<br>` +
+                `🛵 Entrega em ` +
+                `<span id="tempoEntregaMobile">${minutos}</span>` +
+                ` min.` +
+                `</div>`;
 
         } else if (pedido.status === "finalizado") {
 
@@ -2313,71 +2338,75 @@ async function atualizarAcompanhamentoPedido() {
                 );
         }
 
-        if (mensagem) {
+            if (mensagem) {
 
-            if (pedido.status === "saiu_entrega") {
+                if (ultimoStatusPedido !== pedido.status) {
 
-                const inicio =
-                    new Date(pedido.inicio_entrega).getTime();
+                    container.innerHTML = `
+                        <div class="status-pedido">
+                            ${mensagem}
+                        </div>
+                    `;
 
-                const agora =
-                    Date.now();
-
-                const fim =
-                    inicio +
-                    (pedido.tempo_entrega * 60 * 1000);
-
-                const minutos =
-                    Math.max(
-                        0,
-                        Math.ceil(
-                            (fim - agora) / 60000
-                        )
-                    );
-
-                const elementoDesktop =
-                    document.getElementById(
-                        "tempoEntregaPedido"
-                    );
-
-                const elementoMobile =
-                    document.getElementById(
-                        "tempoEntregaMobile"
-                    );
-
-                if (elementoDesktop) {
-
-                    elementoDesktop.innerHTML =
-                        `🕐 Chega em aproximadamente ${minutos} min.`;
+                    ultimoStatusPedido = pedido.status;
 
                 }
 
-                if (elementoMobile) {
+                if (pedido.status === "saiu_entrega") {
 
-                    elementoMobile.textContent =
-                        minutos;
+                    const inicio =
+                        new Date(pedido.inicio_entrega).getTime();
+
+                    const agora =
+                        Date.now();
+
+                    const fim =
+                        inicio +
+                        (pedido.tempo_entrega * 60 * 1000);
+
+                    const minutos =
+                        Math.max(
+                            0,
+                            Math.ceil(
+                                (fim - agora) / 60000
+                            )
+                        );
+
+                    const elementoDesktop =
+                        document.getElementById(
+                            "tempoEntregaPedido"
+                        );
+
+                    const elementoMobile =
+                        document.getElementById(
+                            "tempoEntregaMobile"
+                        );
+
+                    if (elementoDesktop) {
+
+                        elementoDesktop.innerHTML =
+                            `🕐 Chega em aproximadamente ${minutos} min.`;
+
+                    }
+
+                    if (elementoMobile) {
+
+                        elementoMobile.textContent =
+                            minutos;
+
+                    }
 
                 }
-
-            } else {
-
-                container.innerHTML = `
-                    <div class="status-pedido">
-                        ${mensagem}
-                    </div>
-                `;
 
             }
 
-        }
-
         } catch (erro) {
 
-        console.error(
-            "Erro ao atualizar pedido:",
-            erro
-        );
-    }
+            console.error(
+                "Erro ao atualizar pedido:",
+                erro
+            );
+        }
 
     
 }
