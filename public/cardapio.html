@@ -2610,10 +2610,7 @@ async function atualizarAcompanhamentoPedido() {
 
                     ultimoStatusPedido = null;
 
-                    localStorage.removeItem(
-                        "acompanhamentoEncerrado"
-                    );
-
+                    localStorage.removeItem("acompanhamentoEncerrado");
 
                     localStorage.setItem(
                         "pedidoAtual",
@@ -2626,6 +2623,11 @@ async function atualizarAcompanhamentoPedido() {
                     );
 
                     limparCarrinho();
+
+                    localStorage.removeItem("acompanhamentoEncerrado");
+
+                    ultimoStatusPedido = null;
+
                     atualizarAcompanhamentoPedido();
                 }
             }
