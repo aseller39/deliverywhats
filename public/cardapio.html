@@ -2243,6 +2243,13 @@ let ultimoStatusPedido = null;
 
 async function atualizarAcompanhamentoPedido() {
 
+    const acompanhamentoEncerrado =
+        localStorage.getItem("acompanhamentoEncerrado");
+
+    if (acompanhamentoEncerrado === "true") {
+        return;
+    }
+
     const pedidoId =
         localStorage.getItem("pedidoAtual");
 
@@ -2438,6 +2445,11 @@ async function atualizarAcompanhamentoPedido() {
 
                         ultimoStatusPedido = "entregue";
 
+                        localStorage.setItem(
+                            "acompanhamentoEncerrado",
+                            "true"
+                        );
+
                         setTimeout(() => {
 
                             container.innerHTML = "";
@@ -2595,6 +2607,16 @@ async function atualizarAcompanhamentoPedido() {
                 console.log("RESPOSTA DO PEDIDO:", dados);
 
                 if (dados.sucesso) {
+
+                    localStorage.removeItem(
+                        "acompanhamentoEncerrado"
+                    );
+
+                    localStorage.setItem(
+                        "pedidoAtual",
+                        dados.pedido.id
+                    );
+
                     alert(
                         `✅ Pedido #${dados.pedido.id} enviado com sucesso!\n\n` +
                         `O restaurante recebeu seu pedido.`
