@@ -338,7 +338,9 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
                 id,
                 status,
                 tipo_entrega,
-                inicio_preparo
+                inicio_preparo,
+                inicio_entrega,
+                tempo_entrega
             FROM pedidos
             WHERE id = $1
             `,
@@ -383,6 +385,8 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
                 status: pedido.status,
                 tipo_entrega: pedido.tipo_entrega,
                 inicio_preparo: pedido.inicio_preparo,
+                inicio_entrega: pedido.inicio_entrega,
+                tempo_entrega: pedido.tempo_entrega,
                 posicao: posicao
             }
         });
