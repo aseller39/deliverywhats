@@ -2438,6 +2438,12 @@ async function atualizarAcompanhamentoPedido() {
 
                         ultimoStatusPedido = "entregue";
 
+                        setTimeout(() => {
+
+                            container.innerHTML = "";
+
+                        }, 5000);
+
                         return;
                     }
 
