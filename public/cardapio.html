@@ -2608,6 +2608,8 @@ async function atualizarAcompanhamentoPedido() {
 
                 if (dados.sucesso) {
 
+                    ultimoStatusPedido = null;
+
                     localStorage.removeItem(
                         "acompanhamentoEncerrado"
                     );
