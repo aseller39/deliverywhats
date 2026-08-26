@@ -2240,6 +2240,7 @@ function adicionarProdutoCarrinho(id) {
 
 
 let ultimoStatusPedido = null;
+let pedidoAcompanhamentoEncerrado = null;
 
 async function atualizarAcompanhamentoPedido() {
 
@@ -2339,13 +2340,7 @@ async function atualizarAcompanhamentoPedido() {
 
             if (minutos === 0) {
 
-                mensagem =
-                    `<div class="mensagem-chegada">` +
-                    `💚<br>` +
-                    `<strong>Pedido #${pedido.id} entregue!</strong><br><br>` +
-                    `Obrigado por escolher a Gustum!<br>` +
-                    `Esperamos que você aproveite sua refeição. 😊` +
-                    `</div>`;
+                mensagem = "";
 
             } else if (minutos === 1) {
 
