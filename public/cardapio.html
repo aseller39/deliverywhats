@@ -742,6 +742,30 @@ main {
 
 }
 
+
+.mensagem-chegando {
+    padding: 20px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.mensagem-chegando strong {
+    font-size: 22px;
+}
+
+.mensagem-chegada {
+    padding: 24px 20px;
+    text-align: center;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.mensagem-chegada strong {
+    font-size: 22px;
+}
+
+
     </style>
 
 </head>
@@ -2311,21 +2335,44 @@ async function atualizarAcompanhamentoPedido() {
                     Math.ceil((fim - agora) / 60000)
                 );
 
-            mensagem =
-                `<div class="entrega-desktop">` +
-                `📦 Pedido #${pedido.id}<br><br>` +
-                `🛵 Seu pedido saiu para entrega<br>` +
-                `<span id="tempoEntregaPedido">` +
-                `🕐 Chega em aproximadamente ${minutos} min.` +
-                `</span>` +
-                `</div>` +
+            if (minutos === 0) {
 
-                `<div class="entrega-mobile">` +
-                `📦 Pedido #${pedido.id}<br>` +
-                `🛵 Entrega em ` +
-                `<span id="tempoEntregaMobile">${minutos}</span>` +
-                ` min.` +
-                `</div>`;
+                mensagem =
+                    `<div class="mensagem-chegada">` +
+                    `💚<br>` +
+                    `<strong>Pedido #${pedido.id} entregue!</strong><br><br>` +
+                    `Obrigado por escolher a Gustum!<br>` +
+                    `Esperamos que você aproveite sua refeição. 😊` +
+                    `</div>`;
+
+            } else if (minutos === 1) {
+
+                mensagem =
+                    `<div class="mensagem-chegando">` +
+                    `🛵<br>` +
+                    `<strong>Seu pedido já está chegando!</strong><br><br>` +
+                    `Pedido #${pedido.id}` +
+                    `</div>`;
+
+            } else {
+
+                mensagem =
+                    `<div class="entrega-desktop">` +
+                    `📦 Pedido #${pedido.id}<br><br>` +
+                    `🛵 Seu pedido saiu para entrega<br>` +
+                    `<span id="tempoEntregaPedido">` +
+                    `🕐 Chega em aproximadamente ${minutos} min.` +
+                    `</span>` +
+                    `</div>` +
+
+                    `<div class="entrega-mobile">` +
+                    `📦 Pedido #${pedido.id}<br>` +
+                    `🛵 Entrega em ` +
+                    `<span id="tempoEntregaMobile">${minutos}</span>` +
+                    ` min.` +
+                    `</div>`;
+
+            }
 
         } else if (pedido.status === "finalizado") {
 
@@ -2372,6 +2419,51 @@ async function atualizarAcompanhamentoPedido() {
                             )
                         );
 
+                    // 0 minutos: mensagem final
+                    if (
+                        minutos === 0 &&
+                        ultimoStatusPedido !== "entregue"
+                    ) {
+
+                        container.innerHTML = `
+                            <div class="status-pedido">
+                                <div class="mensagem-chegada">
+                                    💚<br>
+                                    <strong>Pedido #${pedido.id} entregue!</strong><br><br>
+                                    Obrigado por escolher a Gustum!<br>
+                                    Esperamos que você aproveite sua refeição. 😊
+                                </div>
+                            </div>
+                        `;
+
+                        ultimoStatusPedido = "entregue";
+
+                        return;
+                    }
+
+                    // 1 minuto: mensagem de chegada
+                    if (
+                        minutos === 1 &&
+                        ultimoStatusPedido !== "chegando"
+                    ) {
+
+                        container.innerHTML = `
+                            <div class="status-pedido">
+                                <div class="mensagem-chegando">
+                                    🛵<br>
+                                    <strong>Seu pedido já está chegando!</strong><br><br>
+                                    Pedido #${pedido.id}
+                                </div>
+                            </div>
+                        `;
+
+                        ultimoStatusPedido = "chegando";
+
+                        return;
+                    }
+
+                    // 2 minutos ou mais:
+                    // atualiza somente o número
                     const elementoDesktop =
                         document.getElementById(
                             "tempoEntregaPedido"
