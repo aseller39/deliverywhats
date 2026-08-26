@@ -2315,13 +2315,7 @@ async function atualizarAcompanhamentoPedido() {
 
         if (mensagem) {
 
-            if (
-                pedido.status === "saiu_entrega" &&
-                document.getElementById("tempoEntregaPedido")
-            ) {
-
-                const elemento =
-                    document.getElementById("tempoEntregaPedido");
+            if (pedido.status === "saiu_entrega") {
 
                 const inicio =
                     new Date(pedido.inicio_entrega).getTime();
@@ -2341,8 +2335,29 @@ async function atualizarAcompanhamentoPedido() {
                         )
                     );
 
-                elemento.innerHTML =
-                    `🕐 Chega em aproximadamente ${minutos} min.`;
+                const elementoDesktop =
+                    document.getElementById(
+                        "tempoEntregaPedido"
+                    );
+
+                const elementoMobile =
+                    document.getElementById(
+                        "tempoEntregaMobile"
+                    );
+
+                if (elementoDesktop) {
+
+                    elementoDesktop.innerHTML =
+                        `🕐 Chega em aproximadamente ${minutos} min.`;
+
+                }
+
+                if (elementoMobile) {
+
+                    elementoMobile.textContent =
+                        minutos;
+
+                }
 
             } else {
 
