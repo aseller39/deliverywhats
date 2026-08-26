@@ -2243,12 +2243,7 @@ let ultimoStatusPedido = null;
 
 async function atualizarAcompanhamentoPedido() {
 
-    const acompanhamentoEncerrado =
-        localStorage.getItem("acompanhamentoEncerrado");
-
-    if (acompanhamentoEncerrado === "true") {
-        return;
-    }
+    
 
     const pedidoId =
         localStorage.getItem("pedidoAtual");
