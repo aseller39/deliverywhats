@@ -2422,34 +2422,27 @@ async function atualizarAcompanhamentoPedido() {
                         );
 
                     // 0 minutos: mensagem final
-                    if (
-                        minutos === 0 &&
-                        ultimoStatusPedido !== "entregue"
-                    ) {
+                    if (minutos === 0) {
 
-                        container.innerHTML = `
-                            <div class="status-pedido">
-                                <div class="mensagem-chegada">
-                                    💚<br>
-                                    <strong>Pedido #${pedido.id} entregue!</strong><br><br>
-                                    Obrigado por escolher a Gustum!<br>
-                                    Esperamos que você aproveite sua refeição. 😊
+                        if (ultimoStatusPedido !== "entregue") {
+
+                            container.innerHTML = `
+                                <div class="status-pedido">
+                                    <div class="mensagem-chegada">
+                                        💚<br>
+                                        <strong>Pedido #${pedido.id} entregue!</strong><br><br>
+                                        Obrigado por escolher a Gustum!<br>
+                                        Esperamos que você aproveite sua refeição. 😊
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
 
-                        ultimoStatusPedido = "entregue";
+                            ultimoStatusPedido = "entregue";
 
-                        localStorage.setItem(
-                            "acompanhamentoEncerrado",
-                            "true"
-                        );
-
-                        setTimeout(() => {
-
-                            container.innerHTML = "";
-
-                        }, 5000);
+                            setTimeout(() => {
+                                container.innerHTML = "";
+                            }, 5000);
+                        }
 
                         return;
                     }
