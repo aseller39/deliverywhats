@@ -2364,22 +2364,19 @@ async function atualizarAcompanhamentoPedido() {
         );
     }
 
-    setTimeout(
-        atualizarAcompanhamentoPedido,
-        1000
-    );
+    
 }
 
 
 
-            carregarCardapio();
-            carregarAvisos();
-            atualizarAcompanhamentoPedido();
+    carregarCardapio();
+    carregarAvisos();
+    atualizarAcompanhamentoPedido();
 
-            setInterval(
-                atualizarAcompanhamentoPedido,
-                5000
-            );
+    setInterval(
+        atualizarAcompanhamentoPedido,
+        5000
+    );
             
 
 
