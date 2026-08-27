@@ -623,7 +623,10 @@ app.put(
 });
 
 
-app.put("/api/pedidos/:id/finalizar", async (req, res) => {
+app.put(
+    "/api/pedidos/:id/finalizar",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
     const pedidoId = req.params.id;
 
@@ -632,10 +635,14 @@ app.put("/api/pedidos/:id/finalizar", async (req, res) => {
       UPDATE pedidos
       SET status = 'finalizado'
       WHERE id = $1
-        AND status = 'pronto'
+  AND restaurante_id = $2
+  AND status = 'pronto'
       RETURNING id, status
       `,
-      [pedidoId]
+      [
+    pedidoId,
+    req.restauranteId
+]
     );
 
     if (resultado.rows.length === 0) {
@@ -662,7 +669,10 @@ app.put("/api/pedidos/:id/finalizar", async (req, res) => {
 });
 
 
-app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
+app.put(
+    "/api/pedidos/:id/saiu-entrega",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const pedidoId = req.params.id;
@@ -676,8 +686,12 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
         endereco
       FROM pedidos
       WHERE id = $1
+  AND restaurante_id = $2
       `,
-      [pedidoId]
+      [
+    pedidoId,
+    req.restauranteId
+]
     );
 
     if (pedido.rows.length === 0) {
@@ -746,8 +760,9 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
         inicio_entrega = NOW(),
         tempo_entrega = $2
       WHERE id = $1
-        AND status = 'pronto'
-        AND tipo_entrega = 'entrega'
+  AND restaurante_id = $3
+  AND status = 'pronto'
+  AND tipo_entrega = 'entrega'
       RETURNING
         id,
         status,
@@ -755,8 +770,9 @@ app.put("/api/pedidos/:id/saiu-entrega", async (req, res) => {
         tempo_entrega
       `,
       [
-        pedidoId,
-        tempoEntrega.minutos
+          pedidoId,
+          tempoEntrega.minutos,
+          req.restauranteId
       ]
     );
 
@@ -1239,11 +1255,13 @@ app.get("/corrigir-tabela-cardapio-semana", async (req, res) => {
 });
 
 
-app.post("/api/cardapio-semana", async (req, res) => {
+app.post(
+    "/api/cardapio-semana",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const {
-      restaurante_id,
       dia_semana,
       titulo,
       descricao,
@@ -1256,7 +1274,6 @@ app.post("/api/cardapio-semana", async (req, res) => {
     } = req.body;
 
     if (
-      !restaurante_id ||
       !dia_semana ||
       !titulo ||
       !descricao ||
@@ -1304,7 +1321,7 @@ app.post("/api/cardapio-semana", async (req, res) => {
 
       RETURNING *
     `, [
-      restaurante_id,
+      req.restauranteId,
       dia_semana,
       titulo,
       descricao,
@@ -1568,7 +1585,10 @@ app.post("/api/pratos", async (req, res) => {
 });
 
 
-app.put("/api/pratos/:id/disponibilidade", async (req, res) => {
+app.put(
+    "/api/pratos/:id/disponibilidade",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const pratoId = req.params.id;
@@ -1579,8 +1599,13 @@ app.put("/api/pratos/:id/disponibilidade", async (req, res) => {
       UPDATE pratos
       SET disponivel = $1
       WHERE id = $2
+  AND restaurante_id = $3
       `,
-      [disponivel, pratoId]
+      [
+    disponivel,
+    pratoId,
+    req.restauranteId
+]
     );
 
     res.json({
@@ -1632,7 +1657,10 @@ app.get("/api/pratos/:id/ingredientes", async (req, res) => {
 
 
 
-app.put("/api/ingredientes/:id/disponibilidade", async (req, res) => {
+app.put(
+    "/api/ingredientes/:id/disponibilidade",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
     const ingredienteId = req.params.id;
     const { disponivel } = req.body;
@@ -1642,8 +1670,17 @@ app.put("/api/ingredientes/:id/disponibilidade", async (req, res) => {
       UPDATE ingredientes
       SET disponivel = $1
       WHERE id = $2
+        AND prato_id IN (
+          SELECT id
+          FROM pratos
+          WHERE restaurante_id = $3
+        )
       `,
-      [disponivel, ingredienteId]
+      [
+        disponivel,
+        ingredienteId,
+        req.restauranteId
+      ]
     );
 
     res.json({
@@ -2091,7 +2128,10 @@ app.get("/api/pratos/:id", async (req, res) => {
 });
 
 
-app.put("/api/pratos/:id", async (req, res) => {
+app.put(
+    "/api/pratos/:id",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const pratoId = req.params.id;
@@ -2126,6 +2166,7 @@ app.put("/api/pratos/:id", async (req, res) => {
         preco_grande = $7,
         preco_kg = $8
       WHERE id = $9
+        AND restaurante_id = $10
       RETURNING *
     `, [
       nome,
@@ -2136,7 +2177,8 @@ app.put("/api/pratos/:id", async (req, res) => {
       preco_media || null,
       preco_grande || null,
       preco_kg || null,
-      pratoId
+      pratoId,
+      req.restauranteId
     ]);
 
     if (resultado.rows.length === 0) {
@@ -2273,7 +2315,12 @@ app.post("/api/avisos", async (req, res) => {
 });
 
 
-app.put("/api/avisos/:id/ativo", async (req, res) => {
+app.put(
+    "/api/avisos/:id/ativo",
+    autenticarRestaurante,
+    async (req, res) => {
+
+
   try {
     const avisoId = req.params.id;
     const { ativo } = req.body;
@@ -2282,10 +2329,16 @@ app.put("/api/avisos/:id/ativo", async (req, res) => {
       `
       UPDATE avisos
       SET ativo = $1
-      WHERE id = $2
+      WHERE id = $2 
+        AND restaurante_id = $3
       RETURNING id, titulo, mensagem, ativo
       `,
-      [ativo, avisoId]
+      [ 
+        ativo, 
+        avisoId, 
+        req.restauranteId 
+
+      ]
     );
 
     res.json({
