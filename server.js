@@ -2378,30 +2378,37 @@ prepararBanco()
     });
 
  
-app.get("/api/preparar-restaurantes", async (req, res) => {
+app.get("/api/cadastrar-login-restaurante", async (req, res) => {
     try {
 
         await pool.query(`
-            ALTER TABLE restaurantes
-            ADD COLUMN IF NOT EXISTS email VARCHAR(150),
-            ADD COLUMN IF NOT EXISTS senha VARCHAR(255);
-        `);
+            UPDATE restaurantes
+            SET
+                nome = $1,
+                email = $2,
+                senha = $3
+            WHERE id = 1
+        `, [
+            "Gostum",
+            "diegonay.ribeiro@hotmail.com",
+            "teste123"
+        ]);
 
         res.json({
             sucesso: true,
-            mensagem: "Campos de login preparados."
+            mensagem: "Login do restaurante cadastrado."
         });
 
     } catch (erro) {
 
         console.error(
-            "Erro ao preparar restaurantes:",
+            "Erro ao cadastrar login:",
             erro
         );
 
         res.status(500).json({
             sucesso: false,
-            erro: "Erro ao preparar restaurantes."
+            erro: "Erro ao cadastrar login."
         });
     }
-});    
+});  
