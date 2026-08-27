@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
 const pool = require("./config/database");
 
 async function prepararBanco() {
@@ -2480,4 +2484,41 @@ app.get("/api/preparar-restaurantes", async (req, res) => {
             erro: "Erro ao preparar restaurantes."
         });
     }
-});    
+}); 
+
+
+app.get("/api/criptografar-senha-restaurante", async (req, res) => {
+    try {
+
+        const senha = "teste123";
+
+        const senhaHash =
+            await bcrypt.hash(senha, 10);
+
+        await pool.query(
+            `
+            UPDATE restaurantes
+            SET senha = $1
+            WHERE id = 1
+            `,
+            [senhaHash]
+        );
+
+        res.json({
+            sucesso: true,
+            mensagem: "Senha do restaurante criptografada."
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao criptografar senha:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao criptografar senha."
+        });
+    }
+});
