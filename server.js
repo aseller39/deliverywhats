@@ -2377,27 +2377,31 @@ prepararBanco()
 
     });
 
-    app.get("/api/verificar-tabelas", async (req, res) => {
+ 
+app.get("/api/preparar-restaurantes", async (req, res) => {
     try {
 
-        const resultado = await pool.query(`
-          SELECT
-              table_name,
-              column_name,
-              data_type
-          FROM information_schema.columns
-          WHERE table_schema = 'public'
-          ORDER BY table_name, ordinal_position;
-      `);
+        await pool.query(`
+            ALTER TABLE restaurantes
+            ADD COLUMN IF NOT EXISTS email VARCHAR(150),
+            ADD COLUMN IF NOT EXISTS senha VARCHAR(255);
+        `);
 
-        res.json(resultado.rows);
+        res.json({
+            sucesso: true,
+            mensagem: "Campos de login preparados."
+        });
 
     } catch (erro) {
 
-        console.error("Erro ao verificar tabelas:", erro);
+        console.error(
+            "Erro ao preparar restaurantes:",
+            erro
+        );
 
         res.status(500).json({
-            erro: "Erro ao verificar tabelas."
+            sucesso: false,
+            erro: "Erro ao preparar restaurantes."
         });
     }
-});
+});    
