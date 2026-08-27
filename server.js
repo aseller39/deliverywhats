@@ -2226,6 +2226,82 @@ app.put("/api/avisos/:id/ativo", async (req, res) => {
 
 
 
+app.post("/api/login-restaurante", async (req, res) => {
+
+    try {
+
+        const { email, senha } = req.body;
+
+        if (!email || !senha) {
+
+            return res.status(400).json({
+                sucesso: false,
+                erro: "Informe e-mail e senha."
+            });
+
+        }
+
+        const resultado = await pool.query(
+            "SELECT id, nome, email, senha, ativo FROM restaurantes WHERE email = $1 LIMIT 1",
+            [email]
+        );
+
+        if (resultado.rows.length === 0) {
+
+            return res.status(401).json({
+                sucesso: false,
+                erro: "E-mail ou senha inválidos."
+            });
+
+        }
+
+        const restaurante = resultado.rows[0];
+
+        if (!restaurante.ativo) {
+
+            return res.status(403).json({
+                sucesso: false,
+                erro: "Restaurante inativo."
+            });
+
+        }
+
+        if (senha !== restaurante.senha) {
+
+            return res.status(401).json({
+                sucesso: false,
+                erro: "E-mail ou senha inválidos."
+            });
+
+        }
+
+        res.json({
+            sucesso: true,
+            restaurante: {
+                id: restaurante.id,
+                nome: restaurante.nome,
+                email: restaurante.email
+            }
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro no login do restaurante:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao realizar login."
+        });
+    }
+});
+
+
+
+
+
 app.post("/webhook", async (req, res) => {
   try {
     const entrada = req.body.entry?.[0];
