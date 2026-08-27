@@ -110,73 +110,13 @@ function autenticarRestaurante(req, res, next) {
 
 
 
-app.get("/criar-tabela-restaurantes", async (req, res) => {
+app.get("/api/restaurantes/:id", async (req, res) => {
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS restaurantes (
-        id SERIAL PRIMARY KEY,
-        nome VARCHAR(150) NOT NULL,
-        telefone VARCHAR(20),
-        ativo BOOLEAN DEFAULT TRUE,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    const restauranteId = req.params.id;
 
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela restaurantes criada com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao criar tabela restaurantes:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
-
-
-app.get("/criar-tabela-pedidos", async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS pedidos (
-        id SERIAL PRIMARY KEY,
-        restaurante_id INTEGER NOT NULL,
-        itens JSONB NOT NULL,
-        observacao TEXT,
-        telefone VARCHAR(20) NOT NULL,
-        tipo_entrega VARCHAR(20) NOT NULL,
-        endereco TEXT,
-        forma_pagamento VARCHAR(30) NOT NULL,
-        total NUMERIC(10,2) NOT NULL,
-        status VARCHAR(30) DEFAULT 'novo',
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela pedidos criada com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao criar tabela pedidos:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao criar tabela pedidos."
-    });
-  }
-});
-
-
-app.get("/api/restaurantes/1", async (req, res) => {
-  try {
     const resultado = await pool.query(
-      "SELECT id, nome, telefone, ativo FROM restaurantes WHERE id = 1"
+      "SELECT id, nome, telefone, ativo FROM restaurantes WHERE id = $1",
+      [restauranteId]
     );
 
     res.json({
@@ -1061,199 +1001,6 @@ function montarEnderecoCompleto(endereco) {
 }
 
 
-app.get("/teste-banco", async (req, res) => {
-  try {
-    const resultado = await pool.query("SELECT NOW()");
-    
-    res.json({
-      conectado: true,
-      data: resultado.rows[0]
-    });
-  } catch (erro) {
-    console.error("Erro no banco:", erro);
-    res.status(500).json({
-      conectado: false,
-      erro: "Não foi possível conectar ao banco."
-    });
-  }
-});
-
-
-app.get("/teste-restaurantes", async (req, res) => {
-  try {
-    const resultado = await pool.query(
-      "SELECT * FROM restaurantes"
-    );
-
-    res.json({
-      sucesso: true,
-      restaurantes: resultado.rows
-    });
-
-  } catch (erro) {
-    console.error("Erro ao consultar restaurantes:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
-
-
-app.get("/cadastrar-gustum", async (req, res) => {
-  try {
-    const resultado = await pool.query(`
-      INSERT INTO restaurantes (nome, telefone)
-      VALUES ($1, $2)
-      RETURNING *
-    `, ["Gustum", "5586988134359"]);
-
-    res.json({
-      sucesso: true,
-      restaurante: resultado.rows[0]
-    });
-
-  } catch (erro) {
-    console.error("Erro ao cadastrar restaurante:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
-
-app.get("/criar-tabela-pratos", async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS pratos (
-        id SERIAL PRIMARY KEY,
-        restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
-        nome VARCHAR(150) NOT NULL,
-        descricao TEXT,
-        preco NUMERIC(10,2) NOT NULL,
-        disponivel BOOLEAN DEFAULT TRUE,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela pratos criada com sucesso."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao criar tabela pratos:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
-
-app.get("/criar-tabela-cardapio-semana", async (req, res) => {
-  try {
-
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS cardapio_semana (
-        id SERIAL PRIMARY KEY,
-        restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
-        dia_semana INTEGER NOT NULL,
-        opcao_1 VARCHAR(150) NOT NULL,
-        opcao_2 VARCHAR(150) NOT NULL,
-        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE (restaurante_id, dia_semana)
-      )
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela cardapio_semana criada."
-    });
-
-  } catch (erro) {
-
-    console.error(
-      "Erro ao criar tabela cardapio_semana:",
-      erro
-    );
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao criar tabela."
-    });
-  }
-});
-
-
-app.get("/atualizar-tabela-cardapio-semana", async (req, res) => {
-  try {
-
-    await pool.query(`
-      ALTER TABLE cardapio_semana
-      ADD COLUMN IF NOT EXISTS titulo VARCHAR(150),
-      ADD COLUMN IF NOT EXISTS descricao TEXT,
-      ADD COLUMN IF NOT EXISTS preco_pequena NUMERIC(10,2),
-      ADD COLUMN IF NOT EXISTS preco_media NUMERIC(10,2),
-      ADD COLUMN IF NOT EXISTS preco_grande NUMERIC(10,2),
-      ADD COLUMN IF NOT EXISTS foto_base64 TEXT,
-      ADD COLUMN IF NOT EXISTS carne_1 VARCHAR(150),
-      ADD COLUMN IF NOT EXISTS carne_2 VARCHAR(150)
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Tabela cardapio_semana atualizada."
-    });
-
-  } catch (erro) {
-
-    console.error(
-      "Erro ao atualizar tabela cardapio_semana:",
-      erro
-    );
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao atualizar tabela."
-    });
-  }
-});
-
-
-app.get("/corrigir-tabela-cardapio-semana", async (req, res) => {
-  try {
-
-    await pool.query(`
-      ALTER TABLE cardapio_semana
-      ALTER COLUMN opcao_1 DROP NOT NULL,
-      ALTER COLUMN opcao_2 DROP NOT NULL
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Campos antigos corrigidos."
-    });
-
-  } catch (erro) {
-
-    console.error(
-      "Erro ao corrigir tabela cardapio_semana:",
-      erro
-    );
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao corrigir tabela."
-    });
-  }
-});
-
 
 app.post(
     "/api/cardapio-semana",
@@ -1407,64 +1154,6 @@ app.get("/api/cardapio-semana", async (req, res) => {
 });
 
 
-app.get("/teste-pratos", async (req, res) => {
-  try {
-    const resultado = await pool.query(`
-      SELECT *
-      FROM pratos
-      WHERE restaurante_id = 1
-      ORDER BY id
-    `);
-
-    res.json({
-      sucesso: true,
-      pratos: resultado.rows
-    });
-
-  } catch (erro) {
-    console.error("Erro ao consultar pratos:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
-
-app.get("/cadastrar-arrumadinho", async (req, res) => {
-  try {
-    const resultado = await pool.query(`
-      INSERT INTO pratos (
-        restaurante_id,
-        nome,
-        descricao,
-        preco
-      )
-      VALUES ($1, $2, $3, $4)
-      RETURNING *
-    `, [
-      1,
-      "Arrumadinho",
-      "Feijão, arroz, farofa, vinagrete e carne.",
-      20.00
-    ]);
-
-    res.json({
-      sucesso: true,
-      prato: resultado.rows[0]
-    });
-
-  } catch (erro) {
-    console.error("Erro ao cadastrar prato:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: erro.message
-    });
-  }
-});
-
 
 app.post(
   "/api/upload-produto",
@@ -1503,11 +1192,13 @@ app.post(
 );
 
 
-app.post("/api/pratos", async (req, res) => {
+app.post(
+    "/api/pratos",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const {
-      restaurante_id,
       nome,
       descricao,
       categoria,
@@ -1524,10 +1215,10 @@ app.post("/api/pratos", async (req, res) => {
   foto_base64 ? "SIM" : "NÃO"
 );
 
-    if (!restaurante_id || !nome || !categoria) {
+    if (!nome || !categoria) {
       return res.status(400).json({
         sucesso: false,
-        erro: "Restaurante, nome e categoria são obrigatórios."
+        erro: "Nome e categoria são obrigatórios."
       });
     }
 
@@ -1554,7 +1245,7 @@ app.post("/api/pratos", async (req, res) => {
       RETURNING *
       `,
       [
-        restaurante_id,
+        req.restauranteId,
         nome,
         descricao || null,
         preco || 0,
@@ -1695,22 +1386,6 @@ app.put(
       sucesso: false,
       erro: "Erro ao atualizar ingrediente"
     });
-  }
-});
-
-
-
-app.get("/teste-whatsapp", async (req, res) => {
-  try {
-    const resultado = await enviarMensagemWhatsApp(
-      "5586988134359",
-      "Olá! Teste do Delivery Facil funcionando."
-    );
-
-    res.json(resultado);
-  } catch (erro) {
-    console.error("Erro ao enviar WhatsApp:", erro);
-    res.status(500).json({ erro: "Falha ao enviar mensagem" });
   }
 });
 
@@ -1929,10 +1604,11 @@ app.get("/api/cardapio", async (req, res) => {
 });
 
 
-app.get("/api/painel/produtos", async (req, res) => {
+app.get(
+  "/api/painel/produtos",
+  autenticarRestaurante,
+  async (req, res) => {
   try {
-
-    const restauranteId = req.query.restaurante;
 
     const resultado = await pool.query(`
       SELECT
@@ -1952,7 +1628,7 @@ app.get("/api/painel/produtos", async (req, res) => {
       FROM pratos
       WHERE restaurante_id = $1
       ORDER BY id
-    `, [restauranteId]);
+        `, [req.restauranteId]);
 
     res.json({
       sucesso: true,
@@ -2260,9 +1936,12 @@ app.get("/api/avisos", async (req, res) => {
 
 
 
-app.post("/api/avisos", async (req, res) => {
+app.post(
+    "/api/avisos",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
-    const { restaurante_id, titulo, mensagem, data_inicio, data_fim } = req.body;
+    const { titulo, mensagem, data_inicio, data_fim } = req.body;
 
     const avisoExistente = await pool.query(
       `
@@ -2274,7 +1953,7 @@ app.post("/api/avisos", async (req, res) => {
         AND ativo = true
       LIMIT 1
       `,
-      [restaurante_id, titulo.trim(), mensagem.trim()]
+      [req.restauranteId, titulo.trim(), mensagem.trim()]
     );
 
     if (avisoExistente.rows.length > 0) {
@@ -2296,7 +1975,7 @@ app.post("/api/avisos", async (req, res) => {
     VALUES ($1, $2, $3, $4, $5)
     RETURNING id, restaurante_id, titulo, mensagem, ativo, data_inicio, data_fim, criado_em
       `,
-      [restaurante_id, titulo, mensagem, data_inicio || null, data_fim || null]
+      [req.restauranteId, titulo, mensagem, data_inicio || null, data_fim || null]
     );
 
     res.json({
@@ -2459,9 +2138,6 @@ app.post("/api/login-restaurante", async (req, res) => {
 });
 
 
-
-
-
 app.post("/webhook", async (req, res) => {
   try {
     const entrada = req.body.entry?.[0];
@@ -2499,101 +2175,6 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/atualizar-tabela-pratos-categoria", async (req, res) => {
-  try {
-    await pool.query(`
-      ALTER TABLE pratos
-      ADD COLUMN IF NOT EXISTS categoria VARCHAR(50) DEFAULT 'prato'
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Categoria adicionada à tabela pratos."
-    });
-
-    await pool.query(`
-      ALTER TABLE pratos
-      ADD COLUMN IF NOT EXISTS foto_url TEXT
-    `);
-
-    await pool.query(`
-      ALTER TABLE pratos
-      ADD COLUMN IF NOT EXISTS foto_base64 TEXT
-    `);
-
-  } catch (erro) {
-    console.error("Erro ao adicionar categoria:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao adicionar categoria."
-    });
-  }
-});
-
-app.get("/atualizar-tabela-porcoes", async (req, res) => {
-  try {
-    await pool.query(`
-      ALTER TABLE pratos
-      ADD COLUMN IF NOT EXISTS preco_kg NUMERIC(10,2)
-    `);
-
-    res.json({
-      sucesso: true,
-      mensagem: "Campo de preço por kg criado."
-    });
-
-  } catch (erro) {
-    console.error("Erro ao atualizar tabela:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao atualizar tabela."
-    });
-  }
-});
-
-
-app.get("/criar-porcao-teste", async (req, res) => {
-  try {
-    const resultado = await pool.query(`
-      INSERT INTO pratos (
-        restaurante_id,
-        nome,
-        descricao,
-        preco,
-        preco_kg,
-        categoria,
-        disponivel
-      )
-      VALUES (
-        1,
-        'Carne assada',
-        'Carne assada temperada',
-        60.00,
-        60.00,
-        'porcao',
-        true
-      )
-      RETURNING *
-    `);
-
-    res.json({
-      sucesso: true,
-      porcao: resultado.rows[0]
-    });
-
-  } catch (erro) {
-    console.error("Erro ao criar porção:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao criar porção."
-    });
-  }
-});
-
-
 prepararBanco()
     .then(() => {
 
@@ -2612,69 +2193,3 @@ prepararBanco()
         );
 
     });
-
- 
-app.get("/api/preparar-restaurantes", async (req, res) => {
-    try {
-
-        await pool.query(`
-            ALTER TABLE restaurantes
-            ADD COLUMN IF NOT EXISTS email VARCHAR(150),
-            ADD COLUMN IF NOT EXISTS senha VARCHAR(255);
-        `);
-
-        res.json({
-            sucesso: true,
-            mensagem: "Campos de login preparados."
-        });
-
-    } catch (erro) {
-
-        console.error(
-            "Erro ao preparar restaurantes:",
-            erro
-        );
-
-        res.status(500).json({
-            sucesso: false,
-            erro: "Erro ao preparar restaurantes."
-        });
-    }
-}); 
-
-
-app.get("/api/criptografar-senha-restaurante", async (req, res) => {
-    try {
-
-        const senha = "teste123";
-
-        const senhaHash =
-            await bcrypt.hash(senha, 10);
-
-        await pool.query(
-            `
-            UPDATE restaurantes
-            SET senha = $1
-            WHERE id = 1
-            `,
-            [senhaHash]
-        );
-
-        res.json({
-            sucesso: true,
-            mensagem: "Senha do restaurante criptografada."
-        });
-
-    } catch (erro) {
-
-        console.error(
-            "Erro ao criptografar senha:",
-            erro
-        );
-
-        res.status(500).json({
-            sucesso: false,
-            erro: "Erro ao criptografar senha."
-        });
-    }
-});
