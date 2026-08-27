@@ -221,6 +221,93 @@
 
     </div>
 
+
+<script>
+
+    document
+        .getElementById("formLogin")
+        .addEventListener("submit", async function (evento) {
+
+            evento.preventDefault();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const senha =
+                document.getElementById("senha").value;
+
+            const mensagem =
+                document.getElementById("mensagem");
+
+            mensagem.className = "mensagem";
+            mensagem.textContent = "";
+
+            try {
+
+                const resposta =
+                    await fetch("/api/login-restaurante", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            senha: senha
+                        })
+
+                    });
+
+                const dados =
+                    await resposta.json();
+
+                if (!dados.sucesso) {
+
+                    mensagem.className =
+                        "mensagem erro";
+
+                    mensagem.textContent =
+                        dados.erro || "Não foi possível entrar.";
+
+                    return;
+                }
+
+                localStorage.setItem(
+                    "restauranteId",
+                    String(dados.restaurante.id)
+                );
+
+                localStorage.setItem(
+                    "restauranteNome",
+                    dados.restaurante.nome
+                );
+
+                window.location.href =
+                    "/painel.html";
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao fazer login:",
+                    erro
+                );
+
+                mensagem.className =
+                    "mensagem erro";
+
+                mensagem.textContent =
+                    "Erro de conexão com o servidor.";
+
+            }
+
+        });
+
+</script>
+
+
+
 </body>
 
 </html>
