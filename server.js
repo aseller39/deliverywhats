@@ -516,7 +516,10 @@ app.get(
 });
 
 
-app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
+app.put(
+    "/api/pedidos/:id/iniciar-preparo",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const pedidoId = req.params.id;
@@ -527,10 +530,14 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
       SET status = 'em_preparo',
           inicio_preparo = NOW()
       WHERE id = $1
-        AND status = 'aguardando'
+      AND restaurante_id = $2
+      AND status = 'aguardando'
       RETURNING id, status
       `,
-      [pedidoId]
+      [
+          pedidoId,
+          req.restauranteId
+      ]
     );
 
     if (resultado.rows.length === 0) {
@@ -563,7 +570,10 @@ app.put("/api/pedidos/:id/iniciar-preparo", async (req, res) => {
 });
 
 
-app.put("/api/pedidos/:id/marcar-pronto", async (req, res) => {
+app.put(
+    "/api/pedidos/:id/marcar-pronto",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
 
     const pedidoId = req.params.id;
@@ -573,10 +583,14 @@ app.put("/api/pedidos/:id/marcar-pronto", async (req, res) => {
       UPDATE pedidos
       SET status = 'pronto'
       WHERE id = $1
-        AND status = 'em_preparo'
+  AND restaurante_id = $2
+  AND status = 'em_preparo'
       RETURNING id, status
       `,
-      [pedidoId]
+      [
+    pedidoId,
+    req.restauranteId
+]
     );
 
     if (resultado.rows.length === 0) {
