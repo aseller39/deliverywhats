@@ -628,8 +628,11 @@ async function carregarPedidos() {
 
     try {
 
+        const restauranteId =
+            localStorage.getItem("restauranteId");
+
         const resposta =
-            await fetch("/api/pedidos?restaurante=1");
+            await fetch(`/api/pedidos?restaurante=${restauranteId}`);
 
         const dados =
             await resposta.json();
