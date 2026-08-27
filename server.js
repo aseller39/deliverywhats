@@ -55,6 +55,60 @@ app.use(express.static("public"));
 app.use(express.json({ limit: "10mb" }));
 
 
+function autenticarRestaurante(req, res, next) {
+
+    try {
+
+        const token =
+            req.cookies?.tokenRestaurante;
+
+        if (!token) {
+
+            return res.status(401).json({
+                sucesso: false,
+                erro: "Acesso não autorizado."
+            });
+
+        }
+
+        const dados =
+            jwt.verify(
+                token,
+                process.env.JWT_SECRET
+            );
+
+        if (
+            !dados.restauranteId ||
+            dados.tipo !== "restaurante"
+        ) {
+
+            return res.status(401).json({
+                sucesso: false,
+                erro: "Token inválido."
+            });
+
+        }
+
+        req.restauranteId =
+            dados.restauranteId;
+
+        next();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro na autenticação do restaurante:",
+            erro
+        );
+
+        return res.status(401).json({
+            sucesso: false,
+            erro: "Sessão inválida ou expirada."
+        });
+    }
+}
+
+
 
 app.get("/criar-tabela-restaurantes", async (req, res) => {
   try {
@@ -416,9 +470,12 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
 });
 
 
-app.get("/api/pedidos", async (req, res) => {
+app.get(
+    "/api/pedidos",
+    autenticarRestaurante,
+    async (req, res) => {
   try {
-    const restauranteId = req.query.restaurante;
+    const restauranteId = req.restauranteId;
 
     const resultado = await pool.query(
       `
