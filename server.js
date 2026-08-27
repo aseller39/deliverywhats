@@ -2270,7 +2270,13 @@ app.post("/api/login-restaurante", async (req, res) => {
 
         }
 
-        if (senha !== restaurante.senha) {
+        const senhaValida =
+            await bcrypt.compare(
+                senha,
+                restaurante.senha
+            );
+
+        if (!senhaValida) {
 
             return res.status(401).json({
                 sucesso: false,
