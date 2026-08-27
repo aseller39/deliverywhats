@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
-app.use(cookieParser());
+
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
 
 const pool = require("./config/database");
 
