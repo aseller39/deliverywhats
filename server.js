@@ -336,6 +336,7 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
             `
             SELECT
                 id,
+                restaurante_id,
                 status,
                 tipo_entrega,
                 inicio_preparo,
@@ -382,6 +383,7 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
             sucesso: true,
             pedido: {
                 id: pedido.id,
+                restaurante_id: pedido.restaurante_id,
                 status: pedido.status,
                 tipo_entrega: pedido.tipo_entrega,
                 inicio_preparo: pedido.inicio_preparo,
