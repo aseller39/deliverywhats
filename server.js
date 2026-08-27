@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+app.use(cookieParser());
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
 
 const pool = require("./config/database");
 
@@ -2284,6 +2286,28 @@ app.post("/api/login-restaurante", async (req, res) => {
             });
 
         }
+
+        const token = jwt.sign(
+            {
+                restauranteId: restaurante.id,
+                tipo: "restaurante"
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "4h"
+            }
+        );
+
+        res.cookie(
+            "tokenRestaurante",
+            token,
+            {
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+                maxAge: 4 * 60 * 60 * 1000
+            }
+        );
 
         res.json({
             sucesso: true,
