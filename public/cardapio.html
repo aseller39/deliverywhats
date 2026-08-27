@@ -2519,6 +2519,10 @@ async function atualizarAcompanhamentoPedido() {
 
 
             async function enviarPedido() {
+
+                const parametros = new URLSearchParams(window.location.search);
+                const restauranteId = parametros.get("restaurante");
+
                 if (itensPedido.length === 0) {
                     alert("Adicione pelo menos um item ao pedido.");
                     return;
@@ -2567,7 +2571,7 @@ async function atualizarAcompanhamentoPedido() {
                 );
 
                 const pedidoFinal = {
-                    restaurante_id: 1,
+                    restaurante_id: Number(restauranteId),
                     itens: itensPedido,
                     observacao: observacaoPedido,
                     telefone: telefone,
