@@ -1773,42 +1773,46 @@ async function excluirCardapioSemana(dia) {
 }
 
 
-    async function atualizarContadorPedidos() {
+async function atualizarContadorPedidos() {
 
-        try {
+    try {
 
-            const resposta =
-                await fetch("/api/pedidos?restaurante=1");
+        const resposta =
+            await fetch("/api/pedidos?restaurante=1", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
 
-            const dados =
-                await resposta.json();
+        const dados =
+            await resposta.json();
 
-            if (!dados.sucesso) {
-                return;
-            }
-
-            const pedidosNovos =
-                dados.pedidos.filter(
-                    pedido => pedido.status === "aguardando"
-                );
-
-            const contador =
-                document.getElementById("contadorPedidos");
-
-            if (!contador) {
-                return;
-            }
-
-            contador.textContent = pedidosNovos.length;
-
-        } catch (erro) {
-
-            console.error(
-                "Erro ao atualizar contador de pedidos:",
-                erro
-            );
+        if (!dados.sucesso) {
+            return;
         }
+
+        const pedidosNovos =
+            dados.pedidos.filter(
+                pedido => pedido.status === "aguardando"
+            );
+
+        const contador =
+            document.getElementById("contadorPedidos");
+
+        if (!contador) {
+            return;
+        }
+
+        contador.textContent = pedidosNovos.length;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao atualizar contador de pedidos:",
+            erro
+        );
     }
+}
 
 
     async function excluirProduto(produtoId) {

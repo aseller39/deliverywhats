@@ -193,270 +193,270 @@ app.get("/api/carnes/:restauranteId", async (req, res) => {
 
 
 app.post("/api/pedidos", async (req, res) => {
-  try {
-    const {
-      restaurante_id,
-      itens,
-      observacao,
-      nome,
-      telefone,
-      tipo_entrega,
-      endereco,
-      forma_pagamento,
-      total
-    } = req.body;
-
-    console.log("ITENS RECEBIDOS NO SERVIDOR:", itens);
-
-    const enderecoCompleto =
-        montarEnderecoCompleto(endereco);
-
-    console.log(
-        "📍 ENDEREÇO DO CLIENTE:",
-        enderecoCompleto
-    );
-
-    if (enderecoCompleto && tipo_entrega === "entrega") {
-
-    const coordenadasCliente =
-        await obterCoordenadas(enderecoCompleto);
-
-    console.log(
-        "📍 COORDENADAS DO CLIENTE:",
-        coordenadasCliente
-    );
-
-    if (coordenadasCliente) {
-
-        const tempoEntrega =
-            await calcularTempoEntrega(
-                coordenadasCliente.latitude,
-                coordenadasCliente.longitude
-            );
-
-        console.log(
-            "🛵 TEMPO DE ENTREGA:",
-            tempoEntrega
-        );
-
-    }
-
-}
-
-    if (
-      !restaurante_id ||
-      !itens ||
-      !telefone ||
-      !tipo_entrega ||
-      !forma_pagamento ||
-      total === undefined
-    ) {
-      return res.status(400).json({
-        sucesso: false,
-        erro: "Dados do pedido incompletos."
-      });
-    }
-
-    const resultado = await pool.query(
-      `
-      INSERT INTO pedidos (
-          restaurante_id,
-          itens,
-          observacao,
-          nome,
-          telefone,
-          tipo_entrega,
-          endereco,
-          forma_pagamento,
-          total,
-          status
-      )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      RETURNING id, criado_em, status
-      `,
-      [
+    try {
+      const {
         restaurante_id,
-        JSON.stringify(itens),
-        observacao || null,
-        nome || null,
+        itens,
+        observacao,
+        nome,
         telefone,
         tipo_entrega,
-        endereco
-        ? JSON.stringify(endereco)
-        : null,
+        endereco,
         forma_pagamento,
-        total,
-        "aguardando"
-      ]
-    );
+        total
+      } = req.body;
 
-        // BAIXAR CARNES DO ESTOQUE
+      console.log("ITENS RECEBIDOS NO SERVIDOR:", itens);
 
-    for (const item of itens) {
+      const enderecoCompleto =
+          montarEnderecoCompleto(endereco);
+
+      console.log(
+          "📍 ENDEREÇO DO CLIENTE:",
+          enderecoCompleto
+      );
+
+      if (enderecoCompleto && tipo_entrega === "entrega") {
+
+      const coordenadasCliente =
+          await obterCoordenadas(enderecoCompleto);
+
+      console.log(
+          "📍 COORDENADAS DO CLIENTE:",
+          coordenadasCliente
+      );
+
+      if (coordenadasCliente) {
+
+          const tempoEntrega =
+              await calcularTempoEntrega(
+                  coordenadasCliente.latitude,
+                  coordenadasCliente.longitude
+              );
+
+          console.log(
+              "🛵 TEMPO DE ENTREGA:",
+              tempoEntrega
+          );
+
+      }
+
+  }
 
       if (
-        item.tipo !== "cardapio_dia" ||
-        !item.opcaoCarne
+        !restaurante_id ||
+        !itens ||
+        !telefone ||
+        !tipo_entrega ||
+        !forma_pagamento ||
+        total === undefined
       ) {
-        continue;
+        return res.status(400).json({
+          sucesso: false,
+          erro: "Dados do pedido incompletos."
+        });
       }
 
-      const quantidadePedido =
-        Number(item.quantidade) || 1;
-
-      let quantidadeCarne1 = 0;
-      let quantidadeCarne2 = 0;
-
-      if (item.opcaoCarne === "2_carne_1") {
-
-        quantidadeCarne1 =
-          2 * quantidadePedido;
-
-      }
-
-      if (item.opcaoCarne === "2_carne_2") {
-
-        quantidadeCarne2 =
-          2 * quantidadePedido;
-
-      }
-
-      if (item.opcaoCarne === "1_cada") {
-
-        quantidadeCarne1 =
-          1 * quantidadePedido;
-
-        quantidadeCarne2 =
-          1 * quantidadePedido;
-      }
-
-      if (quantidadeCarne1 > 0) {
-
-        await pool.query(
-          `
-          UPDATE estoque_carnes
-          SET quantidade_disponivel =
-              quantidade_disponivel - $1
-          WHERE restaurante_id = $2
-          AND nome = $3
-          AND data = CURRENT_DATE
-          AND quantidade_disponivel >= $1
-          `,
-          [
-            quantidadeCarne1,
+      const resultado = await pool.query(
+        `
+        INSERT INTO pedidos (
             restaurante_id,
-            item.carne1
-          ]
-        );
+            itens,
+            observacao,
+            nome,
+            telefone,
+            tipo_entrega,
+            endereco,
+            forma_pagamento,
+            total,
+            status
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING id, criado_em, status
+        `,
+        [
+          restaurante_id,
+          JSON.stringify(itens),
+          observacao || null,
+          nome || null,
+          telefone,
+          tipo_entrega,
+          endereco
+          ? JSON.stringify(endereco)
+          : null,
+          forma_pagamento,
+          total,
+          "aguardando"
+        ]
+      );
+
+          // BAIXAR CARNES DO ESTOQUE
+
+      for (const item of itens) {
+
+        if (
+          item.tipo !== "cardapio_dia" ||
+          !item.opcaoCarne
+        ) {
+          continue;
+        }
+
+        const quantidadePedido =
+          Number(item.quantidade) || 1;
+
+        let quantidadeCarne1 = 0;
+        let quantidadeCarne2 = 0;
+
+        if (item.opcaoCarne === "2_carne_1") {
+
+          quantidadeCarne1 =
+            2 * quantidadePedido;
+
+        }
+
+        if (item.opcaoCarne === "2_carne_2") {
+
+          quantidadeCarne2 =
+            2 * quantidadePedido;
+
+        }
+
+        if (item.opcaoCarne === "1_cada") {
+
+          quantidadeCarne1 =
+            1 * quantidadePedido;
+
+          quantidadeCarne2 =
+            1 * quantidadePedido;
+        }
+
+        if (quantidadeCarne1 > 0) {
+
+          await pool.query(
+            `
+            UPDATE estoque_carnes
+            SET quantidade_disponivel =
+                quantidade_disponivel - $1
+            WHERE restaurante_id = $2
+            AND nome = $3
+            AND data = CURRENT_DATE
+            AND quantidade_disponivel >= $1
+            `,
+            [
+              quantidadeCarne1,
+              restaurante_id,
+              item.carne1
+            ]
+          );
+        }
+
+        if (quantidadeCarne2 > 0) {
+
+          await pool.query(
+            `
+            UPDATE estoque_carnes
+            SET quantidade_disponivel =
+                quantidade_disponivel - $1
+            WHERE restaurante_id = $2
+            AND nome = $3
+            AND data = CURRENT_DATE
+            AND quantidade_disponivel >= $1
+            `,
+            [
+              quantidadeCarne2,
+              restaurante_id,
+              item.carne2
+            ]
+          );
+        }
       }
 
-      if (quantidadeCarne2 > 0) {
+      const pedidoMensagem = {
+        id: resultado.rows[0].id,
+        itens,
+        observacao,
+        nome,
+        telefone,
+        tipo_entrega,
+        endereco,
+        forma_pagamento,
+        total
+      };
 
-        await pool.query(
-          `
-          UPDATE estoque_carnes
-          SET quantidade_disponivel =
-              quantidade_disponivel - $1
-          WHERE restaurante_id = $2
-          AND nome = $3
-          AND data = CURRENT_DATE
-          AND quantidade_disponivel >= $1
-          `,
-          [
-            quantidadeCarne2,
-            restaurante_id,
-            item.carne2
-          ]
-        );
+      const mensagemWhatsApp = montarMensagemPedido(pedidoMensagem);
+
+      console.log("MENSAGEM DO PEDIDO:");
+      console.log(mensagemWhatsApp);
+
+      const restaurante = await pool.query(
+        "SELECT telefone FROM restaurantes WHERE id = $1",
+        [restaurante_id]
+      );
+
+      const numeroRestaurante = restaurante.rows[0]?.telefone;
+
+      if (!numeroRestaurante) {
+        throw new Error("Telefone do restaurante não cadastrado.");
       }
-    }
 
-    const pedidoMensagem = {
-      id: resultado.rows[0].id,
-      itens,
-      observacao,
-      nome,
-      telefone,
-      tipo_entrega,
-      endereco,
-      forma_pagamento,
-      total
-    };
+      await enviarMensagemWhatsApp(
+        numeroRestaurante,
+        mensagemWhatsApp
+      );
 
-    const mensagemWhatsApp = montarMensagemPedido(pedidoMensagem);
+      console.log("Pedido enviado para o WhatsApp do restaurante com sucesso.");
 
-    console.log("MENSAGEM DO PEDIDO:");
-    console.log(mensagemWhatsApp);
+      const mensagemCliente =
+    `🍽️ Pedido #${resultado.rows[0].id} recebido!\n\n` +
+    `Obrigado, ${nome || "cliente"}, por comprar na Gustum! ❤️\n\n` +
+    `Seu pedido já está sendo preparado. ` +
+    `Acompanhe o andamento pelo link do seu pedido.`;
 
-    const restaurante = await pool.query(
-      "SELECT telefone FROM restaurantes WHERE id = $1",
-      [restaurante_id]
+  try {
+
+    console.log(
+      "ENVIANDO CONFIRMAÇÃO PARA O CLIENTE:",
+      telefone
     );
 
-    const numeroRestaurante = restaurante.rows[0]?.telefone;
+    const respostaCliente =
+      await enviarMensagemWhatsApp(
+        telefone,
+        mensagemCliente
+      );
 
-    if (!numeroRestaurante) {
-      throw new Error("Telefone do restaurante não cadastrado.");
-    }
-
-    await enviarMensagemWhatsApp(
-      numeroRestaurante,
-      mensagemWhatsApp
+    console.log(
+      "RESPOSTA WHATSAPP CLIENTE:",
+      respostaCliente
     );
 
-    console.log("Pedido enviado para o WhatsApp do restaurante com sucesso.");
+  } catch (erroCliente) {
 
-    const mensagemCliente =
-  `🍽️ Pedido #${resultado.rows[0].id} recebido!\n\n` +
-  `Obrigado, ${nome || "cliente"}, por comprar na Gustum! ❤️\n\n` +
-  `Seu pedido já está sendo preparado. ` +
-  `Acompanhe o andamento pelo link do seu pedido.`;
-
-try {
-
-  console.log(
-    "ENVIANDO CONFIRMAÇÃO PARA O CLIENTE:",
-    telefone
-  );
-
-  const respostaCliente =
-    await enviarMensagemWhatsApp(
-      telefone,
-      mensagemCliente
+    console.error(
+      "ERRO AO ENVIAR WHATSAPP PARA CLIENTE:",
+      erroCliente
     );
 
-  console.log(
-    "RESPOSTA WHATSAPP CLIENTE:",
-    respostaCliente
-  );
-
-} catch (erroCliente) {
-
-  console.error(
-    "ERRO AO ENVIAR WHATSAPP PARA CLIENTE:",
-    erroCliente
-  );
-
-}
-
-console.log(
-  "Confirmação enviada para o WhatsApp do cliente."
-);
-
-    res.status(201).json({
-      sucesso: true,
-      mensagem: "Pedido recebido com sucesso.",
-      pedido: resultado.rows[0]
-    });
-
-  } catch (erro) {
-    console.error("Erro ao salvar pedido:", erro);
-
-    res.status(500).json({
-      sucesso: false,
-      erro: "Erro ao salvar pedido."
-    });
   }
+
+  console.log(
+    "Confirmação enviada para o WhatsApp do cliente."
+  );
+
+      res.status(201).json({
+        sucesso: true,
+        mensagem: "Pedido recebido com sucesso.",
+        pedido: resultado.rows[0]
+      });
+
+    } catch (erro) {
+      console.error("Erro ao salvar pedido:", erro);
+
+      res.status(500).json({
+        sucesso: false,
+        erro: "Erro ao salvar pedido."
+      });
+    }
 });
 
 
