@@ -1833,6 +1833,13 @@ function adicionarCardapioDiaCarrinho(tamanho) {
         opcaoCarne:
             opcaoCarne.value,
 
+        nomeCarne:
+            opcaoCarne.value === "2_carne_1"
+                ? cardapioDiaSelecionado.carne_1
+                : opcaoCarne.value === "2_carne_2"
+                    ? cardapioDiaSelecionado.carne_2
+                    : "1 pedaço de cada",
+
         garfo:
             opcaoGarfo.value === "sim",
 
