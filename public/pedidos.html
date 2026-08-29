@@ -776,11 +776,9 @@ async function carregarPedidos() {
         const restauranteId =
             localStorage.getItem("restauranteId");
 
-        const resposta =
+       const resposta =
             await fetch(`/api/pedidos?restaurante=${restauranteId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
+                credentials: "include"
             });
 
         const dados =
