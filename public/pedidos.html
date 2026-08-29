@@ -1185,10 +1185,40 @@ async function carregarPedidos() {
                         <ul>
 
                             ${pedido.itens.map(item => `
+
                                 <li>
-                                    ${item.quantidade}x
-                                    ${item.nome}
+
+                                    <strong>
+                                        ${item.quantidade}x
+                                        ${item.nome}
+
+                                        ${
+                                            item.tamanho
+                                                ? ` — ${item.tamanho}`
+                                                : ""
+                                        }
+                                    </strong>
+
+                                    ${
+                                        item.tipo === "cardapio_dia" && item.nomeCarne
+                                            ? `<br>🥩 Carne: ${item.nomeCarne}`
+                                            : ""
+                                    }
+
+                                    ${
+                                        item.tipo === "cardapio_dia" && item.garfo
+                                            ? `<br>🍴 Cliente quer ${item.quantidade} garfo(s)`
+                                            : ""
+                                    }
+
+                                    ${
+                                        item.tipo === "cardapio_dia" && item.observacao
+                                            ? `<br>📝 Observação: ${item.observacao}`
+                                            : ""
+                                    }
+
                                 </li>
+
                             `).join("")}
 
                         </ul>
