@@ -819,7 +819,87 @@ function abrirEstoqueCarnes() {
 
     document.getElementById("estoqueCarnesPainel").style.display = "block";
 
-    carregarEstoqueCarnes();
+    carregarEstoqueCarnesPainel();
+}
+
+
+async function carregarEstoqueCarnesPainel() {
+
+    const container =
+        document.getElementById("listaEstoqueCarnes");
+
+    try {
+
+        const resposta =
+            await fetch(
+                "/api/painel/estoque-carnes",
+                {
+                    credentials: "include"
+                }
+            );
+
+        const dados =
+            await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            container.innerHTML = `
+                <div class="mensagem-vazia">
+                    ❌ Não foi possível carregar o estoque.
+                </div>
+            `;
+
+            return;
+        }
+
+        if (
+            !dados.carnes ||
+            dados.carnes.length === 0
+        ) {
+
+            container.innerHTML = `
+                <div class="mensagem-vazia">
+                    🥩 Nenhuma carne cadastrada hoje.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML =
+            dados.carnes.map(carne => `
+
+                <div class="card-estoque-carne">
+
+                    <div class="estoque-carne-nome">
+                        🥩 ${carne.nome}
+                    </div>
+
+                    <div class="estoque-carne-quantidade">
+                        ${carne.quantidade_disponivel}
+                    </div>
+
+                    <div class="estoque-carne-label">
+                        unidades disponíveis
+                    </div>
+
+                </div>
+
+            `).join("");
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar estoque:",
+            erro
+        );
+
+        container.innerHTML = `
+            <div class="mensagem-vazia">
+                ❌ Erro de comunicação com o servidor.
+            </div>
+        `;
+    }
 }
 
 
