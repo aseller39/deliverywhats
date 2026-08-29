@@ -10,6 +10,7 @@ app.use(cookieParser());
 
 const pool = require("./config/database");
 
+
 async function prepararBanco() {
 
     await pool.query(`
@@ -18,8 +19,23 @@ async function prepararBanco() {
         ADD COLUMN IF NOT EXISTS tempo_entrega INTEGER
     `);
 
-    console.log("✅ Estrutura da tabela pedidos verificada.");
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS estoque_carnes (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
+            data DATE NOT NULL,
+            nome VARCHAR(150) NOT NULL,
+            quantidade_inicial INTEGER NOT NULL DEFAULT 0,
+            quantidade_disponivel INTEGER NOT NULL DEFAULT 0,
+            ativo BOOLEAN DEFAULT TRUE,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (restaurante_id, data, nome)
+        )
+    `);
+
+    console.log("✅ Estrutura do banco verificada.");
 }
+
 
 const restauranteCoordenadas = {
     latitude: -25.350002702451427,
@@ -454,6 +470,51 @@ app.get(
     });
   }
 });
+
+
+
+app.get(
+  "/api/painel/estoque-carnes",
+  autenticarRestaurante,
+  async (req, res) => {
+    try {
+
+      const resultado = await pool.query(
+        `
+        SELECT
+          id,
+          nome,
+          quantidade_inicial,
+          quantidade_disponivel,
+          ativo
+        FROM estoque_carnes
+        WHERE restaurante_id = $1
+          AND data = CURRENT_DATE
+        ORDER BY id
+        `,
+        [req.restauranteId]
+      );
+
+      res.json({
+        sucesso: true,
+        carnes: resultado.rows
+      });
+
+    } catch (erro) {
+
+      console.error(
+        "Erro ao consultar estoque de carnes:",
+        erro
+      );
+
+      res.status(500).json({
+        sucesso: false,
+        erro: "Erro ao consultar estoque de carnes."
+      });
+    }
+  }
+);
+
 
 
 app.put(
