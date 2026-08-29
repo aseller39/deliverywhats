@@ -1199,7 +1199,7 @@ if (cardapioDia) {
 }
 
 
-function abrirProduto(id, tamanhoEscolhido = null) {
+async function abrirProduto(id, tamanhoEscolhido = null) {
     const produto = pratosDisponiveis.find(p => p.id === id);
 
     if (!produto) {
@@ -1207,6 +1207,38 @@ function abrirProduto(id, tamanhoEscolhido = null) {
     }
     produtoSelecionadoId = id;
     tamanhoEscolhidoAtual = tamanhoEscolhido;
+
+    let carnesDisponiveis = [];
+
+    if (produto.categoria === "prato" && tamanhoEscolhido) {
+        try {
+
+            const restauranteId =
+                localStorage.getItem("restauranteId");
+
+            const respostaCarnes =
+                await fetch(
+                    `/api/carnes/${restauranteId}`
+                );
+
+            const dadosCarnes =
+                await respostaCarnes.json();
+
+            if (dadosCarnes.sucesso) {
+                carnesDisponiveis =
+                    dadosCarnes.carnes || [];
+            }
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao carregar carnes:",
+                erro
+            );
+
+        }
+    }
+    
 
     let precoSelecionado = Number(produto.preco);
 
