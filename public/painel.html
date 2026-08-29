@@ -837,6 +837,81 @@ function fecharNovaCarne() {
 }
 
 
+async function salvarNovaCarne() {
+
+    const nome =
+        document.getElementById("nomeNovaCarne").value.trim();
+
+    const quantidade =
+        document.getElementById("quantidadeNovaCarne").value;
+
+    const status =
+        document.getElementById("statusEstoqueCarnes");
+
+    if (!nome || quantidade === "") {
+
+        status.textContent =
+            "⚠️ Informe o nome e a quantidade.";
+
+        return;
+    }
+
+    try {
+
+        const resposta =
+            await fetch(
+                "/api/painel/estoque-carnes",
+                {
+                    method: "POST",
+
+                    credentials: "include",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        nome: nome,
+                        quantidade: Number(quantidade)
+                    })
+                }
+            );
+
+        const dados =
+            await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            status.textContent =
+                "❌ " +
+                (dados.erro || "Não foi possível cadastrar a carne.");
+
+            return;
+        }
+
+        status.textContent =
+            "✅ Carne cadastrada com sucesso.";
+
+        document.getElementById("nomeNovaCarne").value = "";
+        document.getElementById("quantidadeNovaCarne").value = "";
+
+        fecharNovaCarne();
+
+        carregarEstoqueCarnesPainel();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao cadastrar carne:",
+            erro
+        );
+
+        status.textContent =
+            "❌ Erro de comunicação com o servidor.";
+    }
+}
+
+
 function abrirCardapioSemana() {
 
     document.getElementById("formularioProduto").style.display = "none";
