@@ -965,6 +965,10 @@ function montarMensagemPedido(pedido) {
       if (item.tamanho) {
         detalhes = ` - ${item.tamanho}`;
       }
+
+      if (item.tipo === "cardapio_dia" && item.nomeCarne) {
+        detalhes += ` - 🥩 ${item.nomeCarne}`;
+      }
     }
 
     mensagem +=
