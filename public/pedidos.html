@@ -486,6 +486,66 @@ body > h2:first-of-type {
 }
 
 
+#estoqueCarnes {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 15px;
+
+    max-width: 900px;
+
+    margin: 20px auto 30px;
+}
+
+.card-estoque-carne {
+
+    background: #1e293b;
+
+    border: 1px solid #334155;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    text-align: center;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.estoque-carne-nome {
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+}
+
+.estoque-carne-quantidade {
+
+    color: #22c55e;
+
+    font-size: 32px;
+
+    font-weight: bold;
+}
+
+.estoque-carne-label {
+
+    color: #cbd5e1;
+
+    font-size: 13px;
+
+    margin-top: 4px;
+}
+
+
 @media (max-width: 600px) {
 
     body {
@@ -600,11 +660,17 @@ body > h2:first-of-type {
 
     </div>
 
-    <h2>🕐 Fila de pedidos</h2>
+    <h2>🥩 Estoque de carnes</h2>
 
-    <div id="pedidos">
-        Carregando pedidos...
-    </div>
+<div id="estoqueCarnes">
+    Carregando estoque...
+</div>
+
+<h2>🕐 Pedidos</h2>
+
+<div id="pedidos">
+    Carregando pedidos...
+</div>
 
     <h2>👨‍🍳 Em preparo</h2>
 
@@ -618,7 +684,86 @@ body > h2:first-of-type {
         Nenhum pedido pronto.
     </div>
 
+    
+
     <script>
+
+async function carregarEstoqueCarnes() {
+
+    const container =
+        document.getElementById("estoqueCarnes");
+
+    try {
+
+        const resposta = await fetch(
+            "/api/painel/estoque-carnes",
+            {
+                credentials: "include"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            container.innerHTML = `
+                <div class="mensagem-vazia">
+                    ❌ Não foi possível carregar o estoque.
+                </div>
+            `;
+
+            return;
+        }
+
+        if (
+            !dados.carnes ||
+            dados.carnes.length === 0
+        ) {
+
+            container.innerHTML = `
+                <div class="mensagem-vazia">
+                    🥩 Nenhuma carne cadastrada.
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = dados.carnes.map(carne => `
+
+            <div class="card-estoque-carne">
+
+                <div class="estoque-carne-nome">
+                    🥩 ${carne.nome}
+                </div>
+
+                <div class="estoque-carne-quantidade">
+                    ${carne.quantidade_disponivel}
+                </div>
+
+                <div class="estoque-carne-label">
+                    unidades disponíveis
+                </div>
+
+            </div>
+
+        `).join("");
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar estoque:",
+            erro
+        );
+
+        container.innerHTML = `
+            <div class="mensagem-vazia">
+                ❌ Erro de comunicação com o servidor.
+            </div>
+        `;
+    }
+}
+
         let pedidosCache = [];
 
 async function carregarPedidos() {
@@ -1296,8 +1441,11 @@ async function iniciarPreparo(pedidoId) {
         }
 
 
+        carregarEstoqueCarnes();
         carregarPedidos();
+
         setInterval(carregarPedidos, 5000);
+        setInterval(carregarEstoqueCarnes, 5000);
 
         function voltarPainel() {
 
