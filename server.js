@@ -162,10 +162,11 @@ app.get("/api/carnes/:restauranteId", async (req, res) => {
         id,
         nome,
         quantidade_disponivel
-      FROM carnes
+      FROM estoque_carnes
       WHERE restaurante_id = $1
       AND ativo = true
       AND quantidade_disponivel > 0
+      AND data = CURRENT_DATE
       ORDER BY id
       `,
       [restauranteId]
