@@ -417,6 +417,7 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
         const pedido = resultado.rows[0];
 
         let posicao = null;
+        let carnesDisponiveis = [];
 
         if (pedido.status === "aguardando") {
 

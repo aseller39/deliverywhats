@@ -1208,7 +1208,6 @@ async function abrirProduto(id, tamanhoEscolhido = null) {
     produtoSelecionadoId = id;
     tamanhoEscolhidoAtual = tamanhoEscolhido;
 
-    let carnesDisponiveis = [];
 
     if (produto.categoria === "prato" && tamanhoEscolhido) {
         try {
@@ -2045,47 +2044,49 @@ function alterarQuantidadeProduto(valor) {
             }
 
 
-            function atualizarTotalProduto(produto) {
-                const quantidade = Number(
-                    document.getElementById("quantidadeProduto").textContent
-                );
+function atualizarTotalProduto(produto) {
+    const quantidade = Number(
+        document.getElementById("quantidadeProduto").textContent
+    );
 
-                let preco = Number(produto.preco);
+    let preco = Number(produto.preco);
 
-                const tamanho = document.querySelector(
-                    'input[name="tamanhoProduto"]:checked'
-                );
+    const tamanho = document.querySelector(
+        'input[name="tamanhoProduto"]:checked'
+    );
 
-                if (tamanho) {
-                    if (tamanho.value === "pequena") {
-                        preco = Number(produto.preco_pequena);
-                    }
+    if (tamanho) {
+        if (tamanho.value === "pequena") {
+            preco = Number(produto.preco_pequena);
+        }
 
-                    if (tamanho.value === "media") {
-                        preco = Number(produto.preco_media);
-                    }
+        if (tamanho.value === "media") {
+            preco = Number(produto.preco_media);
+        }
 
-                    if (tamanho.value === "grande") {
-                        preco = Number(produto.preco_grande);
-                    }
-                }
+        if (tamanho.value === "grande") {
+            preco = Number(produto.preco_grande);
+        }
+    }
 
-                const opcaoGarfo =
-                    document.querySelector(
-                        'input[name="opcaoGarfo"]:checked'
-                    );
+    const opcaoGarfo =
+        document.querySelector(
+            'input[name="opcaoGarfo"]:checked'
+        );
 
-                const valorGarfo =
-                    opcaoGarfo && opcaoGarfo.value === "sim"
-                        ? 1
-                        : 0;
+    const valorGarfo =
+        opcaoGarfo && opcaoGarfo.value === "sim"
+            ? 1
+            : 0;
 
-                const total =
-                    (preco + valorGarfo) * quantidade;
+    const total =
+        (preco + valorGarfo) * quantidade;
 
-                document.getElementById("totalProduto").textContent =
-                    total.toFixed(2).replace(".", ",");
-            }
+    document.getElementById("totalProduto").textContent =
+        total.toFixed(2).replace(".", ",");
+}
+
+
 
 function adicionarProdutoCarrinho(id) {
     const produto = pratosDisponiveis.find(p => p.id === id);
@@ -2134,6 +2135,8 @@ function adicionarProdutoCarrinho(id) {
             ? opcaoCarneSelecionada.value
             : null;
 
+    
+
         if (
             produto.categoria === "prato" &&
             !opcaoCarne
@@ -2154,10 +2157,32 @@ function adicionarProdutoCarrinho(id) {
         preco: preco,
         quantidade: quantidade,
         opcaoCarne: opcaoCarne,
+        nomeCarne: null,
         observacao: observacao,
         categoria: produto.categoria,
         subtotal: preco * quantidade
     };
+
+    if (opcaoCarneSelecionada) {
+
+        if (opcaoCarneSelecionada.value === "mista") {
+
+            item.nomeCarne = "1 pedaço de cada";
+
+        } else {
+
+            const carneSelecionada =
+                carnesDisponiveis.find(
+                    carne =>
+                        `carne_${carne.id}` ===
+                        opcaoCarneSelecionada.value
+                );
+
+            if (carneSelecionada) {
+                item.nomeCarne = carneSelecionada.nome;
+            }
+        }
+    }
 
     console.log("ITEM CRIADO:", item);
 
@@ -2167,7 +2192,6 @@ function adicionarProdutoCarrinho(id) {
     console.log("CARRINHO:", carrinho);
 
     fecharProduto();
-}
 
 
             function fecharProduto() {
