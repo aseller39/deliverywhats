@@ -1201,7 +1201,11 @@ async function carregarPedidos() {
 
                                     ${
                                         item.tipo === "cardapio_dia" && item.nomeCarne
-                                            ? `<br>🥩 Carne: ${item.value}`
+                                            ? `<br>🥩 Carne: ${
+                                                item.opcaoCarne === "1_cada"
+                                                    ? "Mista"
+                                                    : item.nomeCarne
+                                            }`
                                             : ""
                                     }
 
