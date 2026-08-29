@@ -151,6 +151,46 @@ app.get("/api/restaurantes/:id", async (req, res) => {
 });
 
 
+app.get("/api/carnes/:restauranteId", async (req, res) => {
+  try {
+
+    const restauranteId = req.params.restauranteId;
+
+    const resultado = await pool.query(
+      `
+      SELECT
+        id,
+        nome,
+        quantidade_disponivel
+      FROM carnes
+      WHERE restaurante_id = $1
+      AND ativo = true
+      AND quantidade_disponivel > 0
+      ORDER BY id
+      `,
+      [restauranteId]
+    );
+
+    res.json({
+      sucesso: true,
+      carnes: resultado.rows
+    });
+
+  } catch (erro) {
+
+    console.error(
+      "Erro ao consultar carnes:",
+      erro
+    );
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Erro ao consultar carnes."
+    });
+  }
+});
+
+
 app.post("/api/pedidos", async (req, res) => {
   try {
     const {
