@@ -516,6 +516,93 @@ app.get(
 );
 
 
+app.post(
+  "/api/painel/estoque-carnes",
+  autenticarRestaurante,
+  async (req, res) => {
+    try {
+
+      const { nome, quantidade } = req.body;
+
+      if (!nome || quantidade === undefined) {
+        return res.status(400).json({
+          sucesso: false,
+          erro: "Nome e quantidade são obrigatórios."
+        });
+      }
+
+      const quantidadeNumero = Number(quantidade);
+
+      if (
+        !Number.isInteger(quantidadeNumero) ||
+        quantidadeNumero < 0
+      ) {
+        return res.status(400).json({
+          sucesso: false,
+          erro: "A quantidade deve ser um número inteiro maior ou igual a zero."
+        });
+      }
+
+      const resultado = await pool.query(
+        `
+        INSERT INTO estoque_carnes (
+          restaurante_id,
+          data,
+          nome,
+          quantidade_inicial,
+          quantidade_disponivel,
+          ativo
+        )
+        VALUES (
+          $1,
+          CURRENT_DATE,
+          $2,
+          $3,
+          $3,
+          true
+        )
+        RETURNING
+          id,
+          nome,
+          quantidade_inicial,
+          quantidade_disponivel,
+          ativo
+        `,
+        [
+          req.restauranteId,
+          nome.trim(),
+          quantidadeNumero
+        ]
+      );
+
+      res.status(201).json({
+        sucesso: true,
+        mensagem: "Carne cadastrada com sucesso.",
+        carne: resultado.rows[0]
+      });
+
+    } catch (erro) {
+
+      console.error(
+        "Erro ao cadastrar carne no estoque:",
+        erro
+      );
+
+      if (erro.code === "23505") {
+        return res.status(409).json({
+          sucesso: false,
+          erro: "Esta carne já está cadastrada para hoje."
+        });
+      }
+
+      res.status(500).json({
+        sucesso: false,
+        erro: "Erro ao cadastrar carne."
+      });
+    }
+  }
+);
+
 
 app.put(
     "/api/pedidos/:id/iniciar-preparo",
