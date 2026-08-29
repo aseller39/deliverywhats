@@ -779,6 +779,38 @@
         ➕ Adicionar carne
     </button>
 
+    <div id="formularioNovaCarne" style="display: none;">
+
+    <h3>🥩 Adicionar carne</h3>
+
+    <input
+        type="text"
+        id="nomeNovaCarne"
+        placeholder="Nome da carne"
+    >
+
+    <br><br>
+
+    <input
+        type="number"
+        id="quantidadeNovaCarne"
+        placeholder="Quantidade"
+        min="0"
+        step="1"
+    >
+
+    <br><br>
+
+    <button onclick="salvarNovaCarne()">
+        💾 Salvar carne
+    </button>
+
+    <button onclick="fecharNovaCarne()">
+        Cancelar
+    </button>
+
+</div>
+
     <p id="statusEstoqueCarnes"></p>
 
 </div>
@@ -790,6 +822,19 @@
 <div id="listaProdutos"></div>
 
   <script>
+
+
+function abrirNovaCarne() {
+
+    document.getElementById("formularioNovaCarne").style.display = "block";
+
+}
+
+function fecharNovaCarne() {
+
+    document.getElementById("formularioNovaCarne").style.display = "none";
+
+}
 
 
 function abrirCardapioSemana() {
