@@ -290,6 +290,87 @@ app.post("/api/pedidos", async (req, res) => {
       ]
     );
 
+        // BAIXAR CARNES DO ESTOQUE
+
+    for (const item of itens) {
+
+      if (
+        item.tipo !== "cardapio_dia" ||
+        !item.opcaoCarne
+      ) {
+        continue;
+      }
+
+      const quantidadePedido =
+        Number(item.quantidade) || 1;
+
+      let quantidadeCarne1 = 0;
+      let quantidadeCarne2 = 0;
+
+      if (item.opcaoCarne === "2_carne_1") {
+
+        quantidadeCarne1 =
+          2 * quantidadePedido;
+
+      }
+
+      if (item.opcaoCarne === "2_carne_2") {
+
+        quantidadeCarne2 =
+          2 * quantidadePedido;
+
+      }
+
+      if (item.opcaoCarne === "1_cada") {
+
+        quantidadeCarne1 =
+          1 * quantidadePedido;
+
+        quantidadeCarne2 =
+          1 * quantidadePedido;
+      }
+
+      if (quantidadeCarne1 > 0) {
+
+        await pool.query(
+          `
+          UPDATE estoque_carnes
+          SET quantidade_disponivel =
+              quantidade_disponivel - $1
+          WHERE restaurante_id = $2
+          AND nome = $3
+          AND data = CURRENT_DATE
+          AND quantidade_disponivel >= $1
+          `,
+          [
+            quantidadeCarne1,
+            restaurante_id,
+            item.carne1
+          ]
+        );
+      }
+
+      if (quantidadeCarne2 > 0) {
+
+        await pool.query(
+          `
+          UPDATE estoque_carnes
+          SET quantidade_disponivel =
+              quantidade_disponivel - $1
+          WHERE restaurante_id = $2
+          AND nome = $3
+          AND data = CURRENT_DATE
+          AND quantidade_disponivel >= $1
+          `,
+          [
+            quantidadeCarne2,
+            restaurante_id,
+            item.carne2
+          ]
+        );
+      }
+    }
+
     const pedidoMensagem = {
       id: resultado.rows[0].id,
       itens,
