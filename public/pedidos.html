@@ -703,6 +703,7 @@ async function carregarEstoqueCarnes() {
         );
 
         const dados = await resposta.json();
+        console.log("ESTOQUE RECEBIDO:", dados);
 
         if (!resposta.ok || !dados.sucesso) {
 
