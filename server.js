@@ -290,6 +290,9 @@ app.post("/api/pedidos", async (req, res) => {
         ]
       );
 
+      console.log("INICIANDO BAIXA DE ESTOQUE");
+      console.log("ITENS PARA BAIXAR:", itens);
+
           // BAIXAR CARNES DO ESTOQUE
 
       for (const item of itens) {
@@ -303,6 +306,7 @@ app.post("/api/pedidos", async (req, res) => {
 
         const quantidadePedido =
           Number(item.quantidade) || 1;
+        console.log("ITEM PARA BAIXAR:", item);
 
         let quantidadeCarne1 = 0;
         let quantidadeCarne2 = 0;
