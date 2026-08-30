@@ -612,7 +612,7 @@ app.get(
           ativo
         FROM estoque_carnes
         WHERE restaurante_id = $1
-          AND data = CURRENT_DATE
+          WHERE restaurante_id = $1
         ORDER BY id
         `,
         [req.restauranteId]
