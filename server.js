@@ -345,7 +345,7 @@ app.post("/api/pedidos", async (req, res) => {
   restaurante_id
 );
 
-          await pool.query(
+          const baixaCarne1 = await pool.query(
             `
             UPDATE estoque_carnes
             SET quantidade_disponivel =
@@ -361,11 +361,15 @@ app.post("/api/pedidos", async (req, res) => {
               item.carne1
             ]
           );
+          console.log(
+  "RESULTADO BAIXA CARNE 1:",
+  baixaCarne1.rowCount
+);
         }
 
         if (quantidadeCarne2 > 0) {
 
-          await pool.query(
+          const baixaCarne2 = await pool.query(
             `
             UPDATE estoque_carnes
             SET quantidade_disponivel =
@@ -381,6 +385,10 @@ app.post("/api/pedidos", async (req, res) => {
               item.carne2
             ]
           );
+          console.log(
+  "RESULTADO BAIXA CARNE 2:",
+  baixaCarne2.rowCount
+);
         }
       }
 
