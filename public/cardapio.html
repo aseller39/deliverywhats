@@ -619,6 +619,27 @@ main {
 }
 
 
+.mensagem-fechar {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.mensagem-fechar:hover {
+    color: #ffffff;
+}
+
+.mensagem-pedido-recebido,
+.mensagem-chegando {
+    position: relative;
+}
+
 
 @media (max-width: 600px) {
 
@@ -2387,7 +2408,9 @@ async function atualizarAcompanhamentoPedido() {
             if (pedido.tempo_entrega) {
 
                 mensagem =
+                    mensagem =
                     `<div class="mensagem-pedido-recebido">` +
+                    `<button class="mensagem-fechar" onclick="this.parentElement.remove()">×</button>` +
                     `💚<br><br>` +
                     `<strong>Pedido recebido com sucesso!</strong><br><br>` +
                     `<div class="tempo-estimado">` +
@@ -2449,7 +2472,9 @@ async function atualizarAcompanhamentoPedido() {
         } else if (pedido.status === "saiu_entrega") {
 
             mensagem =
-                `<div class="mensagem-chegando">` +
+                mensagem =
+                `<div class="mensagem-pedido-recebido">` +
+                `<button class="mensagem-fechar" onclick="this.parentElement.remove()">×</button>` +
                 `🛵<br><br>` +
                 `<strong>Seu pedido saiu para entrega!</strong><br><br>` +
                 `📦 Pedido a caminho<br><br>` +
