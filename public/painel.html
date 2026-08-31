@@ -998,26 +998,32 @@ async function carregarEstoqueCarnesPainel() {
             return;
         }
 
-        container.innerHTML =
-            dados.carnes.map(carne => `
+        container.innerHTML = dados.carnes.map(carne => `
 
-                <div class="card-estoque-carne">
+            <div class="card-estoque-carne">
 
-                    <div class="estoque-carne-nome">
-                        🥩 ${carne.nome}
-                    </div>
-
-                    <div class="estoque-carne-quantidade">
-                        ${carne.quantidade_disponivel}
-                    </div>
-
-                    <div class="estoque-carne-label">
-                        unidades disponíveis
-                    </div>
-
+                <div class="estoque-carne-nome">
+                    🥩 ${carne.nome}
                 </div>
 
-            `).join("");
+                <div class="estoque-carne-quantidade">
+                    ${carne.quantidade_disponivel}
+                </div>
+
+                <div class="estoque-carne-label">
+                    unidades disponíveis
+                </div>
+
+                <button
+                    class="botao-editar-carne"
+                    onclick="editarCarne(${carne.id})"
+                >
+                    ✏️ Editar
+                </button>
+
+            </div>
+
+        `).join("");
 
     } catch (erro) {
 
