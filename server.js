@@ -777,7 +777,6 @@ app.put(
             quantidade_disponivel = $2
           WHERE id = $3
             AND restaurante_id = $4
-            AND data = CURRENT_DATE
           RETURNING
             id,
             nome,
