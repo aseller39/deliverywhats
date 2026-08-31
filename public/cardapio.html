@@ -577,6 +577,47 @@ main {
 }
 
 
+.mensagem-pedido-recebido,
+.mensagem-chegando {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 30px 22px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    color: #f8fafc;
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.mensagem-pedido-recebido strong,
+.mensagem-chegando strong {
+    color: #ffffff;
+    font-size: 21px;
+}
+
+.mensagem-pedido-recebido::first-line,
+.mensagem-chegando::first-line {
+    font-size: 32px;
+}
+
+
+.tempo-estimado {
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 10px 0;
+}
+
+.tempo-estimado strong {
+    display: block;
+    font-size: 28px;
+    margin-top: 4px;
+}
+
 
 
 @media (max-width: 600px) {
@@ -2349,8 +2390,10 @@ async function atualizarAcompanhamentoPedido() {
                     `<div class="mensagem-pedido-recebido">` +
                     `💚<br><br>` +
                     `<strong>Pedido recebido com sucesso!</strong><br><br>` +
-                    `⏱️ Seu pedido será entregue em aproximadamente ` +
-                    `<strong>${pedido.tempo_entrega} minutos</strong>.<br><br>` +
+                    `<div class="tempo-estimado">` +
+                    `⏱️ Aproximadamente<br>` +
+                    `<strong>${pedido.tempo_entrega} minutos</strong>` +
+                    `</div><br>` +
                     `Obrigado por escolher a Gustum! 😊` +
                     `</div>`;
 
