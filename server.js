@@ -211,6 +211,8 @@ app.post("/api/pedidos", async (req, res) => {
       const enderecoCompleto =
           montarEnderecoCompleto(endereco);
 
+          let tempoEstimado = null;
+
       console.log(
           "📍 ENDEREÇO DO CLIENTE:",
           enderecoCompleto
@@ -238,6 +240,13 @@ app.post("/api/pedidos", async (req, res) => {
               "🛵 TEMPO DE ENTREGA:",
               tempoEntrega
           );
+
+      if (tempoEntrega) {
+          tempoEstimado =
+              Number(tempoEntrega.distanciaKm) <= 1
+                  ? 30
+                  : 40;
+      }
 
       }
 
@@ -269,10 +278,11 @@ app.post("/api/pedidos", async (req, res) => {
             endereco,
             forma_pagamento,
             total,
-            status
+            status,
+            tempo_entrega
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        RETURNING id, criado_em, status
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING id, criado_em, status, tempo_entrega
         `,
         [
           restaurante_id,
@@ -286,7 +296,8 @@ app.post("/api/pedidos", async (req, res) => {
           : null,
           forma_pagamento,
           total,
-          "aguardando"
+          "aguardando",
+          tempoEstimado
         ]
       );
 

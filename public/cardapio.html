@@ -2343,9 +2343,27 @@ async function atualizarAcompanhamentoPedido() {
 
         if (pedido.status === "aguardando") {
 
-            mensagem =
-                `📦 Pedido #${pedido.id}<br>` +
-                `🛒 Você está em ${pedido.posicao}º lugar na fila`;
+            if (pedido.tempo_entrega) {
+
+                mensagem =
+                    `<div class="mensagem-pedido-recebido">` +
+                    `💚<br><br>` +
+                    `<strong>Pedido recebido com sucesso!</strong><br><br>` +
+                    `⏱️ Seu pedido será entregue em aproximadamente ` +
+                    `<strong>${pedido.tempo_entrega} minutos</strong>.<br><br>` +
+                    `Obrigado por escolher a Gustum! 😊` +
+                    `</div>`;
+
+            } else {
+
+                mensagem =
+                    `<div class="mensagem-pedido-recebido">` +
+                    `💚<br><br>` +
+                    `<strong>Pedido recebido com sucesso!</strong><br><br>` +
+                    `⏱️ Seu pedido está sendo preparado.<br><br>` +
+                    `Obrigado por escolher a Gustum! 😊` +
+                    `</div>`;
+            }
 
         } else if (pedido.status === "em_preparo") {
 
@@ -2387,64 +2405,17 @@ async function atualizarAcompanhamentoPedido() {
 
         } else if (pedido.status === "saiu_entrega") {
 
-            const inicio =
-                new Date(pedido.inicio_entrega).getTime();
-
-            const agora =
-                Date.now();
-
-            const fim =
-                inicio +
-                (pedido.tempo_entrega * 60 * 1000);
-
-            const minutos =
-                Math.max(
-                    0,
-                    Math.ceil((fim - agora) / 60000)
-                );
-
-            if (minutos === 0) {
-
-                mensagem = "";
-
-            } else if (minutos === 1) {
-
-                mensagem =
-                    `<div class="mensagem-chegando">` +
-                    `🛵<br>` +
-                    `<strong>Seu pedido já está chegando!</strong><br><br>` +
-                    `Pedido #${pedido.id}` +
-                    `</div>`;
-
-            } else {
-
-                mensagem =
-                    `<div class="entrega-desktop">` +
-                    `📦 Pedido #${pedido.id}<br><br>` +
-                    `🛵 Seu pedido saiu para entrega<br>` +
-                    `<span id="tempoEntregaPedido">` +
-                    `🕐 Chega em aproximadamente ${minutos} min.` +
-                    `</span>` +
-                    `</div>` +
-
-                    `<div class="entrega-mobile">` +
-                    `📦 Pedido #${pedido.id}<br>` +
-                    `🛵 Entrega em ` +
-                    `<span id="tempoEntregaMobile">${minutos}</span>` +
-                    ` min.` +
-                    `</div>`;
-
-            }
+            mensagem =
+                `<div class="mensagem-chegando">` +
+                `🛵<br><br>` +
+                `<strong>Seu pedido saiu para entrega!</strong><br><br>` +
+                `📦 Pedido a caminho<br><br>` +
+                `Obrigado por escolher a Gustum! 😊` +
+                `</div>`;
 
         } else if (pedido.status === "finalizado") {
 
-            mensagem =
-                `📦 Pedido #${pedido.id}<br>` +
-                (
-                    pedido.tipo_entrega === "entrega"
-                        ? "✅ Pedido entregue!"
-                        : "✅ Pedido finalizado!"
-                );
+            return;
         }
 
             if (mensagem) {
@@ -2458,101 +2429,6 @@ async function atualizarAcompanhamentoPedido() {
                     `;
 
                     ultimoStatusPedido = pedido.status;
-
-                }
-
-                if (pedido.status === "saiu_entrega") {
-
-                    const inicio =
-                        new Date(pedido.inicio_entrega).getTime();
-
-                    const agora =
-                        Date.now();
-
-                    const fim =
-                        inicio +
-                        (pedido.tempo_entrega * 60 * 1000);
-
-                    const minutos =
-                        Math.max(
-                            0,
-                            Math.ceil(
-                                (fim - agora) / 60000
-                            )
-                        );
-
-                    // 0 minutos: mensagem final
-                    if (minutos === 0) {
-
-                        if (ultimoStatusPedido !== "entregue") {
-
-                            container.innerHTML = `
-                                <div class="status-pedido">
-                                    <div class="mensagem-chegada">
-                                        💚<br>
-                                        <strong>Pedido #${pedido.id} entregue!</strong><br><br>
-                                        Obrigado por escolher a Gustum!<br>
-                                        Esperamos que você aproveite sua refeição. 😊
-                                    </div>
-                                </div>
-                            `;
-
-                            ultimoStatusPedido = "entregue";
-
-                            setTimeout(() => {
-                                container.innerHTML = "";
-                            }, 5000);
-                        }
-
-                        return;
-                    }
-
-                    // 1 minuto: mensagem de chegada
-                    if (
-                        minutos === 1 &&
-                        ultimoStatusPedido !== "chegando"
-                    ) {
-
-                        container.innerHTML = `
-                            <div class="status-pedido">
-                                <div class="mensagem-chegando">
-                                    🛵<br>
-                                    <strong>Seu pedido já está chegando!</strong><br><br>
-                                    Pedido #${pedido.id}
-                                </div>
-                            </div>
-                        `;
-
-                        ultimoStatusPedido = "chegando";
-
-                        return;
-                    }
-
-                    // 2 minutos ou mais:
-                    // atualiza somente o número
-                    const elementoDesktop =
-                        document.getElementById(
-                            "tempoEntregaPedido"
-                        );
-
-                    const elementoMobile =
-                        document.getElementById(
-                            "tempoEntregaMobile"
-                        );
-
-                    if (elementoDesktop) {
-
-                        elementoDesktop.innerHTML =
-                            `🕐 Chega em aproximadamente ${minutos} min.`;
-
-                    }
-
-                    if (elementoMobile) {
-
-                        elementoMobile.textContent =
-                            minutos;
-
-                    }
 
                 }
 
@@ -2583,106 +2459,106 @@ async function atualizarAcompanhamentoPedido() {
 
 
 
-            async function enviarPedido() {
+    async function enviarPedido() {
 
-                const parametros = new URLSearchParams(window.location.search);
-                const restauranteId = parametros.get("restaurante");
+        const parametros = new URLSearchParams(window.location.search);
+        const restauranteId = parametros.get("restaurante");
 
-                if (itensPedido.length === 0) {
-                    alert("Adicione pelo menos um item ao pedido.");
-                    return;
-                }
+        if (itensPedido.length === 0) {
+            alert("Adicione pelo menos um item ao pedido.");
+            return;
+        }
 
-                const telefone = document.getElementById("telefonePedido")?.value.trim();
+        const telefone = document.getElementById("telefonePedido")?.value.trim();
 
-                if (!telefone) {
-                    alert("Informe seu telefone.");
-                    return;
-                }
+        if (!telefone) {
+            alert("Informe seu telefone.");
+            return;
+        }
 
-                const tipoEntrega =
-                    document.querySelector('input[name="tipoEntrega"]:checked')?.value;
+        const tipoEntrega =
+            document.querySelector('input[name="tipoEntrega"]:checked')?.value;
 
-                if (!tipoEntrega) {
-                    alert("Escolha como deseja receber o pedido.");
-                    return;
-                }
+        if (!tipoEntrega) {
+            alert("Escolha como deseja receber o pedido.");
+            return;
+        }
 
-                const endereco =
-                    document.getElementById("enderecoPedido")?.value.trim();
+        const endereco =
+            document.getElementById("enderecoPedido")?.value.trim();
 
-                if (tipoEntrega === "entrega" && !endereco) {
-                    alert("Informe o endereço de entrega.");
-                    return;
-                }
+        if (tipoEntrega === "entrega" && !endereco) {
+            alert("Informe o endereço de entrega.");
+            return;
+        }
 
-                const formaPagamento =
-                    document.querySelector('input[name="formaPagamento"]:checked')?.value;
+        const formaPagamento =
+            document.querySelector('input[name="formaPagamento"]:checked')?.value;
 
-                if (!formaPagamento) {
-                    alert("Escolha a forma de pagamento.");
-                    return;
-                }
+        if (!formaPagamento) {
+            alert("Escolha a forma de pagamento.");
+            return;
+        }
 
-                const campoObservacao = document.getElementById("observacaoPedido");
+        const campoObservacao = document.getElementById("observacaoPedido");
 
-                if (campoObservacao) {
-                    observacaoPedido = campoObservacao.value.trim();
-                }
+        if (campoObservacao) {
+            observacaoPedido = campoObservacao.value.trim();
+        }
 
-                const total = itensPedido.reduce(
-                    (soma, item) => soma + (item.preco * item.quantidade),
-                    0
-                );
+        const total = itensPedido.reduce(
+            (soma, item) => soma + (item.preco * item.quantidade),
+            0
+        );
 
-                const pedidoFinal = {
-                    restaurante_id: Number(restauranteId),
-                    itens: itensPedido,
-                    observacao: observacaoPedido,
-                    telefone: telefone,
-                    tipo_entrega: tipoEntrega,
-                    endereco: tipoEntrega === "entrega" ? endereco : null,
-                    forma_pagamento: formaPagamento,
-                    total: total
-                };
+        const pedidoFinal = {
+            restaurante_id: Number(restauranteId),
+            itens: itensPedido,
+            observacao: observacaoPedido,
+            telefone: telefone,
+            tipo_entrega: tipoEntrega,
+            endereco: tipoEntrega === "entrega" ? endereco : null,
+            forma_pagamento: formaPagamento,
+            total: total
+        };
 
-                const resposta = await fetch("/api/pedidos", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(pedidoFinal)
-                });
+        const resposta = await fetch("/api/pedidos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(pedidoFinal)
+        });
 
-                const dados = await resposta.json();
+        const dados = await resposta.json();
 
-                console.log("RESPOSTA DO PEDIDO:", dados);
+        console.log("RESPOSTA DO PEDIDO:", dados);
 
-                if (dados.sucesso) {
+        if (dados.sucesso) {
 
-                    ultimoStatusPedido = null;
+            ultimoStatusPedido = null;
 
-                    localStorage.removeItem("acompanhamentoEncerrado");
+            localStorage.removeItem("acompanhamentoEncerrado");
 
-                    localStorage.setItem(
-                        "pedidoAtual",
-                        String(dados.pedido.id)
-                    );
+            localStorage.setItem(
+                "pedidoAtual",
+                String(dados.pedido.id)
+            );
 
-                    alert(
-                        `✅ Pedido #${dados.pedido.id} enviado com sucesso!\n\n` +
-                        `O restaurante recebeu seu pedido.`
-                    );
+            alert(
+                `✅ Pedido #${dados.pedido.id} enviado com sucesso!\n\n` +
+                `O restaurante recebeu seu pedido.`
+            );
 
-                    limparCarrinho();
+            limparCarrinho();
 
-                    localStorage.removeItem("acompanhamentoEncerrado");
+            localStorage.removeItem("acompanhamentoEncerrado");
 
-                    ultimoStatusPedido = null;
+            ultimoStatusPedido = null;
 
-                    atualizarAcompanhamentoPedido();
-                }
-            }
+            atualizarAcompanhamentoPedido();
+        }
+    }
 
             function atualizarIconeCarrinho() {
                 const quantidade = carrinho.reduce(

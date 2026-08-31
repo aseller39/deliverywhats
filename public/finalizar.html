@@ -716,146 +716,146 @@ document
         }
 
 
-        async function enviarPedido() {
+    async function enviarPedido() {
 
-            if (carrinho.length === 0) {
-                alert("Seu carrinho está vazio.");
-                return;
-            }
+        if (carrinho.length === 0) {
+            alert("Seu carrinho está vazio.");
+            return;
+        }
 
-            const parametros =
-                new URLSearchParams(window.location.search);
+        const parametros =
+            new URLSearchParams(window.location.search);
 
-            const restauranteId =
-                parametros.get("restaurante");
+        const restauranteId =
+            parametros.get("restaurante");
 
-            const tipoEntrega =
-                document.querySelector(
-                    'input[name="tipoEntrega"]:checked'
-                ).value;
+        const tipoEntrega =
+            document.querySelector(
+                'input[name="tipoEntrega"]:checked'
+            ).value;
 
-            const pagamento =
-                document.querySelector(
-                    'input[name="pagamento"]:checked'
-                ).value;
-            
-            const telefone =
-                document.getElementById("telefone").value
-                    .replace(/\D/g, "");
+        const pagamento =
+            document.querySelector(
+                'input[name="pagamento"]:checked'
+            ).value;
+        
+        const telefone =
+            document.getElementById("telefone").value
+                .replace(/\D/g, "");
 
-            if (telefone.length < 10 || telefone.length > 11) {
-                alert("Digite um telefone válido com DDD.");
-                return;
-            }
+        if (telefone.length < 10 || telefone.length > 11) {
+            alert("Digite um telefone válido com DDD.");
+            return;
+        }
 
-            const endereco = tipoEntrega === "entrega"
-                ? [
-                    document.getElementById("rua").value,
-                    document.getElementById("numero").value,
-                    document.getElementById("bairro").value,
-                    document.getElementById("complemento").value,
-                    document.getElementById("referencia").value
-                ].filter(Boolean).join(", ")
-                : null;
+        const endereco = tipoEntrega === "entrega"
+            ? [
+                document.getElementById("rua").value,
+                document.getElementById("numero").value,
+                document.getElementById("bairro").value,
+                document.getElementById("complemento").value,
+                document.getElementById("referencia").value
+            ].filter(Boolean).join(", ")
+            : null;
 
-            let total = 0;
+        let total = 0;
 
-            carrinho.forEach(item => {
-                total += Number(item.subtotal);
+        carrinho.forEach(item => {
+            total += Number(item.subtotal);
+        });
+
+        const pedido = {
+
+            restaurante_id: Number(restauranteId),
+
+            itens: carrinho,
+
+            observacao:
+                document.getElementById("observacao").value,
+
+            nome:
+                document.getElementById("nomeCliente").value,
+
+
+            telefone:
+                "55" + telefone,
+
+            tipo_entrega: tipoEntrega,
+
+            endereco: tipoEntrega === "entrega"
+                ? {
+                    rua: document.getElementById("rua").value,
+                    numero: document.getElementById("numero").value,
+                    bairro: document.getElementById("bairro").value,
+                    complemento: document.getElementById("complemento").value,
+                    referencia: document.getElementById("referencia").value
+                }
+                : null,
+
+            forma_pagamento: pagamento,
+
+            total: total
+
+        };
+        console.log("ENVIANDO PEDIDO:", pedido);
+
+        try {
+
+            const resposta = await fetch("/api/pedidos", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(pedido)
+
             });
 
-            const pedido = {
+            const dados = await resposta.json();
 
-                restaurante_id: Number(restauranteId),
+            console.log("RESPOSTA DO SERVIDOR:", dados);
 
-                itens: carrinho,
-
-                observacao:
-                    document.getElementById("observacao").value,
-
-                nome:
-                    document.getElementById("nomeCliente").value,
-
-
-                telefone:
-                    "55" + telefone,
-
-                tipo_entrega: tipoEntrega,
-
-                endereco: tipoEntrega === "entrega"
-                    ? {
-                        rua: document.getElementById("rua").value,
-                        numero: document.getElementById("numero").value,
-                        bairro: document.getElementById("bairro").value,
-                        complemento: document.getElementById("complemento").value,
-                        referencia: document.getElementById("referencia").value
-                    }
-                    : null,
-
-                forma_pagamento: pagamento,
-
-                total: total
-
-            };
-            console.log("ENVIANDO PEDIDO:", pedido);
-
-            try {
-
-                const resposta = await fetch("/api/pedidos", {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(pedido)
-
-                });
-
-                const dados = await resposta.json();
-
-                console.log("RESPOSTA DO SERVIDOR:", dados);
-
-                if (!resposta.ok) {
-
-                    alert(
-                        dados.erro ||
-                        "Não foi possível enviar o pedido."
-                    );
-
-                    return;
-                }
+            if (!resposta.ok) {
 
                 alert(
-                    "ID DO PEDIDO: " +
-                    dados.pedido.id
+                    dados.erro ||
+                    "Não foi possível enviar o pedido."
                 );
 
-                localStorage.setItem(
-                    "pedidoAtual",
-                    String(dados.pedido.id)
-                );
-
-                alert("Pedido enviado com sucesso!");
-
-                localStorage.removeItem("carrinho");
-
-                window.location.href =
-                    `/cardapio.html?restaurante=${restauranteId}`;
-
-            } catch (erro) {
-
-                console.error(
-                    "Erro ao enviar pedido:",
-                    erro
-                );
-
-                alert(
-                    "Não foi possível enviar o pedido. Tente novamente."
-                );
+                return;
             }
+
+            alert(
+                "ID DO PEDIDO: " +
+                dados.pedido.id
+            );
+
+            localStorage.setItem(
+                "pedidoAtual",
+                String(dados.pedido.id)
+            );
+
+            alert("Pedido enviado com sucesso!");
+
+            localStorage.removeItem("carrinho");
+
+            window.location.href =
+                `/cardapio.html?restaurante=${restauranteId}`;
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao enviar pedido:",
+                erro
+            );
+
+            alert(
+                "Não foi possível enviar o pedido. Tente novamente."
+            );
         }
+    }
 
 
         carregarResumo();
