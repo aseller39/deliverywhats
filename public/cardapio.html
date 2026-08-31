@@ -2474,7 +2474,7 @@ async function atualizarAcompanhamentoPedido() {
             mensagem =
                 mensagem =
                 `<div class="mensagem-pedido-recebido">` +
-                `<button class="mensagem-fechar" onclick="this.parentElement.remove()">×</button>` +
+                `<button class="mensagem-fechar" onclick="fecharMensagemPedido(${pedido.id})">×</button>` +
                 `🛵<br><br>` +
                 `<strong>Seu pedido saiu para entrega!</strong><br><br>` +
                 `📦 Pedido a caminho<br><br>` +
