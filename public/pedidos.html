@@ -1209,18 +1209,12 @@ async function carregarPedidos() {
                             }
                         </p>
 
-                        ${
-                            indice === 0
-                                ? `
-                                    <button
-                                        class="botao-iniciar"
-                                        onclick="iniciarPreparo(${pedido.id})"
-                                    >
-                                        ▶️ Iniciar preparo
-                                    </button>
-                                `
-                                : ""
-                        }
+                        <button
+                            class="botao-iniciar"
+                            onclick="iniciarPreparo(${pedido.id})"
+                        >
+                            ▶️ Iniciar preparo
+                        </button>
 
                     </div>
 
