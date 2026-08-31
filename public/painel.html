@@ -826,9 +826,12 @@
 
 function editarCarne(id) {
 
+    carneEditandoId = id;
+
     const carne = estoqueCarnesPainel.find(
         carne => carne.id === id
     );
+
 
     if (!carne) {
         return;
@@ -880,11 +883,21 @@ async function salvarNovaCarne() {
 
     try {
 
+        const metodo =
+            carneEditandoId
+                ? "PUT"
+                : "POST";
+
+        const url =
+            carneEditandoId
+                ? `/api/painel/estoque-carnes/${carneEditandoId}`
+                : "/api/painel/estoque-carnes";
+
         const resposta =
             await fetch(
-                "/api/painel/estoque-carnes",
+                url,
                 {
-                    method: "POST",
+                    method: metodo,
 
                     credentials: "include",
 

@@ -732,6 +732,100 @@ app.post(
 
 
 app.put(
+  "/api/painel/estoque-carnes/:id",
+  autenticarRestaurante,
+  async (req, res) => {
+    try {
+
+      const carneId = req.params.id;
+
+      const {
+        nome,
+        quantidade
+      } = req.body;
+
+      if (!nome || quantidade === undefined) {
+
+        return res.status(400).json({
+          sucesso: false,
+          erro: "Nome e quantidade são obrigatórios."
+        });
+
+      }
+
+      const quantidadeNumero =
+        Number(quantidade);
+
+      if (
+        !Number.isInteger(quantidadeNumero) ||
+        quantidadeNumero < 0
+      ) {
+
+        return res.status(400).json({
+          sucesso: false,
+          erro: "A quantidade deve ser um número inteiro maior ou igual a zero."
+        });
+
+      }
+
+      const resultado =
+        await pool.query(
+          `
+          UPDATE estoque_carnes
+          SET
+            nome = $1,
+            quantidade_disponivel = $2
+          WHERE id = $3
+            AND restaurante_id = $4
+            AND data = CURRENT_DATE
+          RETURNING
+            id,
+            nome,
+            quantidade_inicial,
+            quantidade_disponivel,
+            ativo
+          `,
+          [
+            nome.trim(),
+            quantidadeNumero,
+            carneId,
+            req.restauranteId
+          ]
+        );
+
+      if (resultado.rows.length === 0) {
+
+        return res.status(404).json({
+          sucesso: false,
+          erro: "Carne não encontrada para hoje."
+        });
+
+      }
+
+      res.json({
+        sucesso: true,
+        mensagem: "Carne atualizada com sucesso.",
+        carne: resultado.rows[0]
+      });
+
+    } catch (erro) {
+
+      console.error(
+        "Erro ao atualizar carne:",
+        erro
+      );
+
+      res.status(500).json({
+        sucesso: false,
+        erro: "Erro ao atualizar carne."
+      });
+
+    }
+  }
+);
+
+
+app.put(
     "/api/pedidos/:id/iniciar-preparo",
     autenticarRestaurante,
     async (req, res) => {
