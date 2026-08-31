@@ -362,9 +362,28 @@ app.post("/api/pedidos", async (req, res) => {
             ]
           );
           console.log(
-  "RESULTADO BAIXA CARNE 1:",
-  baixaCarne1.rowCount
-);
+            "RESULTADO BAIXA CARNE 1:",
+            baixaCarne1.rowCount
+          );
+
+          const verificarEstoque1 = await pool.query(
+            `
+            SELECT id, nome, data, quantidade_disponivel
+            FROM estoque_carnes
+            WHERE restaurante_id = $1
+              AND LOWER(TRIM(nome)) = LOWER(TRIM($2))
+            `,
+            [
+              restaurante_id,
+              item.carne1
+            ]
+          );
+
+          console.log(
+            "ESTOQUE APÓS BAIXA CARNE 1:",
+            verificarEstoque1.rows
+          );
+
         }
 
         if (quantidadeCarne2 > 0) {
