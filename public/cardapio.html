@@ -2403,6 +2403,15 @@ async function atualizarAcompanhamentoPedido() {
 
         let mensagem = "";
 
+        const mensagemFechada =
+            sessionStorage.getItem(
+                "mensagemPedidoFechada_" + pedido.id
+            );
+
+        if (mensagemFechada === "true") {
+            return;
+        }
+
         if (pedido.status === "aguardando") {
 
             if (pedido.tempo_entrega) {
@@ -2515,14 +2524,29 @@ async function atualizarAcompanhamentoPedido() {
 
 
 
-    carregarCardapio();
-    carregarAvisos();
-    atualizarAcompanhamentoPedido();
+carregarCardapio();
+carregarAvisos();
+atualizarAcompanhamentoPedido();
 
-    setInterval(
-        atualizarAcompanhamentoPedido,
-        5000
+setInterval(
+    atualizarAcompanhamentoPedido,
+    5000
+);
+
+function fecharMensagemPedido(pedidoId) {
+
+    sessionStorage.setItem(
+        "mensagemPedidoFechada_" + pedidoId,
+        "true"
     );
+
+    const container =
+        document.getElementById("acompanhamentoPedido");
+
+    if (container) {
+        container.innerHTML = "";
+    }
+}
             
 
 
