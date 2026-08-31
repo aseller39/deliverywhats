@@ -351,7 +351,7 @@ app.post("/api/pedidos", async (req, res) => {
             SET quantidade_disponivel =
                 quantidade_disponivel - $1
             WHERE restaurante_id = $2
-            AND nome = $3
+            AND LOWER(nome) = LOWER($3)
             AND data = CURRENT_DATE
             AND quantidade_disponivel >= $1
             `,
@@ -371,7 +371,7 @@ app.post("/api/pedidos", async (req, res) => {
             SET quantidade_disponivel =
                 quantidade_disponivel - $1
             WHERE restaurante_id = $2
-            AND nome = $3
+            AND LOWER(nome) = LOWER($3)
             AND data = CURRENT_DATE
             AND quantidade_disponivel >= $1
             `,
