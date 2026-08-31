@@ -642,21 +642,29 @@ app.get(
   async (req, res) => {
     try {
 
-      const resultado = await pool.query(
-        `
-        SELECT
-          id,
-          nome,
-          quantidade_inicial,
-          quantidade_disponivel,
-          ativo
-        FROM estoque_carnes
-        WHERE restaurante_id = $1
-          AND data = CURRENT_DATE
-        ORDER BY id
-        `,
-        [req.restauranteId]
-      );
+    const resultado = await pool.query(
+      `
+      SELECT
+        e.id,
+        e.nome,
+        e.quantidade_inicial,
+        e.quantidade_disponivel,
+        e.ativo
+      FROM estoque_carnes e
+      INNER JOIN cardapio_semana c
+        ON c.restaurante_id = e.restaurante_id
+      AND c.dia_semana = EXTRACT(ISODOW FROM CURRENT_DATE)
+      AND (
+            LOWER(TRIM(e.nome)) = LOWER(TRIM(c.carne_1))
+            OR
+            LOWER(TRIM(e.nome)) = LOWER(TRIM(c.carne_2))
+      )
+      WHERE e.restaurante_id = $1
+        AND e.data = CURRENT_DATE
+      ORDER BY e.id
+      `,
+      [req.restauranteId]
+    );
 
       res.json({
         sucesso: true,
