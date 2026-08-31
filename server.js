@@ -336,6 +336,15 @@ app.post("/api/pedidos", async (req, res) => {
 
         if (quantidadeCarne1 > 0) {
 
+          console.log(
+  "BAIXANDO CARNE 1:",
+  item.carne1,
+  "quantidade:",
+  quantidadeCarne1,
+  "restaurante:",
+  restaurante_id
+);
+
           await pool.query(
             `
             UPDATE estoque_carnes
