@@ -824,6 +824,28 @@
   <script>
 
 
+function editarCarne(id) {
+
+    const carne = estoqueCarnesPainel.find(
+        carne => carne.id === id
+    );
+
+    if (!carne) {
+        return;
+    }
+
+    document.getElementById("nomeNovaCarne").value =
+        carne.nome;
+
+    document.getElementById("quantidadeNovaCarne").value =
+        carne.quantidade_disponivel;
+
+    document.getElementById("formularioNovaCarne").style.display =
+        "block";
+
+}
+
+
 function abrirNovaCarne() {
 
     document.getElementById("formularioNovaCarne").style.display = "block";
@@ -972,6 +994,8 @@ async function carregarEstoqueCarnesPainel() {
 
         const dados =
             await resposta.json();
+
+        estoqueCarnesPainel = dados.carnes || [];
 
         if (!resposta.ok || !dados.sucesso) {
 
