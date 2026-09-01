@@ -890,7 +890,7 @@ async function salvarNovaCarne() {
 
         const url =
             window.carneEditandoId
-                ? `/api/painel/estoque-carnes/${carneEditandoId}`
+                ? `/api/painel/estoque-carnes/${window.carneEditandoId}`
                 : "/api/painel/estoque-carnes";
 
         const resposta =
