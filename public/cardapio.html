@@ -579,6 +579,7 @@ main {
 
 .mensagem-pedido-recebido,
 .mensagem-chegando {
+    position: relative;
     background: #1e293b;
     border: 1px solid #334155;
     border-radius: 20px;
@@ -601,6 +602,28 @@ main {
 .mensagem-pedido-recebido::first-line,
 .mensagem-chegando::first-line {
     font-size: 32px;
+}
+
+
+.fechar-mensagem-pedido {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+
+    background: transparent;
+    border: none;
+
+    color: #94a3b8;
+    font-size: 22px;
+
+    cursor: pointer;
+    padding: 4px 8px;
+
+    line-height: 1;
+}
+
+.fechar-mensagem-pedido:hover {
+    color: #ffffff;
 }
 
 
@@ -2433,10 +2456,15 @@ async function atualizarAcompanhamentoPedido() {
 
                 mensagem =
                     `<div class="mensagem-pedido-recebido">` +
+
+                    `<button class="fechar-mensagem-pedido" ` +
+                    `onclick="this.parentElement.remove()">✕</button>` +
+
                     `💚<br><br>` +
                     `<strong>Pedido recebido com sucesso!</strong><br><br>` +
-                    `⏱️ Seu pedido está sendo preparado.<br><br>` +
+                    `⏱️ Seu pedido já já, vai ser preparado.<br><br>` +
                     `Obrigado por escolher a Gustum! 😊` +
+
                     `</div>`;
             }
 
