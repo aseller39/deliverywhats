@@ -156,6 +156,24 @@
             color: #fca5a5;
         }
 
+        .fechar-pedido {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: #dc2626;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .fechar-pedido:hover {
+            background: #b91c1c;
+        }
+
         @media (max-width: 600px) {
 
             header h1 {
@@ -675,6 +693,11 @@
                             </div>
 
                         </div>
+                       
+
+                        ${criarMensagemPedido(
+                            pedido
+                        )}
 
                         <button
                             class="fechar-pedido"
@@ -682,10 +705,6 @@
                         >
                             ✕ Fechar
                         </button>
-
-                        ${criarMensagemPedido(
-                            pedido
-                        )}
 
                     `;
 
