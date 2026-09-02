@@ -2283,7 +2283,20 @@ function adicionarProdutoCarrinho(id) {
 
     carrinho.push(item);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
-    document.getElementById("quantidadeCarrinho").textContent = carrinho.length;
+    console.log(
+    "CONTADOR:",
+    document.getElementById("quantidadeCarrinho")
+);
+
+console.log(
+    "CARRINHO LENGTH:",
+    carrinho.length
+);
+
+console.log(
+    "LOCALSTORAGE:",
+    localStorage.getItem("carrinho")
+);
 
     console.log("CARRINHO:", carrinho);
 
