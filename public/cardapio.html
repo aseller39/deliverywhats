@@ -2061,84 +2061,87 @@ function alterarQuantidadeProduto(valor) {
 }
 
 
-            function alterarQuantidadePorcao(valor) {
-                const elemento = document.getElementById("quantidadePorcao");
+function alterarQuantidadePorcao(valor) {
+    const elemento = document.getElementById("quantidadePorcao");
 
-                let gramas = parseInt(elemento.textContent);
+    let gramas = parseInt(elemento.textContent);
 
-                gramas += valor;
+    gramas += valor;
 
-                if (gramas < 100) {
-                    gramas = 100;
-                }
+    if (gramas < 100) {
+        gramas = 100;
+    }
 
-                if (gramas > 1000) {
-                    gramas = 1000;
-                }
+    if (gramas > 1000) {
+        gramas = 1000;
+    }
 
-                elemento.textContent =
-                    gramas >= 1000
-                        ? "1 kg"
-                        : `${gramas} g`;
+    elemento.textContent =
+        gramas >= 1000
+            ? "1 kg"
+            : `${gramas} g`;
 
-                const produto = pratosDisponiveis.find(
-                    p => p.id === produtoSelecionadoId
-                );
+    const produto = pratosDisponiveis.find(
+        p => p.id === produtoSelecionadoId
+    );
 
-                if (produto) {
-                    atualizarTotalPorcao(produto, gramas);
-                }
-            }
+    if (produto) {
+        atualizarTotalPorcao(produto, gramas);
+    }
+}
 
-            function atualizarTotalPorcao(produto, gramas) {
-                const precoKg = Number(produto.preco_kg);
+function atualizarTotalPorcao(produto, gramas) {
+    const precoKg = Number(produto.preco_kg);
 
-                const total = precoKg * (gramas / 1000);
+    const total = precoKg * (gramas / 1000);
 
-                document.getElementById("totalProduto").textContent =
-                    total.toFixed(2).replace(".", ",");
-            }
+    document.getElementById("totalProduto").textContent =
+        total.toFixed(2).replace(".", ",");
+}
 
 
-            function adicionarPorcaoCarrinho(id) {
-                const produto = pratosDisponiveis.find(p => p.id === id);
+function adicionarPorcaoCarrinho(id) {
+    const produto = pratosDisponiveis.find(p => p.id === id);
 
-                if (!produto) {
-                    return;
-                }
+    if (!produto) {
+        return;
+    }
 
-                const textoQuantidade =
-                    document.getElementById("quantidadePorcao").textContent;
+    const textoQuantidade =
+        document.getElementById("quantidadePorcao").textContent;
 
-                const gramas =
-                    textoQuantidade === "1 kg"
-                        ? 1000
-                        : parseInt(textoQuantidade);
+    const gramas =
+        textoQuantidade === "1 kg"
+            ? 1000
+            : parseInt(textoQuantidade);
 
-                const precoKg = Number(produto.preco_kg);
+    const precoKg = Number(produto.preco_kg);
 
-                const subtotal = precoKg * (gramas / 1000);
+    const subtotal = precoKg * (gramas / 1000);
 
-                const item = {
-                    id: produto.id,
-                    nome: produto.nome,
-                    tipo: "porcao",
-                    gramas: gramas,
-                    preco_kg: precoKg,
-                    quantidade: 1,
-                    subtotal: subtotal
-                };
+    const item = {
+        id: produto.id,
+        nome: produto.nome,
+        tipo: "porcao",
+        gramas: gramas,
+        preco_kg: precoKg,
+        quantidade: 1,
+        subtotal: subtotal
+    };
 
-                console.log("CARRINHO ANTES DO PUSH:", carrinho);
+    console.log("CARRINHO ANTES DO PUSH:", carrinho);
 
-                carrinho.push(item);
-                localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    carrinho.push(item);
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    
+    document.getElementById("quantidadeCarrinho").textContent =
+    carrinho.length;
 
-                console.log("CARRINHO:", carrinho);
+    console.log("CARRINHO:", carrinho);
 
-                fecharProduto();
-                
-            }
+    fecharProduto();
+    
+}
 
 
 function atualizarTotalProduto(produto) {
