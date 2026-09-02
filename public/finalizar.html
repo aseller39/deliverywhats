@@ -511,6 +511,29 @@
 
     </div>
 
+    <script>
+        const enderecoSalvo = JSON.parse(
+            localStorage.getItem("enderecoCliente") || "null"
+        );
+
+        if (enderecoSalvo) {
+            document.getElementById("rua").value =
+                enderecoSalvo.rua || "";
+
+            document.getElementById("numero").value =
+                enderecoSalvo.numero || "";
+
+            document.getElementById("bairro").value =
+                enderecoSalvo.bairro || "";
+
+            document.getElementById("complemento").value =
+                enderecoSalvo.complemento || "";
+
+            document.getElementById("referencia").value =
+                enderecoSalvo.referencia || "";
+        }
+    </script>
+
     <h2>Nome</h2>
 
     <input
@@ -526,6 +549,19 @@
         id="telefone"
         placeholder="Digite seu telefone"
     >
+
+    <script>
+        const nomeSalvo = localStorage.getItem("nomeCliente");
+        const telefoneSalvo = localStorage.getItem("telefoneCliente");
+
+        if (nomeSalvo) {
+            document.getElementById("nomeCliente").value = nomeSalvo;
+        }
+
+        if (telefoneSalvo) {
+            document.getElementById("telefone").value = telefoneSalvo;
+        }
+    </script>
 
     <h2>Forma de pagamento</h2>
 
@@ -825,6 +861,31 @@ document
                 );
 
                 return;
+            }
+
+            localStorage.setItem(
+                "nomeCliente",
+                document.getElementById("nomeCliente").value.trim()
+            );
+
+            localStorage.setItem(
+                "telefoneCliente",
+                document.getElementById("telefone").value.trim()
+            );
+
+            if (tipoEntrega === "entrega") {
+                const enderecoCliente = {
+                    rua: document.getElementById("rua").value.trim(),
+                    numero: document.getElementById("numero").value.trim(),
+                    bairro: document.getElementById("bairro").value.trim(),
+                    complemento: document.getElementById("complemento").value.trim(),
+                    referencia: document.getElementById("referencia").value.trim()
+                };
+
+                localStorage.setItem(
+                    "enderecoCliente",
+                    JSON.stringify(enderecoCliente)
+                );
             }
 
             alert(
