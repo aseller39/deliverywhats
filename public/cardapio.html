@@ -2127,6 +2127,8 @@ function alterarQuantidadeProduto(valor) {
                     subtotal: subtotal
                 };
 
+                console.log("CARRINHO ANTES DO PUSH:", carrinho);
+
                 carrinho.push(item);
                 localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
