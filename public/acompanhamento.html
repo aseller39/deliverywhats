@@ -540,6 +540,24 @@
         }
 
 
+        function fecharPedido(pedidoId) {
+
+            let pedidos =
+                obterPedidosAcompanhamento();
+
+            pedidos =
+                pedidos.filter(
+                    id => Number(id) !== Number(pedidoId)
+                );
+
+            salvarPedidosAcompanhamento(
+                pedidos
+            );
+
+            carregarPedidos();
+        }
+
+
         async function carregarPedidos() {
 
             const container =
@@ -647,20 +665,23 @@
                         <div class="pedido-topo">
 
                             <div class="pedido-numero">
-
                                 📦 Pedido #${pedido.id}
-
                             </div>
 
                             <div class="pedido-status">
-
                                 ${nomeStatus(
                                     pedido.status
                                 )}
-
                             </div>
 
                         </div>
+
+                        <button
+                            class="fechar-pedido"
+                            onclick="fecharPedido(${pedido.id})"
+                        >
+                            ✕ Fechar
+                        </button>
 
                         ${criarMensagemPedido(
                             pedido
