@@ -1948,6 +1948,8 @@ function adicionarCardapioDiaCarrinho(tamanho) {
         "carrinho",
         JSON.stringify(carrinho)
     );
+    document.getElementById("quantidadeCarrinho").textContent =
+    carrinho.length;
 
     console.log(
         "CARDÁPIO DO DIA ADICIONADO:",
