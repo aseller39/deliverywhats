@@ -2133,7 +2133,7 @@ function adicionarPorcaoCarrinho(id) {
 
     carrinho.push(item);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
-    
+
     document.getElementById("quantidadeCarrinho").textContent =
     carrinho.length;
 
@@ -2288,6 +2288,9 @@ function adicionarProdutoCarrinho(id) {
 
     carrinho.push(item);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+    document.getElementById("quantidadeCarrinho").textContent =
+    carrinho.length;
 
     console.log("CARRINHO:", carrinho);
 
