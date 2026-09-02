@@ -862,6 +862,13 @@ main {
         <button id="botaoCarrinho" onclick="abrirCarrinho()">
             🛒 <span id="quantidadeCarrinho">0</span>
         </button>
+
+        <button
+            id="botaoAcompanhar"
+            onclick="abrirAcompanhamento()"
+        >
+            📦 Acompanhar
+        </button>
     </header>
 
     <main id="cardapio">
@@ -1479,7 +1486,7 @@ async function abrirProduto(id, tamanhoEscolhido = null) {
 
                 <textarea
                     id="observacaoProduto"
-                    placeholder="Ex.: sem cebola, pouco feijão..."
+                    placeholder="Ex.: sem cebola, pouco feijão, Completa..."
                     rows="3"
                 ></textarea>
 
@@ -2298,25 +2305,37 @@ function adicionarProdutoCarrinho(id) {
 }
 
 
-            function fecharProduto() {
-                document.getElementById("modalProduto").style.display = "none";
-            }
+function fecharProduto() {
+    document.getElementById("modalProduto").style.display = "none";
+}
 
-            function abrirCarrinho() {
-                const parametros =
-                    new URLSearchParams(window.location.search);
+function abrirCarrinho() {
+    const parametros =
+        new URLSearchParams(window.location.search);
 
-                const restauranteId =
-                    parametros.get("restaurante");
+    const restauranteId =
+        parametros.get("restaurante");
 
-                window.location.href =
-                    `/carrinho.html?restaurante=${restauranteId}`;
-            }
+    window.location.href =
+        `/carrinho.html?restaurante=${restauranteId}`;
+}
 
 
-            function fecharCarrinho() {
-                document.getElementById("modalCarrinho").style.display = "none";
-            }
+function fecharCarrinho() {
+    document.getElementById("modalCarrinho").style.display = "none";
+}
+
+
+function abrirAcompanhamento() {
+    const parametros =
+        new URLSearchParams(window.location.search);
+
+    const restauranteId =
+        parametros.get("restaurante");
+
+    window.location.href =
+        `/acompanhamento.html?restaurante=${restauranteId}`;
+}
                         
 
             function adicionarAoPedido(pratoId) {

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Acompanhar pedidos - Gustum</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        header {
+            position: relative;
+            padding: 25px 20px;
+            text-align: center;
+            background: #111827;
+            border-bottom: 1px solid #334155;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            color: #94a3b8;
+        }
+
+        .acoes {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .botao {
+            border: none;
+            border-radius: 12px;
+            padding: 13px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao-comprar {
+            background: #22c55e;
+            color: #052e16;
+        }
+
+        .botao-atualizar {
+            background: #334155;
+            color: #f8fafc;
+        }
+
+        #pedidosAcompanhamento {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 10px 20px 40px;
+        }
+
+        .pedido-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+        }
+
+        .pedido-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .pedido-numero {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .pedido-status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #334155;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .pedido-mensagem {
+            padding: 20px;
+            border-radius: 15px;
+            background: #0f172a;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .pedido-mensagem .icone {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .pedido-mensagem strong {
+            font-size: 19px;
+            color: #ffffff;
+        }
+
+        .tempo-estimado {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #172554;
+        }
+
+        .tempo-estimado strong {
+            font-size: 20px;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .vazio .icone {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .erro {
+            text-align: center;
+            padding: 30px 20px;
+            color: #fca5a5;
+        }
+
+        @media (max-width: 600px) {
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            #pedidosAcompanhamento {
+                padding: 10px 12px 30px;
+            }
+
+            .pedido-card {
+                padding: 16px;
+            }
+
+            .pedido-topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .acoes {
+                padding: 15px 12px;
+            }
+
+            .botao {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🍽️ Gustum</h1>
+
+        <p>
+            Acompanhe seus pedidos
+        </p>
+
+    </header>
+
+
+    <div class="acoes">
+
+        <button
+            class="botao botao-comprar"
+            onclick="continuarComprando()"
+        >
+            🍽️ Continuar comprando
+        </button>
+
+        <button
+            class="botao botao-atualizar"
+            onclick="carregarPedidos()"
+        >
+            🔄 Atualizar
+        </button>
+
+    </div>
+
+
+    <main id="pedidosAcompanhamento"></main>
+
+
+    <script>
+
+        let intervaloAcompanhamento = null;
+
+
+        function obterRestauranteId() {
+
+            const parametros =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return parametros.get("restaurante");
+        }
+
+
+        function obterPedidosAcompanhamento() {
+
+            try {
+
+                const dados =
+                    localStorage.getItem(
+                        "pedidosAcompanhamento"
+                    );
+
+                if (!dados) {
+                    return [];
+                }
+
+                const pedidos =
+                    JSON.parse(dados);
+
+                if (!Array.isArray(pedidos)) {
+                    return [];
+                }
+
+                return pedidos
+                    .map(Number)
+                    .filter(Boolean);
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao ler pedidos:",
+                    erro
+                );
+
+                return [];
+            }
+        }
+
+
+        function salvarPedidosAcompanhamento(
+            pedidos
+        ) {
+
+            localStorage.setItem(
+                "pedidosAcompanhamento",
+                JSON.stringify(pedidos)
+            );
+        }
+
+
+        function continuarComprando() {
+
+            const restauranteId =
+                obterRestauranteId();
+
+            if (!restauranteId) {
+                return;
+            }
+
+            window.location.href =
+                `/cardapio.html?restaurante=${restauranteId}`;
+        }
+
+
+        function criarMensagemPedido(
+            pedido
+        ) {
+
+            if (
+                pedido.status ===
+                "aguardando"
+            ) {
+
+                if (pedido.tempo_entrega) {
+
+                    return `
+                        <div class="pedido-mensagem">
+
+                            <div class="icone">
+                                💚
+                            </div>
+
+                            <strong>
+                                Pedido recebido com sucesso!
+                            </strong>
+
+                            <div class="tempo-estimado">
+
+                                ⏱️ Aproximadamente<br>
+
+                                <strong>
+                                    ${pedido.tempo_entrega} minutos
+                                </strong>
+
+                            </div>
+
+                            <br>
+
+                            Obrigado por escolher
+                            a Gustum! 😊
+
+                        </div>
+                    `;
+
+                }
+
+                return `
+                    <div class="pedido-mensagem">
+
+                        <div class="icone">
+                            💚
+                        </div>
+
+                        <strong>
+                            Pedido recebido com sucesso!
+                        </strong>
+
+                        <br><br>
+
+                        ⏱️ Seu pedido já já
+                        vai ser preparado.
+
+                        <br><br>
+
+                        Obrigado por escolher
+                        a Gustum! 😊
+
+                    </div>
+                `;
+            }
+
+
+            if (
+                pedido.status ===
+                "em_preparo"
+            ) {
+
+                if (
+                    pedido.tipo_entrega ===
+                    "retirada"
+                ) {
+
+                    return `
+                        <div class="pedido-mensagem">
+
+                            <div class="icone">
+                                👨‍🍳
+                            </div>
+
+                            <strong>
+                                Seu pedido está em preparo
+                            </strong>
+
+                            <br><br>
+
+                            🕐 Em breve estará pronto.
+
+                        </div>
+                    `;
+
+                }
+
+                return `
+                    <div class="pedido-mensagem">
+
+                        <div class="icone">
+                            👨‍🍳
+                        </div>
+
+                        <strong>
+                            Seu pedido está em preparo
+                        </strong>
+
+                        <br><br>
+
+                        Aguarde só mais um pouquinho. 😊
+
+                    </div>
+                `;
+            }
+
+
+            if (
+                pedido.status ===
+                "pronto"
+            ) {
+
+                if (
+                    pedido.tipo_entrega ===
+                    "retirada"
+                ) {
+
+                    return `
+                        <div class="pedido-mensagem">
+
+                            <div class="icone">
+                                ✅
+                            </div>
+
+                            <strong>
+                                Seu pedido está pronto!
+                            </strong>
+
+                            <br><br>
+
+                            🛍️ Você já pode
+                            retirar seu pedido.
+
+                        </div>
+                    `;
+
+                }
+
+                return `
+                    <div class="pedido-mensagem">
+
+                        <div class="icone">
+                            ✅
+                        </div>
+
+                        <strong>
+                            Seu pedido está pronto!
+                        </strong>
+
+                        <br><br>
+
+                        🛵 Em breve sairá para entrega.
+
+                    </div>
+                `;
+            }
+
+
+            if (
+                pedido.status ===
+                "saiu_entrega"
+            ) {
+
+                return `
+                    <div class="pedido-mensagem">
+
+                        <div class="icone">
+                            🛵
+                        </div>
+
+                        <strong>
+                            Seu pedido saiu para entrega!
+                        </strong>
+
+                        <br><br>
+
+                        📦 Pedido a caminho
+
+                        <br><br>
+
+                        Obrigado por escolher
+                        a Gustum! 😊
+
+                    </div>
+                `;
+            }
+
+
+            return `
+                <div class="pedido-mensagem">
+
+                    <div class="icone">
+                        📦
+                    </div>
+
+                    <strong>
+                        Pedido em andamento
+                    </strong>
+
+                </div>
+            `;
+        }
+
+
+        function nomeStatus(
+            status
+        ) {
+
+            if (status === "aguardando") {
+                return "Aguardando";
+            }
+
+            if (status === "em_preparo") {
+                return "Em preparo";
+            }
+
+            if (status === "pronto") {
+                return "Pronto";
+            }
+
+            if (status === "saiu_entrega") {
+                return "A caminho";
+            }
+
+            return "Em andamento";
+        }
+
+
+        async function carregarPedidos() {
+
+            const container =
+                document.getElementById(
+                    "pedidosAcompanhamento"
+                );
+
+            let pedidos =
+                obterPedidosAcompanhamento();
+
+
+            if (pedidos.length === 0) {
+
+                container.innerHTML = `
+                    <div class="vazio">
+
+                        <div class="icone">
+                            🛒
+                        </div>
+
+                        <h2>
+                            Nenhum pedido em acompanhamento
+                        </h2>
+
+                        <p>
+                            Faça um pedido para
+                            acompanhar seu andamento.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            const pedidosAtivos = [];
+
+
+            container.innerHTML = "";
+
+
+            for (
+                const pedidoId
+                of pedidos
+            ) {
+
+                try {
+
+                    const resposta =
+                        await fetch(
+                            `/api/pedidos/${pedidoId}/status`
+                        );
+
+
+                    const dados =
+                        await resposta.json();
+
+
+                    if (
+                        !resposta.ok ||
+                        !dados.sucesso ||
+                        !dados.pedido
+                    ) {
+
+                        continue;
+                    }
+
+
+                    const pedido =
+                        dados.pedido;
+
+
+                    /*
+                     * Quando o pedido estiver
+                     * finalizado, ele deixa de
+                     * aparecer na tela.
+                     */
+
+                    if (
+                        pedido.status ===
+                        "finalizado"
+                    ) {
+
+                        continue;
+                    }
+
+
+                    pedidosAtivos.push(
+                        pedido.id
+                    );
+
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+                    card.className =
+                        "pedido-card";
+
+
+                    card.innerHTML = `
+
+                        <div class="pedido-topo">
+
+                            <div class="pedido-numero">
+
+                                📦 Pedido #${pedido.id}
+
+                            </div>
+
+                            <div class="pedido-status">
+
+                                ${nomeStatus(
+                                    pedido.status
+                                )}
+
+                            </div>
+
+                        </div>
+
+                        ${criarMensagemPedido(
+                            pedido
+                        )}
+
+                    `;
+
+
+                    container.appendChild(
+                        card
+                    );
+
+
+                } catch (erro) {
+
+                    console.error(
+                        "Erro ao consultar pedido:",
+                        pedidoId,
+                        erro
+                    );
+                }
+            }
+
+
+            /*
+             * Mantém somente os pedidos
+             * que ainda estão ativos.
+             */
+
+            salvarPedidosAcompanhamento(
+                pedidosAtivos
+            );
+
+
+            if (
+                container.children.length ===
+                0
+            ) {
+
+                container.innerHTML = `
+                    <div class="vazio">
+
+                        <div class="icone">
+                            ✅
+                        </div>
+
+                        <h2>
+                            Não há pedidos em andamento
+                        </h2>
+
+                        <p>
+                            Você pode continuar
+                            comprando quando quiser.
+                        </p>
+
+                    </div>
+                `;
+            }
+        }
+
+
+        carregarPedidos();
+
+
+        intervaloAcompanhamento =
+            setInterval(
+                carregarPedidos,
+                10000
+            );
+
+
+        window.addEventListener(
+            "beforeunload",
+            () => {
+
+                if (
+                    intervaloAcompanhamento
+                ) {
+
+                    clearInterval(
+                        intervaloAcompanhamento
+                    );
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

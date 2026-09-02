@@ -832,9 +832,16 @@ document
                 dados.pedido.id
             );
 
+            const pedidosAcompanhamento =
+                JSON.parse(
+                    localStorage.getItem("pedidosAcompanhamento") || "[]"
+                );
+
+            pedidosAcompanhamento.push(dados.pedido.id);
+
             localStorage.setItem(
-                "pedidoAtual",
-                String(dados.pedido.id)
+                "pedidosAcompanhamento",
+                JSON.stringify(pedidosAcompanhamento)
             );
 
             alert("Pedido enviado com sucesso!");
@@ -842,7 +849,7 @@ document
             localStorage.removeItem("carrinho");
 
             window.location.href =
-                `/cardapio.html?restaurante=${restauranteId}`;
+                `/acompanhamento.html?restaurante=${restauranteId}`;
 
         } catch (erro) {
 
