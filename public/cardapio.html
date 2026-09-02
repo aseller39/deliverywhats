@@ -2282,6 +2282,7 @@ function adicionarProdutoCarrinho(id) {
 
     carrinho.push(item);
     localStorage.setItem("carrinho", JSON.stringify(carrinho));
+    atualizarCarrinho();
 
     console.log("CARRINHO:", carrinho);
 
