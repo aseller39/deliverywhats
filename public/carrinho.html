@@ -408,116 +408,116 @@ body > h1 {
             carrinho = JSON.parse(carrinhoSalvo);
         }
 
-        function carregarCarrinho() {
+function carregarCarrinho() {
 
-            const container =
-                document.getElementById("itensCarrinho");
+    const container =
+        document.getElementById("itensCarrinho");
 
-            let total = 0;
+    let total = 0;
 
-            if (carrinho.length === 0) {
+    if (carrinho.length === 0) {
 
-                container.innerHTML = `
-                    <div class="carrinho-vazio">
+        container.innerHTML = `
+            <div class="carrinho-vazio">
 
-                        <div class="icone-carrinho-vazio">
-                            🛒
-                        </div>
+                <div class="icone-carrinho-vazio">
+                    🛒
+                </div>
 
-                        <h2>Seu carrinho está vazio</h2>
+                <h2>Seu carrinho está vazio</h2>
 
-                        <p>
-                            Escolha seus pratos favoritos no cardápio
-                            e adicione ao seu pedido.
-                        </p>
+                <p>
+                    Escolha seus pratos favoritos no cardápio
+                    e adicione ao seu pedido.
+                </p>
 
-                        <button
-                            class="botao-vazio"
-                            onclick="voltarCardapio()"
-                        >
-                            🍽️ Ver cardápio
-                        </button>
+                <button
+                    class="botao-vazio"
+                    onclick="voltarCardapio()"
+                >
+                    🍽️ Ver cardápio
+                </button>
 
-                    </div>
-                `;
+            </div>
+        `;
 
-                document.getElementById("totalCarrinho").textContent = "0,00";
+        document.getElementById("totalCarrinho").textContent = "0,00";
 
-                return;
-            }
+        return;
+    }
 
-            container.innerHTML = carrinho.map(item => {
+    container.innerHTML = carrinho.map(item => {
 
-                total += Number(item.subtotal);
+        total += Number(item.subtotal);
 
-                let descricao = "";
+        let descricao = "";
 
-                if (item.tipo === "porcao") {
+        if (item.tipo === "porcao") {
 
-                    descricao = item.gramas === 1000
-                        ? "1 kg"
-                        : `${item.gramas} g`;
+            descricao = item.gramas === 1000
+                ? "1 kg"
+                : `${item.gramas} g`;
 
-                } else if (item.tamanho) {
+        } else if (item.tamanho) {
 
-                    descricao = item.tamanho;
-                }
-
-                return `
-                    <div class="card-item-carrinho">
-
-                        <div class="info-item-carrinho">
-
-                            <h3>${item.nome}</h3>
-
-                            ${descricao
-                                ? `<p>${descricao}</p>`
-                                : ""
-                            }
-
-                            <strong>
-                                R$ ${Number(item.subtotal)
-                                    .toFixed(2)
-                                    .replace(".", ",")}
-                            </strong>
-
-                        </div>
-
-                        <div class="quantidade-carrinho">
-
-                            <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, -1)">
-                                −
-                            </button>
-
-                            <span>${item.tipo === "porcao"
-                                ? (item.gramas === 1000 ? "1 kg" : item.gramas + " g")
-                                : item.quantidade
-                            }</span>
-
-                            <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, 1)">
-                                +
-                            </button>
-
-                        </div>
-
-                        <button
-                            class="botao-lixeira"
-                            onclick="removerDoCarrinho(
-                                ${item.id},
-                                '${item.tamanho || ""}',
-                                ${item.gramas || 0}
-                            )">
-                            🗑️
-                        </button>
-
-                    </div>
-                `;
-
-            }).join("");
-
-            document.getElementById("totalCarrinho").textContent =
-                total.toFixed(2).replace(".", ",");
+            descricao = item.tamanho;
         }
+
+        return `
+            <div class="card-item-carrinho">
+
+                <div class="info-item-carrinho">
+
+                    <h3>${item.nome}</h3>
+
+                    ${descricao
+                        ? `<p>${descricao}</p>`
+                        : ""
+                    }
+
+                    <strong>
+                        R$ ${Number(item.subtotal)
+                            .toFixed(2)
+                            .replace(".", ",")}
+                    </strong>
+
+                </div>
+
+                <div class="quantidade-carrinho">
+
+                    <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, -1)">
+                        −
+                    </button>
+
+                    <span>${item.tipo === "porcao"
+                        ? (item.gramas === 1000 ? "1 kg" : item.gramas + " g")
+                        : item.quantidade
+                    }</span>
+
+                    <button onclick="alterarQuantidadeCarrinho(${item.id}, '${item.tamanho || ""}', ${item.gramas || 0}, 1)">
+                        +
+                    </button>
+
+                </div>
+
+                <button
+                    class="botao-lixeira"
+                    onclick="removerDoCarrinho(
+                        ${item.id},
+                        '${item.tamanho || ""}',
+                        ${item.gramas || 0}
+                    )">
+                    🗑️
+                </button>
+
+            </div>
+        `;
+
+    }).join("");
+
+    document.getElementById("totalCarrinho").textContent =
+        total.toFixed(2).replace(".", ",");
+}
 
 
         function alterarQuantidadeCarrinho(id, tamanho, gramas, alteracao) {
