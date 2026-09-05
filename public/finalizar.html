@@ -508,6 +508,9 @@
             id="referencia"
             placeholder="Ponto de referência"
         >
+        
+        <div id="taxaEntrega" style="margin-top: 15px; font-weight: bold;">
+        </div>
 
     </div>
 
@@ -531,6 +534,56 @@
 
             document.getElementById("referencia").value =
                 enderecoSalvo.referencia || "";
+        }
+
+        async function consultarTaxaEntrega() {
+
+            const rua =
+                document.getElementById("rua").value.trim();
+
+            const numero =
+                document.getElementById("numero").value.trim();
+
+            const bairro =
+                document.getElementById("bairro").value.trim();
+
+            if (!rua || !numero || !bairro) {
+                return;
+            }
+
+            const endereco =
+                `${rua}, ${numero}, ${bairro}, Paraná, Brasil`;
+
+            try {
+
+                const resposta = await fetch(
+                    `/teste-endereco?endereco=${encodeURIComponent(endereco)}`
+                );
+
+                const dados = await resposta.json();
+
+                console.log(
+                    "🔎 CONSULTA TAXA:",
+                    dados
+                );
+
+                if (dados.taxaEntrega) {
+
+                    document.getElementById("taxaEntrega").textContent =
+                        `🛵 Taxa de entrega: R$ ${Number(dados.taxaEntrega.taxa)
+                            .toFixed(2)
+                            .replace(".", ",")}`;
+
+                }
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao consultar taxa:",
+                    erro
+                );
+
+            }
         }
     </script>
 
