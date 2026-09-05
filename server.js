@@ -316,12 +316,29 @@ app.get("/teste-endereco", async (req, res) => {
         console.log("🏙️ CIDADE:", cidade);
         console.log("📍 BAIRRO:", bairro);
 
+        const taxaResult = await pool.query(
+    `
+    SELECT taxa, entrega_disponivel
+    FROM taxas_entrega
+    WHERE restaurante_id = $1
+      AND LOWER(TRIM(cidade)) = LOWER(TRIM($2))
+      AND LOWER(TRIM(bairro)) = LOWER(TRIM($3))
+    LIMIT 1
+    `,
+    [1, cidade, bairro]
+);
+
+const taxaEntrega = taxaResult.rows[0] || null;
+
+console.log("💰 TAXA ENCONTRADA:", taxaEntrega);
+
         res.json({
             cidade,
             bairro,
             endereco: resultado.enderecoFormatado,
             latitude: resultado.latitude,
-            longitude: resultado.longitude
+            longitude: resultado.longitude,
+            taxaEntrega
         });
 
     } catch (erro) {
@@ -395,6 +412,30 @@ app.post("/api/pedidos", async (req, res) => {
 
           console.log("🏙️ CIDADE IDENTIFICADA:", cidade);
           console.log("📍 BAIRRO IDENTIFICADO:", bairro);
+
+          const taxaEntregaResult = await pool.query(
+              `
+              SELECT taxa, entrega_disponivel
+              FROM taxas_entrega
+              WHERE restaurante_id = $1
+                AND LOWER(TRIM(cidade)) = LOWER(TRIM($2))
+                AND LOWER(TRIM(bairro)) = LOWER(TRIM($3))
+              LIMIT 1
+              `,
+              [
+                  restaurante_id,
+                  cidade,
+                  bairro
+              ]
+          );
+
+          const taxaEntrega =
+              taxaEntregaResult.rows[0];
+
+          console.log(
+              "💰 TAXA DE ENTREGA:",
+              taxaEntrega
+          );
 
           const tempoEntrega =
               await calcularTempoEntrega(
