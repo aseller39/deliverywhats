@@ -785,9 +785,12 @@ function carregarResumo() {
 
         }).join("");
 
+    const totalComEntrega =
+        total + taxaEntregaAtual;
+
     document.getElementById("totalPedido")
         .textContent =
-            total.toFixed(2)
+            totalComEntrega.toFixed(2)
                 .replace(".", ",");
 
     document.getElementById("taxaEntregaResumo")
