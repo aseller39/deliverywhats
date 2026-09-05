@@ -577,6 +577,14 @@
                     taxaEntregaAtual =
                         Number(dados.taxaEntrega.taxa);
 
+                    const totalAtualizado =
+                        total + taxaEntregaAtual;
+
+                    document.getElementById("totalPedido")
+                        .textContent =
+                            totalAtualizado.toFixed(2)
+                                .replace(".", ",");
+
                     document.getElementById("taxaEntrega").textContent =
                         `🛵 Taxa de entrega: R$ ${Number(dados.taxaEntrega.taxa)
                             .toFixed(2)
