@@ -833,6 +833,8 @@ document
             if (entrega === "retirada") {
                 taxaEntregaAtual = 0;
                 carregarResumo();
+            } else {
+                consultarTaxaEntrega();
             }
 
             document.getElementById("dadosEntrega")
