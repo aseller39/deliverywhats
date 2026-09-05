@@ -376,6 +376,7 @@ app.post("/api/pedidos", async (req, res) => {
           montarEnderecoCompleto(endereco);
 
           let tempoEstimado = null;
+          let taxaEntrega = null;
 
       console.log(
           "📍 ENDEREÇO DO CLIENTE:",
@@ -434,8 +435,8 @@ app.post("/api/pedidos", async (req, res) => {
               ]
           );
 
-          const taxaEntrega =
-              taxaEntregaResult.rows[0];
+          taxaEntrega =
+              taxaEntregaResult.rows[0] || null;
 
           console.log(
               "💰 TAXA DE ENTREGA:",
@@ -488,6 +489,14 @@ app.post("/api/pedidos", async (req, res) => {
         });
       }
 
+      const taxaNumerica =
+          tipo_entrega === "entrega"
+              ? Number(taxaEntrega.taxa)
+              : 0;
+
+      const totalComEntrega =
+          Number(total) + taxaNumerica;
+
       const resultado = await pool.query(
         `
         INSERT INTO pedidos (
@@ -501,10 +510,11 @@ app.post("/api/pedidos", async (req, res) => {
             forma_pagamento,
             total,
             status,
-            tempo_entrega
+            tempo_entrega,
+            taxa_entrega
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        RETURNING id, criado_em, status, tempo_entrega
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        RETURNING id, criado_em, status, tempo_entrega, taxa_entrega, total
         `,
         [
           restaurante_id,
@@ -517,9 +527,12 @@ app.post("/api/pedidos", async (req, res) => {
           ? JSON.stringify(endereco)
           : null,
           forma_pagamento,
-          total,
+          totalComEntrega,
           "aguardando",
-          tempoEstimado
+          tempoEstimado,
+          tipo_entrega === "entrega"
+            ? Number(taxaEntrega.taxa)
+            : 0
         ]
       );
 
@@ -653,7 +666,11 @@ app.post("/api/pedidos", async (req, res) => {
         tipo_entrega,
         endereco,
         forma_pagamento,
-        total
+        total,
+        taxa_entrega:
+          tipo_entrega === "entrega"
+              ? Number(taxaEntrega.taxa)
+              : 0
       };
 
       const mensagemWhatsApp = montarMensagemPedido(pedidoMensagem);
@@ -1431,6 +1448,13 @@ function montarMensagemPedido(pedido) {
         .toFixed(2)
         .replace(".", ",")}\n`;
   });
+
+  if (pedido.tipo_entrega === "entrega") {
+    mensagem +=
+      `\n\n🛵 Taxa de entrega: R$ ${Number(pedido.taxa_entrega)
+        .toFixed(2)
+        .replace(".", ",")}`;
+  }
 
   mensagem +=
     `\n💰 Total: R$ ${Number(pedido.total)
