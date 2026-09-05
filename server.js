@@ -20,6 +20,11 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        ALTER TABLE pedidos
+        ADD COLUMN IF NOT EXISTS taxa_entrega NUMERIC(10,2)
+    `);
+
+    await pool.query(`
         CREATE TABLE IF NOT EXISTS estoque_carnes (
             id SERIAL PRIMARY KEY,
             restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
@@ -436,6 +441,16 @@ app.post("/api/pedidos", async (req, res) => {
               "💰 TAXA DE ENTREGA:",
               taxaEntrega
           );
+
+          if (
+              tipo_entrega === "entrega" &&
+              (!taxaEntrega || !taxaEntrega.entrega_disponivel)
+          ) {
+              return res.status(400).json({
+                  sucesso: false,
+                  erro: "Desculpe, não realizamos entregas neste bairro."
+              });
+          }
 
           const tempoEntrega =
               await calcularTempoEntrega(
