@@ -602,7 +602,10 @@
 
         document.getElementById("bairro").addEventListener("blur", consultarTaxaEntrega);
 
-        if (enderecoSalvo) {
+        if (
+            enderecoSalvo &&
+            document.querySelector('input[name="tipoEntrega"]:checked').value === "entrega"
+        ) {
             consultarTaxaEntrega();
         }
 
