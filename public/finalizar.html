@@ -827,6 +827,11 @@ document
                     'input[name="tipoEntrega"]:checked'
                 ).value;
 
+            if (entrega === "retirada") {
+                taxaEntregaAtual = 0;
+                carregarResumo();
+            }
+
             document.getElementById("dadosEntrega")
                 .style.display =
                     entrega === "entrega"
