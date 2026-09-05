@@ -272,6 +272,67 @@ app.get("/api/carnes/:restauranteId", async (req, res) => {
 });
 
 
+app.get("/teste-endereco", async (req, res) => {
+    try {
+        const endereco = req.query.endereco;
+
+        if (!endereco) {
+            return res.status(400).json({
+                erro: "Informe um endereço."
+            });
+        }
+
+        const resultado =
+            await obterCoordenadas(endereco);
+
+        if (!resultado) {
+            return res.status(404).json({
+                erro: "Endereço não encontrado."
+            });
+        }
+
+        const componentes =
+            resultado.componentes || [];
+
+        const obterComponente = (tipo) => {
+            const componente =
+                componentes.find(c =>
+                    c.types.includes(tipo)
+                );
+
+            return componente
+                ? componente.long_name
+                : null;
+        };
+
+        const cidade =
+            obterComponente("locality");
+
+        const bairro =
+            obterComponente("sublocality") ||
+            obterComponente("sublocality_level_1");
+
+        console.log("🏙️ CIDADE:", cidade);
+        console.log("📍 BAIRRO:", bairro);
+
+        res.json({
+            cidade,
+            bairro,
+            endereco: resultado.enderecoFormatado,
+            latitude: resultado.latitude,
+            longitude: resultado.longitude
+        });
+
+    } catch (erro) {
+        console.error("Erro no teste:", erro);
+
+        res.status(500).json({
+            erro: "Erro ao testar endereço."
+        });
+    }
+});
+
+
 app.post("/api/pedidos", async (req, res) => {
     try {
       const {
