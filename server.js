@@ -47,17 +47,71 @@ async function prepararBanco() {
         )
     `);
 
-    const restaurantes =
-    await pool.query(`
-        SELECT id, nome
-        FROM restaurantes
-        ORDER BY id
-    `);
+        await pool.query(`
+        INSERT INTO taxas_entrega
+            (restaurante_id, cidade, bairro, taxa, entrega_disponivel)
+        VALUES
 
-console.log(
-    "RESTAURANTES:",
-    restaurantes.rows
-);
+            -- CAMPINA GRANDE DO SUL
+            (1, 'Campina Grande do Sul', 'Centro / Sede', 18.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Graciosa', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Paulista', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Araçatuba', 9.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Eugênia Maria', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Vila São Cosme', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Santa Rosa', 8.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Florida', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Ceccon', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Joana Olímpia', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Moradias Timbu', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Nesita', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Ipanema', 5.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Vila Santa Fé', 5.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Nossa Senhora das Graças', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim João Paulo II', 10.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Daher', 10.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim da Campina', 18.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Recanto Verde', 9.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Área Industrial', 9.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Santa Rita de Cássia', 8.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Jardim Santa Angelina', 9.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Timbu', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Timbu Velho', 4.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Roseira', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Bela Vista', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Paiol de Baixo', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Jaguatirica', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Mandassaia', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Barro Branco', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Terra Boa', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Ribeirão Grande', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Chácaras Olhos D''Água', 12.00, TRUE),
+            (1, 'Campina Grande do Sul', 'Campo Fundo', NULL, FALSE),
+            (1, 'Campina Grande do Sul', 'Cohab', 8.00, TRUE),
+
+            -- QUATRO BARRAS
+            (1, 'Quatro Barras', 'Nossa Senhora das Graças', 6.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Graciosa', 8.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Menino Deus', 5.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Maria Alice Gema', 8.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Patrícia', 8.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Creplive', 8.00, TRUE),
+            (1, 'Quatro Barras', 'Lot Bosque Merhy', 8.00, TRUE),
+            (1, 'Quatro Barras', 'Centro', 9.00, TRUE),
+            (1, 'Quatro Barras', 'Jardim Orestes Thá', 10.00, TRUE),
+            (1, 'Quatro Barras', 'Itapira', 12.00, TRUE),
+            (1, 'Quatro Barras', 'Granja das Acácias', 12.00, TRUE),
+
+            -- COLOMBO
+            (1, 'Colombo', 'Jardim Paraná', 9.00, TRUE),
+            (1, 'Colombo', 'Canguiri', 9.00, TRUE),
+            (1, 'Colombo', 'Colônia Faria', 9.00, TRUE)
+
+        ON CONFLICT (restaurante_id, cidade, bairro)
+        DO UPDATE SET
+            taxa = EXCLUDED.taxa,
+            entrega_disponivel = EXCLUDED.entrega_disponivel
+    `);
 
     console.log("✅ Estrutura do banco verificada.");
 }
@@ -255,6 +309,30 @@ app.post("/api/pedidos", async (req, res) => {
       );
 
       if (coordenadasCliente) {
+
+          const componentes =
+              coordenadasCliente.componentes || [];
+
+          const obterComponente = (tipo) => {
+              const componente =
+                  componentes.find(c =>
+                      c.types.includes(tipo)
+                  );
+
+              return componente
+                  ? componente.long_name
+                  : null;
+          };
+
+          const cidade =
+              obterComponente("locality");
+
+          const bairro =
+              obterComponente("sublocality") ||
+              obterComponente("sublocality_level_1");
+
+          console.log("🏙️ CIDADE IDENTIFICADA:", cidade);
+          console.log("📍 BAIRRO IDENTIFICADO:", bairro);
 
           const tempoEntrega =
               await calcularTempoEntrega(
@@ -1335,7 +1413,9 @@ async function obterCoordenadas(endereco) {
 
     return {
         latitude: localizacao.lat,
-        longitude: localizacao.lng
+        longitude: localizacao.lng,
+        enderecoFormatado: dados.results[0].formatted_address,
+        componentes: dados.results[0].address_components
     };
 }
 
