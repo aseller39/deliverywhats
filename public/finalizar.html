@@ -421,8 +421,10 @@
     <div id="resumoPedido"></div>
 
     <h2>
-        Total: R$
+    Total: R$
         <span id="totalPedido">0,00</span>
+
+        <span id="taxaEntregaResumo"></span>
     </h2>
 
     <hr>
@@ -771,6 +773,9 @@ function carregarResumo() {
         .textContent =
             total.toFixed(2)
                 .replace(".", ",");
+
+    document.getElementById("taxaEntregaResumo")
+        .textContent = " 🛵 Taxa de entrega: R$ 0,00";
 }
 
 
