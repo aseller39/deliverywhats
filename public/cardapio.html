@@ -90,7 +90,9 @@ header {
 
     border-bottom: 1px solid #334155;
 
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 header h1 {
@@ -114,41 +116,41 @@ main {
 }
 
 
-        .card-produto h2 {
-            margin: 0 0 8px;
-        }
+.card-produto h2 {
+    margin: 0 0 8px;
+}
 
-        .card-produto p {
-            margin: 0 0 10px;
-        }
+.card-produto p {
+    margin: 0 0 10px;
+}
 
-        .card-produto strong {
-            display: block;
-            font-size: 18px;
-        }
+.card-produto strong {
+    display: block;
+    font-size: 18px;
+}
 
-        #pratos {
-            width: 100%;
-        }
+#pratos {
+    width: 100%;
+}
 
-        .grade-produtos {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 30px;
-        }
+.grade-produtos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+}
 
-        .modal-produto {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+.modal-produto {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
 
-        .conteudo-modal-produto {
+.conteudo-modal-produto {
     background: #1e293b;
 
     color: #ffffff;
@@ -270,7 +272,7 @@ main {
     border: none;
     border-radius: 12px;
     padding: 12px 18px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     box-shadow:
@@ -708,7 +710,7 @@ main {
     .grade-produtos {
         display: grid;
 
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
 
         gap: 12px;
     }
