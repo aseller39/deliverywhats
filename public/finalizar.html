@@ -584,7 +584,8 @@
                             .replace(".", ",")}`;
 
                     document.getElementById("taxaEntregaResumo")
-                        .textContent = "";
+                        .textContent =
+                            `Taxa de entrega: R$ ${taxaEntregaAtual.toFixed(2).replace(".", ",")}`;
                     
                     carregarResumo();
 
@@ -791,11 +792,7 @@ function carregarResumo() {
                         ${Number(item.subtotal)
                             .toFixed(2)
                             .replace(".", ",")}
-                        ${
-                            taxaEntregaAtual > 0
-                                ? ` + Taxa de entrega: R$ ${taxaEntregaAtual.toFixed(2).replace(".", ",")}`
-                                : ""
-                        }
+                        
                     </strong>
 
                 </div>
@@ -815,7 +812,10 @@ function carregarResumo() {
                 .replace(".", ",");
 
     document.getElementById("taxaEntregaResumo")
-    .textContent = "";
+        .textContent =
+            taxaEntregaAtual > 0
+                ? `Taxa de entrega: R$ ${taxaEntregaAtual.toFixed(2).replace(".", ",")}`
+                : "";
 }
 
 
