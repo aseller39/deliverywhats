@@ -47,6 +47,18 @@ async function prepararBanco() {
         )
     `);
 
+    const restaurantes =
+    await pool.query(`
+        SELECT id, nome
+        FROM restaurantes
+        ORDER BY id
+    `);
+
+console.log(
+    "RESTAURANTES:",
+    restaurantes.rows
+);
+
     console.log("✅ Estrutura do banco verificada.");
 }
 
