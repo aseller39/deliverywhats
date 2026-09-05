@@ -53,6 +53,10 @@ async function prepararBanco() {
     `);
 
         await pool.query(`
+            CREATE EXTENSION IF NOT EXISTS unaccent
+        `);
+
+        await pool.query(`
         INSERT INTO taxas_entrega
             (restaurante_id, cidade, bairro, taxa, entrega_disponivel)
         VALUES
@@ -424,8 +428,10 @@ app.post("/api/pedidos", async (req, res) => {
               SELECT taxa, entrega_disponivel
               FROM taxas_entrega
               WHERE restaurante_id = $1
-                AND LOWER(TRIM(cidade)) = LOWER(TRIM($2))
-                AND LOWER(TRIM(bairro)) = LOWER(TRIM($3))
+                AND unaccent(LOWER(TRIM(cidade))) =
+                    unaccent(LOWER(TRIM($2)))
+                AND unaccent(LOWER(TRIM(bairro))) =
+                    unaccent(LOWER(TRIM($3)))
               LIMIT 1
               `,
               [
