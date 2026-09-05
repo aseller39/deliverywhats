@@ -33,6 +33,20 @@ async function prepararBanco() {
         )
     `);
 
+        await pool.query(`
+        CREATE TABLE IF NOT EXISTS taxas_entrega (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL
+                REFERENCES restaurantes(id),
+            cidade VARCHAR(100) NOT NULL,
+            bairro VARCHAR(150) NOT NULL,
+            taxa NUMERIC(10,2),
+            entrega_disponivel BOOLEAN DEFAULT TRUE,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (restaurante_id, cidade, bairro)
+        )
+    `);
+
     console.log("✅ Estrutura do banco verificada.");
 }
 
