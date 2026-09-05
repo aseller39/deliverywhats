@@ -540,6 +540,7 @@
 
 
         let taxaEntregaAtual = 0;
+        let totalPedidoAtual = 0;
 
         async function consultarTaxaEntrega() {
 
@@ -578,7 +579,7 @@
                         Number(dados.taxaEntrega.taxa);
 
                     const totalAtualizado =
-                        total + taxaEntregaAtual;
+                        totalPedidoAtual + taxaEntregaAtual;
 
                     document.getElementById("totalPedido")
                         .textContent =
@@ -792,6 +793,7 @@ function carregarResumo() {
             `;
 
         }).join("");
+    totalPedidoAtual = total;
 
     console.log("💰 TAXA USADA NO TOTAL:", taxaEntregaAtual);
 
