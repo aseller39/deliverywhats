@@ -674,7 +674,7 @@ app.post("/api/pedidos", async (req, res) => {
         tipo_entrega,
         endereco,
         forma_pagamento,
-        total,
+        total: totalComEntrega,
         taxa_entrega:
           tipo_entrega === "entrega"
               ? Number(taxaEntrega.taxa)

@@ -420,13 +420,6 @@
 
     <div id="resumoPedido"></div>
 
-    <h2>
-    Total: R$
-        <span id="totalPedido">0,00</span>
-
-        <span id="taxaEntregaResumo"></span>
-    </h2>
-
     <hr>
 
     <h2>Como deseja receber?</h2>
@@ -708,6 +701,13 @@
     ></textarea>
 
     <br><br>
+    <h2>
+    Total: R$
+        <span id="totalPedido">0,00</span>
+
+        <span id="taxaEntregaResumo"></span>
+    </h2>
+    <br><br>
 
     <div class="acoes-finalizar">
 
@@ -922,7 +922,7 @@ document
 
             forma_pagamento: pagamento,
 
-            total: total
+            total: totalPedidoAtual + taxaEntregaAtual
 
         };
         console.log("ENVIANDO PEDIDO:", pedido);
