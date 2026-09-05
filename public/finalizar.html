@@ -538,6 +538,8 @@
                 enderecoSalvo.referencia || "";
         }
 
+        let taxaEntregaAtual = 0;
+
         async function consultarTaxaEntrega() {
 
             const rua =
@@ -571,10 +573,19 @@
 
                 if (dados.taxaEntrega) {
 
+                    taxaEntregaAtual =
+                        Number(dados.taxaEntrega.taxa);
+
                     document.getElementById("taxaEntrega").textContent =
                         `🛵 Taxa de entrega: R$ ${Number(dados.taxaEntrega.taxa)
                             .toFixed(2)
                             .replace(".", ",")}`;
+
+                    document.getElementById("taxaEntregaResumo")
+                        .textContent =
+                            ` 🛵 Taxa: R$ ${taxaEntregaAtual
+                                .toFixed(2)
+                                .replace(".", ",")}`;
 
                 }
 
