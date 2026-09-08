@@ -1488,7 +1488,10 @@ function montarMensagemPedido(pedido) {
 
   if (pedido.tipo_entrega === "entrega") {
     mensagem +=
-      `\n📍 Endereço: ${pedido.endereco}`;
+  `\n📍 Endereço: ${pedido.endereco.rua}, ${pedido.endereco.numero}` +
+  `\n🏘️ Bairro: ${pedido.endereco.bairro}` +
+  `${pedido.endereco.complemento ? `\n🏠 Complemento: ${pedido.endereco.complemento}` : ""}` +
+  `${pedido.endereco.referencia ? `\n📌 Referência: ${pedido.endereco.referencia}` : ""}`;
   }
 
   mensagem +=
