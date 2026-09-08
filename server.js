@@ -417,7 +417,8 @@ app.post("/api/pedidos", async (req, res) => {
           };
 
           const cidade =
-              obterComponente("locality");
+              obterComponente("locality") ||
+              obterComponente("administrative_area_level_2");
 
           const bairro =
               obterComponente("sublocality") ||
