@@ -315,8 +315,8 @@ app.get("/teste-endereco", async (req, res) => {
         };
 
         const cidade =
-            obterComponente("locality") ||
             obterComponente("administrative_area_level_2") ||
+            obterComponente("locality");
             obterComponente("postal_town");
 
         const bairro =
