@@ -316,7 +316,8 @@ app.get("/teste-endereco", async (req, res) => {
 
         const cidade =
             obterComponente("locality") ||
-            obterComponente("administrative_area_level_2");
+            obterComponente("administrative_area_level_2") ||
+            obterComponente("postal_town");
 
         const bairro =
             obterComponente("sublocality") ||
@@ -395,8 +396,8 @@ app.post("/api/pedidos", async (req, res) => {
           await obterCoordenadas(enderecoCompleto);
 
       console.log(
-          "📍 COORDENADAS DO CLIENTE:",
-          coordenadasCliente
+          "📍 COMPONENTES:",
+          JSON.stringify(coordenadasCliente.componentes, null, 2)
       );
 
       if (coordenadasCliente) {
