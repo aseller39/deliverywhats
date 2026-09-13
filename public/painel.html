@@ -526,7 +526,7 @@
         class="botao-novo-produto"
         onclick="abrirPainelEntregas()"
     >
-        🛵 Entregas hoje
+        🛵 Entregas de hoje
     </button>
 
 </div>
@@ -822,6 +822,22 @@
 
 </div>
 
+<div id="entregasHojePainel" style="display: none;">
+
+    <h2>🛵 Entregas hoje</h2>
+
+    <p>
+        🛵 Quantidade de entregas:
+        <strong id="quantidadeEntregasHoje">0</strong>
+    </p>
+
+    <p>
+        💵 Taxas de entrega:
+        <strong id="totalTaxasEntregaHoje">R$ 0,00</strong>
+    </p>
+
+</div>
+
 <div id="listaProdutos"></div>
 
 
@@ -995,6 +1011,65 @@ console.log(
     "FUNÇÃO ESTOQUE:",
     typeof carregarEstoqueCarnesPainel
 );
+
+
+function abrirPainelEntregas() {
+
+    console.log("CLIQUEI EM ENTREGAS HOJE");
+
+    document.getElementById("formularioProduto").style.display = "none";
+    document.getElementById("listaProdutos").style.display = "none";
+    document.getElementById("formularioCardapioSemana").style.display = "none";
+    document.getElementById("listaCardapioSemanaPainel").style.display = "none";
+    document.getElementById("estoqueCarnesPainel").style.display = "none";
+
+    document.getElementById("entregasHojePainel").style.display = "block";
+
+    carregarEntregasHoje();
+
+}
+
+
+async function carregarEntregasHoje() {
+
+    try {
+
+        const resposta = await fetch(
+            "/api/entregas-hoje"
+        );
+
+        const dados = await resposta.json();
+
+        console.log(
+            "📊 ENTREGAS HOJE:",
+            dados
+        );
+
+        if (!dados.sucesso) {
+            return;
+        }
+
+        document.getElementById(
+            "quantidadeEntregasHoje"
+        ).textContent =
+            dados.quantidadeEntregas;
+
+        document.getElementById(
+            "totalTaxasEntregaHoje"
+        ).textContent =
+            `R$ ${Number(dados.totalTaxas)
+                .toFixed(2)
+                .replace(".", ",")}`;
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar entregas de hoje:",
+            erro
+        );
+
+    }
+}
 
 
 async function carregarEstoqueCarnesPainel() {

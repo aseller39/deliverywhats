@@ -897,6 +897,57 @@ app.get(
 
 
 app.get(
+    "/api/entregas-hoje",
+    autenticarRestaurante,
+    async (req, res) => {
+        try {
+
+            const restauranteId =
+                req.restauranteId;
+
+            const resultado = await pool.query(
+                `
+                SELECT
+                    COUNT(*) AS quantidade_entregas,
+                    COALESCE(SUM(taxa_entrega), 0) AS total_taxas
+                FROM pedidos
+                WHERE restaurante_id = $1
+                  AND tipo_entrega = 'entrega'
+                  AND DATE(criado_em) = CURRENT_DATE
+                `,
+                [restauranteId]
+            );
+
+            res.json({
+                sucesso: true,
+                quantidadeEntregas:
+                    Number(
+                        resultado.rows[0].quantidade_entregas
+                    ),
+                totalTaxas:
+                    Number(
+                        resultado.rows[0].total_taxas
+                    )
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao buscar entregas de hoje:",
+                erro
+            );
+
+            res.status(500).json({
+                sucesso: false,
+                erro: "Erro ao buscar entregas de hoje."
+            });
+        }
+    }
+);
+
+
+
+app.get(
   "/api/painel/estoque-carnes",
   autenticarRestaurante,
   async (req, res) => {
