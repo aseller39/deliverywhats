@@ -21,6 +21,11 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        ALTER TABLE restaurantes
+        ADD COLUMN IF NOT EXISTS email VARCHAR(255)
+    `);
+
+    await pool.query(`
         INSERT INTO restaurantes (id, nome)
         VALUES (1, 'Gostum')
         ON CONFLICT (id) DO NOTHING
