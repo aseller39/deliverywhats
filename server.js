@@ -26,10 +26,25 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
-        INSERT INTO restaurantes (id, nome)
-        VALUES (1, 'Gostum')
-        ON CONFLICT (id) DO NOTHING
+        ALTER TABLE restaurantes
+        ADD COLUMN IF NOT EXISTS senha VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS ativo BOOLEAN DEFAULT TRUE
     `);
+
+    const senhaRestaurante = await bcrypt.hash(
+        "Gostum@123",
+        10
+    );
+
+    await pool.query(`
+        INSERT INTO restaurantes (id, nome, email, senha, ativo)
+        VALUES (1, 'Gostum', 'diegonay.ribeiro@hotmail.com', $1, TRUE)
+        ON CONFLICT (id) DO UPDATE SET
+            nome = EXCLUDED.nome,
+            email = EXCLUDED.email,
+            senha = EXCLUDED.senha,
+            ativo = EXCLUDED.ativo
+    `, [senhaRestaurante]);
 
     await pool.query(`
         CREATE TABLE IF NOT EXISTS pedidos (
