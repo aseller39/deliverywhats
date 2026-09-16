@@ -21,6 +21,26 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        CREATE TABLE IF NOT EXISTS pedidos (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
+            itens JSONB NOT NULL,
+            observacao TEXT,
+            nome VARCHAR(150),
+            telefone VARCHAR(30),
+            tipo_entrega VARCHAR(20),
+            endereco JSONB,
+            forma_pagamento VARCHAR(50),
+            total NUMERIC(10,2),
+            status VARCHAR(50),
+            inicio_entrega TIMESTAMP,
+            tempo_entrega INTEGER,
+            taxa_entrega NUMERIC(10,2),
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    await pool.query(`
         ALTER TABLE pedidos
         ADD COLUMN IF NOT EXISTS inicio_entrega TIMESTAMP,
         ADD COLUMN IF NOT EXISTS tempo_entrega INTEGER
