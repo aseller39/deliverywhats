@@ -21,6 +21,12 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        INSERT INTO restaurantes (id, nome)
+        VALUES (1, 'Gostum')
+        ON CONFLICT (id) DO NOTHING
+    `);
+
+    await pool.query(`
         CREATE TABLE IF NOT EXISTS pedidos (
             id SERIAL PRIMARY KEY,
             restaurante_id INTEGER NOT NULL REFERENCES restaurantes(id),
