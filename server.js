@@ -67,6 +67,59 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        CREATE TABLE IF NOT EXISTS pratos (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL
+                REFERENCES restaurantes(id),
+            nome VARCHAR(150) NOT NULL,
+            descricao TEXT,
+            preco NUMERIC(10,2),
+            preco_pequena NUMERIC(10,2),
+            preco_media NUMERIC(10,2),
+            preco_grande NUMERIC(10,2),
+            preco_kg NUMERIC(10,2),
+            categoria VARCHAR(100),
+            foto_base64 TEXT,
+            disponivel BOOLEAN DEFAULT TRUE,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS avisos (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL
+                REFERENCES restaurantes(id),
+            titulo VARCHAR(200) NOT NULL,
+            mensagem TEXT NOT NULL,
+            ativo BOOLEAN DEFAULT TRUE,
+            data_inicio DATE,
+            data_fim DATE,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS cardapio_semana (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL
+                REFERENCES restaurantes(id),
+            dia_semana VARCHAR(20) NOT NULL,
+            titulo VARCHAR(150) NOT NULL,
+            descricao TEXT NOT NULL,
+            preco_pequena NUMERIC(10,2) NOT NULL,
+            preco_media NUMERIC(10,2) NOT NULL,
+            preco_grande NUMERIC(10,2) NOT NULL,
+            foto_base64 TEXT,
+            carne_1 VARCHAR(150) NOT NULL,
+            carne_2 VARCHAR(150) NOT NULL,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE (restaurante_id, dia_semana)
+        )
+    `);
+
+    await pool.query(`
         ALTER TABLE pedidos
         ADD COLUMN IF NOT EXISTS inicio_entrega TIMESTAMP,
         ADD COLUMN IF NOT EXISTS tempo_entrega INTEGER
