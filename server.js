@@ -14,6 +14,13 @@ const pool = require("./config/database");
 async function prepararBanco() {
 
     await pool.query(`
+        CREATE TABLE IF NOT EXISTS restaurantes (
+            id SERIAL PRIMARY KEY,
+            nome VARCHAR(150) NOT NULL
+        )
+    `);
+
+    await pool.query(`
         ALTER TABLE pedidos
         ADD COLUMN IF NOT EXISTS inicio_entrega TIMESTAMP,
         ADD COLUMN IF NOT EXISTS tempo_entrega INTEGER
