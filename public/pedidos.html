@@ -1196,14 +1196,17 @@ async function carregarPedidos() {
 
                         </div>
 
-                        ${
-                            pedido.tipo_entrega === "entrega"
-                                ? `
-                                    <p>
-                                        📍 ${pedido.endereco || ""}
-                                    </p>
-                                `
-                                : ""
+                        ${pedido.tipo_entrega === "entrega"
+                            ? `
+                                <p>
+                                    📍 ${pedido.endereco?.rua || ""}
+                                    ${pedido.endereco?.numero ? ", " + pedido.endereco.numero : ""}
+                                    ${pedido.endereco?.bairro ? " - " + pedido.endereco.bairro : ""}
+                                    ${pedido.endereco?.complemento ? " - " + pedido.endereco.complemento : ""}
+                                    ${pedido.endereco?.referencia ? " - Ref.: " + pedido.endereco.referencia : ""}
+                                </p>
+                            `
+                            : ""
                         }
 
                         <p>
