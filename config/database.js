@@ -15,6 +15,11 @@ async function prepararBanco() {
         ALTER TABLE pedidos
         ADD COLUMN IF NOT EXISTS inicio_preparo TIMESTAMP;
     `);
+
+    await pool.query(`
+        ALTER TABLE restaurantes
+        ADD COLUMN IF NOT EXISTS telefone VARCHAR(30);
+    `);
 }
 
 prepararBanco().catch(console.error);

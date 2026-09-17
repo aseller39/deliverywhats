@@ -37,13 +37,28 @@ async function prepararBanco() {
     );
 
     await pool.query(`
-        INSERT INTO restaurantes (id, nome, email, senha, ativo)
-        VALUES (1, 'Gostum', 'diegonay.ribeiro@hotmail.com', $1, TRUE)
+        INSERT INTO restaurantes (
+            id,
+            nome,
+            email,
+            senha,
+            ativo,
+            telefone
+        )
+        VALUES (
+            1,
+            'Gostum',
+            'diegonay.ribeiro@hotmail.com',
+            $1,
+            TRUE,
+            '5586988044407'
+        )
         ON CONFLICT (id) DO UPDATE SET
             nome = EXCLUDED.nome,
             email = EXCLUDED.email,
             senha = EXCLUDED.senha,
-            ativo = EXCLUDED.ativo
+            ativo = EXCLUDED.ativo,
+            telefone = EXCLUDED.telefone
     `, [senhaRestaurante]);
 
     await pool.query(`
@@ -2390,7 +2405,7 @@ app.get("/api/cardapio", async (req, res) => {
     const diaSemana = hoje.getDay() === 0
       ? 7
       : hoje.getDay();
-      
+
 
     const diaNaoTrabalhamos =
       diaSemana === 0 || diaSemana === 6;
