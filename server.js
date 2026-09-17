@@ -1070,7 +1070,7 @@ app.get(
       FROM estoque_carnes e
       INNER JOIN cardapio_semana c
         ON c.restaurante_id = e.restaurante_id
-      AND c.dia_semana = EXTRACT(ISODOW FROM CURRENT_DATE)
+      AND c.dia_semana = EXTRACT(ISODOW FROM CURRENT_DATE)::TEXT
       AND (
             LOWER(TRIM(e.nome)) = LOWER(TRIM(c.carne_1))
             OR
