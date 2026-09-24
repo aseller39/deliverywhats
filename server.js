@@ -357,6 +357,86 @@ function autenticarRestaurante(req, res, next) {
 }
 
 
+function autenticarEntregador(req, res, next) {
+    try {
+        const token = req.cookies.tokenEntregador;
+
+        if (!token) {
+            return res.status(401).json({
+                sucesso: false,
+                erro: "Entregador não autenticado."
+            });
+        }
+
+        const dados = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+        if (dados.tipo !== "entregador") {
+            return res.status(403).json({
+                sucesso: false,
+                erro: "Acesso não permitido."
+            });
+        }
+
+        req.entregadorId = dados.entregadorId;
+        req.restauranteId = dados.restauranteId;
+
+        next();
+
+    } catch (erro) {
+        console.error("Erro na autenticação do entregador:", erro);
+
+        return res.status(401).json({
+            sucesso: false,
+            erro: "Sessão do entregador inválida ou expirada."
+        });
+    }
+}
+
+
+app.get("/api/entregador/me", autenticarEntregador, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                nome,
+                email
+            FROM entregadores
+            WHERE id = $1
+              AND restaurante_id = $2
+            LIMIT 1
+            `,
+            [
+                req.entregadorId,
+                req.restauranteId
+            ]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({
+                sucesso: false,
+                erro: "Entregador não encontrado."
+            });
+        }
+
+        res.json({
+            sucesso: true,
+            entregador: resultado.rows[0]
+        });
+
+    } catch (erro) {
+        console.error("Erro ao buscar entregador:", erro);
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao buscar dados do entregador."
+        });
+    }
+});
+
 
 app.get("/api/restaurantes/:id", async (req, res) => {
   try {
