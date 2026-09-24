@@ -822,19 +822,24 @@
 
 </div>
 
-<div id="entregasHojePainel" style="display: none;">
+<div id="entregadoresPainel" style="display: none;">
 
-    <h2>🛵 Entregas hoje</h2>
+    <h2>🛵 Entregadores</h2>
 
-    <p>
-        🛵 Quantidade de entregas:
-        <strong id="quantidadeEntregasHoje">0</strong>
-    </p>
+    <button
+        class="botao-novo-produto"
+        onclick="abrirCadastroEntregador()"
+    >
+        ➕ Cadastrar entregador
+    </button>
 
-    <p>
-        💵 Taxas de entrega:
-        <strong id="totalTaxasEntregaHoje">R$ 0,00</strong>
-    </p>
+    <div id="listaEntregadores">
+
+        <p>
+            Nenhum entregador cadastrado.
+        </p>
+
+    </div>
 
 </div>
 
@@ -1039,7 +1044,7 @@ function abrirPainelEntregadores() {
     document.getElementById("formularioCardapioSemana").style.display = "none";
     document.getElementById("listaCardapioSemanaPainel").style.display = "none";
     document.getElementById("estoqueCarnesPainel").style.display = "none";
-    document.getElementById("entregasHojePainel").style.display = "none";
+    document.getElementById("entregadoresPainel").style.display = "block";
 
 }
 
