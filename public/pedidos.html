@@ -981,7 +981,7 @@ async function carregarPedidos() {
 
                         <button
                             class="botao-pronto"
-                            onclick="abrirSelecaoPedidosEntrega()"
+                            onclick="abrirSelecaoPedidosEntrega(${pedido.id})"
                         >
                             ✅ Marcar como pronto
                         </button>
@@ -1591,7 +1591,8 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
 }
 
 
-function abrirSelecaoPedidosEntrega() {
+function abrirSelecaoPedidosEntrega(pedidoId) {
+
     const pedidosEntrega = pedidosEmPreparoAtual.filter(
         pedido => pedido.tipo_entrega === "entrega"
     );
@@ -1611,6 +1612,7 @@ function abrirSelecaoPedidosEntrega() {
                 type="checkbox"
                 class="pedido-pronto-selecionado"
                 value="${pedido.id}"
+                ${pedido.id === pedidoId ? "checked" : ""}
             >
             📦 Pedido #${pedido.id} - ${pedido.nome}
         </label>
