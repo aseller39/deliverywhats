@@ -42,6 +42,7 @@ async function carregarEntregador() {
     }
 }
 
+let pedidosEntregador = [];
 
 async function carregarPedidos() {
     try {
@@ -53,6 +54,8 @@ async function carregarPedidos() {
         );
 
         const dados = await resposta.json();
+
+        pedidosEntregador = dados.pedidos || [];
 
         const lista = document.getElementById("listaPedidos");
 
@@ -145,6 +148,10 @@ async function carregarPedidos() {
                     })()
                 }
 
+                <button onclick="abrirRota(${pedido.id})">
+                    🗺️ Abrir rota
+                </button>
+
                 <button onclick="verPedido(${pedido.id})">
                     📋 Ver pedido
                 </button>
@@ -158,6 +165,47 @@ async function carregarPedidos() {
         document.getElementById("listaPedidos").innerHTML =
             "<p>Erro de conexão com o servidor.</p>";
     }
+}
+
+
+function abrirRota(pedidoId) {
+    const pedido = pedidosEntregador.find(
+        pedido => pedido.id === pedidoId
+    );
+
+    if (!pedido) {
+        alert("Pedido não encontrado.");
+        return;
+    }
+
+    let endereco = pedido.endereco;
+
+    try {
+        if (typeof endereco === "string") {
+            endereco = JSON.parse(endereco);
+        }
+    } catch (erro) {
+        endereco = null;
+    }
+
+    if (!endereco) {
+        alert("Endereço de entrega não informado.");
+        return;
+    }
+
+    const destino = [
+        endereco.rua,
+        endereco.numero,
+        endereco.bairro,
+        endereco.complemento
+    ]
+        .filter(Boolean)
+        .join(", ");
+
+    const url =
+        `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destino)}`;
+
+    window.open(url, "_blank");
 }
 
 
