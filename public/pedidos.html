@@ -715,6 +715,8 @@ async function carregarEstoqueCarnes() {
 
         let carneEditandoId = null;
 
+        let pedidosEmPreparoAtual = [];
+
         
 
 async function carregarPedidos() {
@@ -763,6 +765,8 @@ async function carregarPedidos() {
         const pedidosEmPreparo = dados.pedidos.filter(
             pedido => pedido.status === "em_preparo"
         );
+
+        pedidosEmPreparoAtual = pedidosEmPreparo;
 
         const pedidosProntos = dados.pedidos.filter(
             pedido => pedido.status === "pronto"
@@ -1588,7 +1592,7 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
 
 
 function abrirSelecaoPedidosEntrega() {
-    const pedidosEntrega = pedidosFila.filter(
+    const pedidosEntrega = pedidosEmPreparoAtual.filter(
         pedido => pedido.tipo_entrega === "entrega"
     );
 
