@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Entregador</title>
+</head>
+
+<body>
+
+    <h1>🛵 Painel do Entregador</h1>
+
+    <h2 id="nomeEntregador">Carregando...</h2>
+
+    <h3>📦 Pedidos de hoje</h3>
+
+    <div id="listaPedidos">
+        Carregando pedidos...
+    </div>
+
+
+<script>
+async function carregarEntregador() {
+    try {
+        const resposta = await fetch("/api/entregador/me", {
+            credentials: "include"
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+            window.location.href = "/login-entregador.html";
+            return;
+        }
+
+        document.getElementById("nomeEntregador").textContent =
+            `Olá, ${dados.entregador.nome}!`;
+
+    } catch (erro) {
+        console.error("Erro ao carregar entregador:", erro);
+        window.location.href = "/login-entregador.html";
+    }
+}
+
+
+async function carregarPedidos() {
+    try {
+        const resposta = await fetch(
+            "/api/entregador/pedidos",
+            {
+                credentials: "include"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        const lista = document.getElementById("listaPedidos");
+
+        if (!resposta.ok || !dados.sucesso) {
+            lista.innerHTML = "<p>Erro ao carregar pedidos.</p>";
+            return;
+        }
+
+        if (dados.pedidos.length === 0) {
+            lista.innerHTML = "<p>Nenhum pedido para entrega hoje.</p>";
+            return;
+        }
+
+        lista.innerHTML = dados.pedidos.map(pedido => `
+            <div class="pedido-entregador">
+
+                <h3>📦 Pedido #${pedido.id}</h3>
+
+                <p>
+                    👤 <strong>Cliente:</strong>
+                    ${pedido.nome}
+                </p>
+
+                <p>
+                    💰 <strong>Total:</strong>
+                    R$ ${Number(pedido.total).toFixed(2)}
+                </p>
+
+                <p>
+                    🛵 <strong>Taxa de entrega:</strong>
+                    R$ ${Number(pedido.taxa_entrega || 0).toFixed(2)}
+                </p>
+
+                <p>
+                    💳 <strong>Pagamento:</strong>
+                    ${pedido.forma_pagamento}
+                </p>
+
+                <button onclick="verPedido(${pedido.id})">
+                    📋 Ver pedido
+                </button>
+
+            </div>
+        `).join("");
+
+    } catch (erro) {
+        console.error("Erro ao carregar pedidos:", erro);
+
+        document.getElementById("listaPedidos").innerHTML =
+            "<p>Erro de conexão com o servidor.</p>";
+    }
+}
+
+
+carregarEntregador();
+carregarPedidos();
+
+</script>
+
+
+</body>
+</html>

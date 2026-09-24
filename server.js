@@ -438,6 +438,52 @@ app.get("/api/entregador/me", autenticarEntregador, async (req, res) => {
 });
 
 
+app.get("/api/entregador/pedidos", autenticarEntregador, async (req, res) => {
+    try {
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                nome,
+                telefone,
+                endereco,
+                forma_pagamento,
+                total,
+                taxa_entrega,
+                status,
+                criado_em
+            FROM pedidos
+            WHERE restaurante_id = $1
+              AND entregador_id = $2
+              AND tipo_entrega = 'entrega'
+              AND DATE(criado_em) = CURRENT_DATE
+            ORDER BY criado_em ASC
+            `,
+            [
+                req.restauranteId,
+                req.entregadorId
+            ]
+        );
+
+        res.json({
+            sucesso: true,
+            pedidos: resultado.rows
+        });
+
+    } catch (erro) {
+        console.error(
+            "Erro ao buscar pedidos do entregador:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao buscar pedidos."
+        });
+    }
+});
+
+
 app.get("/api/restaurantes/:id", async (req, res) => {
   try {
     const restauranteId = req.params.id;
