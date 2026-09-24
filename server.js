@@ -456,6 +456,7 @@ app.get("/api/entregador/pedidos", autenticarEntregador, async (req, res) => {
             WHERE restaurante_id = $1
               AND entregador_id = $2
               AND tipo_entrega = 'entrega'
+              AND status = 'pronto'
               AND DATE(criado_em) = CURRENT_DATE
             ORDER BY criado_em ASC
             `,
