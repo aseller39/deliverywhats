@@ -2877,6 +2877,50 @@ app.get("/api/avisos", async (req, res) => {
 });
 
 
+app.get("/api/entregadores", autenticarRestaurante, async (req, res) => {
+
+    try {
+
+        const restauranteId = req.restauranteId;
+
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                nome,
+                telefone,
+                email,
+                ativo,
+                criado_em
+            FROM entregadores
+            WHERE restaurante_id = $1
+            ORDER BY nome ASC
+            `,
+            [restauranteId]
+        );
+
+        res.json({
+            sucesso: true,
+            entregadores: resultado.rows
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao buscar entregadores:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao buscar entregadores."
+        });
+
+    }
+
+});
+
+
 
 app.post(
     "/api/avisos",
