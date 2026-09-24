@@ -990,6 +990,7 @@ app.get(
         endereco,
         forma_pagamento,
         total,
+        taxa_entrega,
         status,
         inicio_preparo,
         criado_em
