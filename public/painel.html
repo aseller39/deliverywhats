@@ -1109,6 +1109,83 @@ function fecharCadastroEntregador() {
 }
 
 
+async function salvarEntregador() {
+
+    const nome =
+        document.getElementById("nomeEntregador").value.trim();
+
+    const telefone =
+        document.getElementById("telefoneEntregador").value.trim();
+
+    const email =
+        document.getElementById("emailEntregador").value.trim();
+
+    const senha =
+        document.getElementById("senhaEntregador").value;
+
+    if (!nome || !email || !senha) {
+
+        alert("Informe nome, e-mail e senha.");
+
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch("/api/entregadores", {
+
+            method: "POST",
+
+            credentials: "include",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                nome,
+                telefone,
+                email,
+                senha
+            })
+
+        });
+
+        const dados = await resposta.json();
+
+        if (!dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível cadastrar o entregador."
+            );
+
+            return;
+        }
+
+        alert("✅ Entregador cadastrado com sucesso!");
+
+        document.getElementById("nomeEntregador").value = "";
+        document.getElementById("telefoneEntregador").value = "";
+        document.getElementById("emailEntregador").value = "";
+        document.getElementById("senhaEntregador").value = "";
+
+        fecharCadastroEntregador();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao cadastrar entregador:",
+            erro
+        );
+
+        alert("Erro de conexão com o servidor.");
+
+    }
+
+}
+
+
 async function carregarEntregasHoje() {
 
     try {
