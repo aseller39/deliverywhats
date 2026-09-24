@@ -14,6 +14,10 @@
 
     <h3>📦 Pedidos de hoje</h3>
 
+    <div id="resumoEntregador">
+        <p>📊 Carregando resumo...</p>
+    </div>
+
     <div id="listaPedidos">
         Carregando pedidos...
     </div>
@@ -69,8 +73,14 @@ async function carregarPedidos() {
             return;
         }
 
-        lista.innerHTML = dados.pedidos.map(pedido => `
+        lista.innerHTML = dados.pedidos.map((pedido, indice) => `
             <div class="pedido-entregador">
+
+                ${indice === 0 ? `
+                    <p>
+                        🚨 <strong>PRÓXIMA ENTREGA</strong>
+                    </p>
+                ` : ""}
 
                 <h3>📦 Pedido #${pedido.id}</h3>
 
@@ -172,6 +182,53 @@ async function carregarPedidos() {
 }
 
 
+async function carregarResumo() {
+    try {
+        const resposta = await fetch(
+            "/api/entregador/resumo",
+            {
+                credentials: "include"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        const resumo = document.getElementById(
+            "resumoEntregador"
+        );
+
+        if (!resposta.ok || !dados.sucesso) {
+            resumo.innerHTML =
+                "<p>Erro ao carregar resumo.</p>";
+            return;
+        }
+
+        resumo.innerHTML = `
+            <p>
+                📦 <strong>Entregas realizadas:</strong>
+                ${dados.resumo.entregasRealizadas}
+            </p>
+
+            <p>
+                💰 <strong>Taxas de entrega:</strong>
+                R$ ${dados.resumo.totalTaxas.toFixed(2)}
+            </p>
+        `;
+
+    } catch (erro) {
+        console.error(
+            "Erro ao carregar resumo:",
+            erro
+        );
+
+        document.getElementById(
+            "resumoEntregador"
+        ).innerHTML =
+            "<p>Erro de conexão com o servidor.</p>";
+    }
+}
+
+
 function abrirRota(pedidoId) {
     const pedido = pedidosEntregador.find(
         pedido => pedido.id === pedidoId
@@ -243,7 +300,19 @@ async function finalizarPedido(pedidoId) {
 
         alert("✅ Pedido finalizado!");
 
-        carregarPedidos();
+        await carregarPedidos();
+
+        const proximoPedido = pedidosEntregador[0];
+
+        if (proximoPedido) {
+            const irParaProximo = confirm(
+                `Próxima entrega: Pedido #${proximoPedido.id}\n\nDeseja abrir a rota agora?`
+            );
+
+            if (irParaProximo) {
+                abrirRota(proximoPedido.id);
+            }
+        }
 
     } catch (erro) {
         console.error(
@@ -255,7 +324,7 @@ async function finalizarPedido(pedidoId) {
     }
 }
 
-
+carregarResumo();
 carregarEntregador();
 carregarPedidos();
 

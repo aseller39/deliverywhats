@@ -485,6 +485,57 @@ app.get("/api/entregador/pedidos", autenticarEntregador, async (req, res) => {
 });
 
 
+app.get(
+    "/api/entregador/resumo",
+    autenticarEntregador,
+    async (req, res) => {
+        try {
+            const resultado = await pool.query(
+                `
+                SELECT
+                    COUNT(*) AS entregas_realizadas,
+                    COALESCE(SUM(taxa_entrega), 0) AS total_taxas
+                FROM pedidos
+                WHERE restaurante_id = $1
+                  AND entregador_id = $2
+                  AND tipo_entrega = 'entrega'
+                  AND status = 'finalizado'
+                  AND DATE(criado_em) = CURRENT_DATE
+                `,
+                [
+                    req.restauranteId,
+                    req.entregadorId
+                ]
+            );
+
+            const resumo = resultado.rows[0];
+
+            res.json({
+                sucesso: true,
+                resumo: {
+                    entregasRealizadas:
+                        Number(resumo.entregas_realizadas),
+
+                    totalTaxas:
+                        Number(resumo.total_taxas)
+                }
+            });
+
+        } catch (erro) {
+            console.error(
+                "Erro ao buscar resumo do entregador:",
+                erro
+            );
+
+            res.status(500).json({
+                sucesso: false,
+                erro: "Erro ao buscar resumo."
+            });
+        }
+    }
+);
+
+
 app.get("/api/restaurantes/:id", async (req, res) => {
   try {
     const restauranteId = req.params.id;
