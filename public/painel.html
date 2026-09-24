@@ -1032,7 +1032,43 @@ function abrirPainelEntregas() {
 
 function abrirPainelEntregadores() {
 
-    alert("Painel de entregadores");
+    const container = document.getElementById("conteudo");
+
+    if (!container) {
+        console.error("Container do conteúdo não encontrado.");
+        return;
+    }
+
+    container.innerHTML = `
+
+        <div class="painel-entregadores">
+
+            <div class="cabecalho-entregadores">
+
+                <h2>
+                    🛵 Entregadores
+                </h2>
+
+                <button
+                    class="botao-novo-produto"
+                    onclick="abrirCadastroEntregador()"
+                >
+                    ➕ Cadastrar entregador
+                </button>
+
+            </div>
+
+            <div id="listaEntregadores">
+
+                <p>
+                    Nenhum entregador cadastrado.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
 
 }
 
