@@ -1169,15 +1169,6 @@ async function carregarPedidos() {
 
                                     ? `
 
-                                        <label style="display: block; margin: 10px 0;">
-                                            <input
-                                                type="checkbox"
-                                                class="pedido-selecionado"
-                                                value="${pedido.id}"
-                                            >
-                                            Selecionar para entregador
-                                        </label>
-
                                         <button
                                             class="botao-finalizar"
                                             onclick="saiuParaEntrega(${pedido.id})"
@@ -1198,10 +1189,10 @@ async function carregarPedidos() {
 
                                     `
                             }
+                            
+                            </div>
 
-                        </div>
-
-                    `;
+                            `;
 
                 }).join("");
         }
@@ -1496,6 +1487,7 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
     let entregadorId = null;
 
     if (tipoEntrega === "entrega") {
+
         const resposta = await fetch("/api/entregadores", {
             credentials: "include"
         });
@@ -1536,6 +1528,7 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
     }
 
     try {
+
         const resposta = await fetch(
             `/api/pedidos/${pedidoId}/marcar-pronto`,
             {
@@ -1565,6 +1558,7 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
         carregarPedidos();
 
     } catch (erro) {
+
         console.error(
             "Erro ao marcar pedido como pronto:",
             erro
