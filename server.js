@@ -31,6 +31,21 @@ async function prepararBanco() {
         ADD COLUMN IF NOT EXISTS ativo BOOLEAN DEFAULT TRUE
     `);
 
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS entregadores (
+            id SERIAL PRIMARY KEY,
+            restaurante_id INTEGER NOT NULL
+                REFERENCES restaurantes(id)
+                ON DELETE CASCADE,
+            nome VARCHAR(150) NOT NULL,
+            telefone VARCHAR(30),
+            email VARCHAR(255) NOT NULL,
+            senha VARCHAR(255) NOT NULL,
+            ativo BOOLEAN DEFAULT TRUE,
+            criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
     const senhaRestaurante = await bcrypt.hash(
         "Gostum@123",
         10
