@@ -959,7 +959,7 @@ async function carregarPedidos() {
 
                         <button
                             class="botao-pronto"
-                            onclick="marcarComoPronto(${pedido.id})"
+                            onclick="marcarComoPronto(${pedido.id}, '${pedido.tipo_entrega}')"
                         >
                             ✅ Marcar como pronto
                         </button>
@@ -1483,45 +1483,87 @@ async function iniciarPreparo(pedidoId) {
 }
 
 
-        async function marcarComoPronto(pedidoId) {
+async function marcarComoPronto(pedidoId, tipoEntrega) {
+    let entregadorId = null;
 
-            try {
+    if (tipoEntrega === "entrega") {
+        const resposta = await fetch("/api/entregadores", {
+            credentials: "include"
+        });
 
-                const resposta = await fetch(
-                    `/api/pedidos/${pedidoId}/marcar-pronto`,
-                    {
-                        method: "PUT"
-                    }
-                );
+        const dados = await resposta.json();
 
-                const dados = await resposta.json();
-
-                console.log(dados);
-
-                if (!resposta.ok || !dados.sucesso) {
-
-                    alert(
-                        dados.erro ||
-                        "Não foi possível marcar o pedido como pronto."
-                    );
-
-                    return;
-                }
-
-                carregarPedidos();
-
-            } catch (erro) {
-
-                console.error(
-                    "Erro ao marcar pedido como pronto:",
-                    erro
-                );
-
-                alert(
-                    "Erro de comunicação com o servidor."
-                );
-            }
+        if (!dados.sucesso || dados.entregadores.length === 0) {
+            alert("Nenhum entregador cadastrado.");
+            return;
         }
+
+        const opcoes = dados.entregadores
+            .map(entregador =>
+                `${entregador.id} - ${entregador.nome}`
+            )
+            .join("\n");
+
+        const escolha = prompt(
+            "Escolha o entregador:\n\n" +
+            opcoes +
+            "\n\nDigite o ID do entregador:"
+        );
+
+        if (!escolha) {
+            return;
+        }
+
+        entregadorId = Number(escolha);
+
+        const entregadorExiste = dados.entregadores.some(
+            entregador => entregador.id === entregadorId
+        );
+
+        if (!entregadorExiste) {
+            alert("Entregador inválido.");
+            return;
+        }
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/pedidos/${pedidoId}/marcar-pronto`,
+            {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    entregadorId
+                })
+            }
+        );
+
+        const dados = await resposta.json();
+
+        console.log(dados);
+
+        if (!resposta.ok || !dados.sucesso) {
+            alert(
+                dados.erro ||
+                "Não foi possível marcar o pedido como pronto."
+            );
+            return;
+        }
+
+        carregarPedidos();
+
+    } catch (erro) {
+        console.error(
+            "Erro ao marcar pedido como pronto:",
+            erro
+        );
+
+        alert("Erro de comunicação com o servidor.");
+    }
+}
 
 
         carregarEstoqueCarnes();

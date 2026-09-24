@@ -1447,19 +1447,24 @@ app.put(
 
     const pedidoId = req.params.id;
 
+    const { entregadorId } = req.body;
+
     const resultado = await pool.query(
-      `
-      UPDATE pedidos
-      SET status = 'pronto'
-      WHERE id = $1
-  AND restaurante_id = $2
-  AND status = 'em_preparo'
-      RETURNING id, status
-      `,
-      [
-    pedidoId,
-    req.restauranteId
-]
+        `
+        UPDATE pedidos
+        SET
+            status = 'pronto',
+            entregador_id = $3
+        WHERE id = $1
+        AND restaurante_id = $2
+        AND status = 'em_preparo'
+        RETURNING id, status, entregador_id
+        `,
+        [
+            pedidoId,
+            req.restauranteId,
+            entregadorId || null
+        ]
     );
 
     if (resultado.rows.length === 0) {
