@@ -97,6 +97,13 @@ async function prepararBanco() {
     `);
 
     await pool.query(`
+        ALTER TABLE pedidos
+        ADD COLUMN IF NOT EXISTS entregador_id INTEGER
+        REFERENCES entregadores(id)
+        ON DELETE SET NULL
+    `);
+
+    await pool.query(`
         CREATE TABLE IF NOT EXISTS pratos (
             id SERIAL PRIMARY KEY,
             restaurante_id INTEGER NOT NULL

@@ -1242,6 +1242,13 @@ async function carregarEntregadores() {
                         ${entregador.email}
                     </p>
 
+                    <button
+                        class="botao-novo-produto"
+                        onclick="abrirPedidosEntregador(${entregador.id})"
+                    >
+                        📦 Pedidos de hoje
+                    </button>
+
                 </div>
 
             `).join("");
@@ -1257,6 +1264,16 @@ async function carregarEntregadores() {
             "<p>Erro de conexão com o servidor.</p>";
 
     }
+
+}
+
+
+function abrirPedidosEntregador(entregadorId) {
+
+    console.log(
+        "Abrir pedidos do entregador:",
+        entregadorId
+    );
 
 }
 
