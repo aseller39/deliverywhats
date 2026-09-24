@@ -2933,6 +2933,49 @@ app.get("/api/entregadores", autenticarRestaurante, async (req, res) => {
 });
 
 
+app.get("/api/entregadores/:id/pedidos", autenticarRestaurante, async (req, res) => {
+    try {
+        const entregadorId = req.params.id;
+        const restauranteId = req.restauranteId;
+
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                nome,
+                telefone,
+                endereco,
+                forma_pagamento,
+                total,
+                taxa_entrega,
+                status,
+                criado_em
+            FROM pedidos
+            WHERE restaurante_id = $1
+              AND entregador_id = $2
+              AND tipo_entrega = 'entrega'
+              AND DATE(criado_em) = CURRENT_DATE
+            ORDER BY criado_em ASC
+            `,
+            [restauranteId, entregadorId]
+        );
+
+        res.json({
+            sucesso: true,
+            pedidos: resultado.rows
+        });
+
+    } catch (erro) {
+        console.error("Erro ao buscar pedidos do entregador:", erro);
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao buscar pedidos do entregador."
+        });
+    }
+});
+
+
 
 app.post(
     "/api/avisos",
@@ -3125,6 +3168,103 @@ app.post("/api/login-restaurante", async (req, res) => {
 
         console.error(
             "Erro no login do restaurante:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao realizar login."
+        });
+    }
+});
+
+
+app.post("/api/login-entregador", async (req, res) => {
+    try {
+        const { email, senha } = req.body;
+
+        if (!email || !senha) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: "Informe e-mail e senha."
+            });
+        }
+
+        const resultado = await pool.query(
+            `
+            SELECT
+                id,
+                restaurante_id,
+                nome,
+                email,
+                senha,
+                ativo
+            FROM entregadores
+            WHERE email = $1
+            LIMIT 1
+            `,
+            [email]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(401).json({
+                sucesso: false,
+                erro: "E-mail ou senha inválidos."
+            });
+        }
+
+        const entregador = resultado.rows[0];
+
+        if (!entregador.ativo) {
+            return res.status(403).json({
+                sucesso: false,
+                erro: "Entregador inativo."
+            });
+        }
+
+        const senhaValida = await bcrypt.compare(
+            senha,
+            entregador.senha
+        );
+
+        if (!senhaValida) {
+            return res.status(401).json({
+                sucesso: false,
+                erro: "E-mail ou senha inválidos."
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                entregadorId: entregador.id,
+                restauranteId: entregador.restaurante_id,
+                tipo: "entregador"
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "8h"
+            }
+        );
+
+        res.cookie("tokenEntregador", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 8 * 60 * 60 * 1000
+        });
+
+        res.json({
+            sucesso: true,
+            entregador: {
+                id: entregador.id,
+                nome: entregador.nome,
+                email: entregador.email
+            }
+        });
+
+    } catch (erro) {
+        console.error(
+            "Erro no login do entregador:",
             erro
         );
 

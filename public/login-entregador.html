@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login do Entregador</title>
+</head>
+
+<body>
+
+    <h1>🛵 Login do Entregador</h1>
+
+    <form id="formLoginEntregador">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="E-mail"
+            required
+        >
+
+        <br><br>
+
+        <input
+            type="password"
+            id="senha"
+            placeholder="Senha"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Entrar
+        </button>
+
+    </form>
+
+    <p id="mensagem"></p>
+
+
+<script>
+document.getElementById("formLoginEntregador").addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value;
+    const mensagem = document.getElementById("mensagem");
+
+    try {
+        const resposta = await fetch("/api/login-entregador", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                senha
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+            mensagem.textContent = dados.erro || "Erro ao entrar.";
+            return;
+        }
+
+        mensagem.textContent = "Login realizado com sucesso!";
+
+        console.log("Entregador:", dados.entregador);
+
+    } catch (erro) {
+        console.error("Erro no login:", erro);
+        mensagem.textContent = "Erro de conexão com o servidor.";
+    }
+});
+</script>
+
+
+</body>
+</html>

@@ -1268,13 +1268,28 @@ async function carregarEntregadores() {
 }
 
 
-function abrirPedidosEntregador(entregadorId) {
+async function abrirPedidosEntregador(entregadorId) {
+    try {
+        const resposta = await fetch(
+            `/api/entregadores/${entregadorId}/pedidos`,
+            {
+                credentials: "include"
+            }
+        );
 
-    console.log(
-        "Abrir pedidos do entregador:",
-        entregadorId
-    );
+        const dados = await resposta.json();
 
+        if (!dados.sucesso) {
+            alert(dados.erro || "Erro ao buscar pedidos.");
+            return;
+        }
+
+        console.log("Pedidos do entregador:", dados.pedidos);
+
+    } catch (erro) {
+        console.error("Erro ao buscar pedidos do entregador:", erro);
+        alert("Erro de conexão com o servidor.");
+    }
 }
 
 
