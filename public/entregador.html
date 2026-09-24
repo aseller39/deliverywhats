@@ -156,6 +156,10 @@ async function carregarPedidos() {
                     📋 Ver pedido
                 </button>
 
+                <button onclick="finalizarPedido(${pedido.id})">
+                    ✅ Finalizar pedido
+                </button>
+
             </div>
         `).join("");
 
@@ -206,6 +210,49 @@ function abrirRota(pedidoId) {
         `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destino)}`;
 
     window.open(url, "_blank");
+}
+
+
+async function finalizarPedido(pedidoId) {
+    const confirmar = confirm(
+        "Confirmar que este pedido foi entregue?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/entregador/pedidos/${pedidoId}/finalizar`,
+            {
+                method: "PUT",
+                credentials: "include"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+            alert(
+                dados.erro ||
+                "Não foi possível finalizar o pedido."
+            );
+            return;
+        }
+
+        alert("✅ Pedido finalizado!");
+
+        carregarPedidos();
+
+    } catch (erro) {
+        console.error(
+            "Erro ao finalizar pedido:",
+            erro
+        );
+
+        alert("Erro de conexão com o servidor.");
+    }
 }
 
 

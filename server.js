@@ -1670,6 +1670,58 @@ app.put(
 
 
 app.put(
+    "/api/entregador/pedidos/:id/finalizar",
+    autenticarEntregador,
+    async (req, res) => {
+        try {
+            const pedidoId = req.params.id;
+
+            const resultado = await pool.query(
+                `
+                UPDATE pedidos
+                SET status = 'finalizado'
+                WHERE id = $1
+                  AND restaurante_id = $2
+                  AND entregador_id = $3
+                  AND status = 'pronto'
+                RETURNING id, status
+                `,
+                [
+                    pedidoId,
+                    req.restauranteId,
+                    req.entregadorId
+                ]
+            );
+
+            if (resultado.rows.length === 0) {
+                return res.status(404).json({
+                    sucesso: false,
+                    erro: "Pedido não encontrado, não está pronto ou não pertence a este entregador."
+                });
+            }
+
+            res.json({
+                sucesso: true,
+                mensagem: "Pedido finalizado com sucesso.",
+                pedido: resultado.rows[0]
+            });
+
+        } catch (erro) {
+            console.error(
+                "Erro ao finalizar pedido pelo entregador:",
+                erro
+            );
+
+            res.status(500).json({
+                sucesso: false,
+                erro: "Erro ao finalizar pedido."
+            });
+        }
+    }
+);
+
+
+app.put(
     "/api/pedidos/:id/saiu-entrega",
     autenticarRestaurante,
     async (req, res) => {
