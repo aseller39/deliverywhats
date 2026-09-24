@@ -1092,6 +1092,8 @@ function abrirPainelEntregadores() {
     document.getElementById("estoqueCarnesPainel").style.display = "none";
     document.getElementById("entregadoresPainel").style.display = "block";
 
+    carregarEntregadores();
+
 }
 
 
@@ -1184,6 +1186,80 @@ async function salvarEntregador() {
     }
 
 }
+
+
+async function carregarEntregadores() {
+
+    const lista =
+        document.getElementById("listaEntregadores");
+
+    if (!lista) {
+        return;
+    }
+
+    try {
+
+        const resposta =
+            await fetch("/api/entregadores", {
+                credentials: "include"
+            });
+
+        const dados =
+            await resposta.json();
+
+        if (!dados.sucesso) {
+
+            lista.innerHTML =
+                "<p>Erro ao carregar entregadores.</p>";
+
+            return;
+        }
+
+        if (dados.entregadores.length === 0) {
+
+            lista.innerHTML =
+                "<p>Nenhum entregador cadastrado.</p>";
+
+            return;
+        }
+
+        lista.innerHTML =
+            dados.entregadores.map(entregador => `
+
+                <div class="card-entregador">
+
+                    <h3>
+                        🛵 ${entregador.nome}
+                    </h3>
+
+                    <p>
+                        📱 Telefone:
+                        ${entregador.telefone || "Não informado"}
+                    </p>
+
+                    <p>
+                        📧 E-mail:
+                        ${entregador.email}
+                    </p>
+
+                </div>
+
+            `).join("");
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar entregadores:",
+            erro
+        );
+
+        lista.innerHTML =
+            "<p>Erro de conexão com o servidor.</p>";
+
+    }
+
+}
+
 
 
 async function carregarEntregasHoje() {
