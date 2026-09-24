@@ -833,6 +833,52 @@
         ➕ Cadastrar entregador
     </button>
 
+    <div id="formularioEntregador" style="display: none;">
+
+        <h3>👤 Cadastrar entregador</h3>
+
+        <input
+            type="text"
+            id="nomeEntregador"
+            placeholder="Nome do entregador"
+        >
+
+        <br><br>
+
+        <input
+            type="text"
+            id="telefoneEntregador"
+            placeholder="Telefone"
+        >
+
+        <br><br>
+
+        <input
+            type="email"
+            id="emailEntregador"
+            placeholder="E-mail"
+        >
+
+        <br><br>
+
+        <input
+            type="password"
+            id="senhaEntregador"
+            placeholder="Senha"
+        >
+
+        <br><br>
+
+        <button onclick="salvarEntregador()">
+            💾 Salvar entregador
+        </button>
+
+        <button onclick="fecharCadastroEntregador()">
+            Cancelar
+        </button>
+
+    </div>
+
     <div id="listaEntregadores">
 
         <p>
@@ -1045,6 +1091,20 @@ function abrirPainelEntregadores() {
     document.getElementById("listaCardapioSemanaPainel").style.display = "none";
     document.getElementById("estoqueCarnesPainel").style.display = "none";
     document.getElementById("entregadoresPainel").style.display = "block";
+
+}
+
+
+function abrirCadastroEntregador() {
+
+    document.getElementById("formularioEntregador").style.display = "block";
+
+}
+
+
+function fecharCadastroEntregador() {
+
+    document.getElementById("formularioEntregador").style.display = "none";
 
 }
 
