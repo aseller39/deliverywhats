@@ -606,6 +606,24 @@ body > h2:first-of-type {
 
     <h2>✅ Pedidos prontos</h2>
 
+
+    <div id="selecaoPedidosEntrega" style="display: none;">
+        <h3>🛵 Selecionar pedidos para entrega</h3>
+
+        <div id="listaSelecaoPedidosEntrega"></div>
+
+        <br>
+
+        <button onclick="confirmarPedidosEntrega()">
+            ✅ Confirmar pedidos
+        </button>
+
+        <button onclick="fecharSelecaoPedidosEntrega()">
+            Cancelar
+        </button>
+    </div>
+
+
     <div id="pedidosProntos">
         Nenhum pedido pronto.
     </div>
@@ -1566,6 +1584,44 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
 
         alert("Erro de comunicação com o servidor.");
     }
+}
+
+
+function abrirSelecaoPedidosEntrega() {
+    const pedidosEntrega = pedidosFila.filter(
+        pedido => pedido.tipo_entrega === "entrega"
+    );
+
+    if (pedidosEntrega.length === 0) {
+        alert("Não há pedidos de entrega em preparo.");
+        return;
+    }
+
+    const lista = document.getElementById(
+        "listaSelecaoPedidosEntrega"
+    );
+
+    lista.innerHTML = pedidosEntrega.map(pedido => `
+        <label style="display: block; margin: 10px 0;">
+            <input
+                type="checkbox"
+                class="pedido-pronto-selecionado"
+                value="${pedido.id}"
+            >
+            📦 Pedido #${pedido.id} - ${pedido.nome}
+        </label>
+    `).join("");
+
+    document.getElementById(
+        "selecaoPedidosEntrega"
+    ).style.display = "block";
+}
+
+
+function fecharSelecaoPedidosEntrega() {
+    document.getElementById(
+        "selecaoPedidosEntrega"
+    ).style.display = "none";
 }
 
 
