@@ -1032,43 +1032,14 @@ function abrirPainelEntregas() {
 
 function abrirPainelEntregadores() {
 
-    const container = document.getElementById("conteudo");
+    console.log("CLIQUEI EM ENTREGADORES");
 
-    if (!container) {
-        console.error("Container do conteúdo não encontrado.");
-        return;
-    }
-
-    container.innerHTML = `
-
-        <div class="painel-entregadores">
-
-            <div class="cabecalho-entregadores">
-
-                <h2>
-                    🛵 Entregadores
-                </h2>
-
-                <button
-                    class="botao-novo-produto"
-                    onclick="abrirCadastroEntregador()"
-                >
-                    ➕ Cadastrar entregador
-                </button>
-
-            </div>
-
-            <div id="listaEntregadores">
-
-                <p>
-                    Nenhum entregador cadastrado.
-                </p>
-
-            </div>
-
-        </div>
-
-    `;
+    document.getElementById("formularioProduto").style.display = "none";
+    document.getElementById("listaProdutos").style.display = "none";
+    document.getElementById("formularioCardapioSemana").style.display = "none";
+    document.getElementById("listaCardapioSemanaPainel").style.display = "none";
+    document.getElementById("estoqueCarnesPainel").style.display = "none";
+    document.getElementById("entregasHojePainel").style.display = "none";
 
 }
 
