@@ -1223,6 +1223,68 @@ app.post(
 );
 
 
+app.post("/api/entregadores", autenticarRestaurante, async (req, res) => {
+    try {
+
+        const restauranteId = req.restauranteId;
+
+        const {
+            nome,
+            telefone,
+            email,
+            senha
+        } = req.body;
+
+        if (!nome || !email || !senha) {
+            return res.status(400).json({
+                sucesso: false,
+                erro: "Nome, e-mail e senha são obrigatórios."
+            });
+        }
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        const resultado = await pool.query(
+            `
+            INSERT INTO entregadores (
+                restaurante_id,
+                nome,
+                telefone,
+                email,
+                senha
+            )
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, nome, telefone, email, ativo
+            `,
+            [
+                restauranteId,
+                nome,
+                telefone || null,
+                email,
+                senhaHash
+            ]
+        );
+
+        res.json({
+            sucesso: true,
+            entregador: resultado.rows[0]
+        });
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao cadastrar entregador:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao cadastrar entregador."
+        });
+    }
+});
+
+
 app.put(
   "/api/painel/estoque-carnes/:id",
   autenticarRestaurante,
