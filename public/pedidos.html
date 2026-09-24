@@ -1169,6 +1169,17 @@ async function carregarPedidos() {
 
                                     ? `
 
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                class="pedido-selecionado"
+                                                value="${pedido.id}"
+                                            >
+                                            Selecionar para entregador
+                                        </label>
+
+                                        <br><br>
+
                                         <button
                                             class="botao-finalizar"
                                             onclick="saiuParaEntrega(${pedido.id})"
