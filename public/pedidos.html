@@ -719,6 +719,8 @@ async function carregarPedidos() {
 
             pedidosCache = dados.pedidos;
 
+            console.log("PEDIDOS RECEBIDOS DA API:", dados.pedidos);
+
         if (!dados.sucesso) {
             container.innerHTML =
                 "<p>Erro ao carregar pedidos.</p>";
