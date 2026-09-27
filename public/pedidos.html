@@ -1593,6 +1593,18 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
 
 function abrirSelecaoPedidosEntrega(pedidoId) {
 
+    const containerPreparo =
+        document.getElementById("pedidosEmPreparo");
+
+    const cardSelecionado =
+        containerPreparo.querySelector(
+            `.card-pedido:has(button[onclick*="abrirSelecaoPedidosEntrega(${pedidoId})"])`
+        );
+
+    if (cardSelecionado) {
+        cardSelecionado.style.display = "none";
+    }
+
     const pedidosEntrega = pedidosEmPreparoAtual.filter(
         pedido => pedido.tipo_entrega === "entrega"
     );

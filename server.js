@@ -2721,10 +2721,9 @@ app.get("/api/cardapio", async (req, res) => {
       })
     );
 
-    //const diaSemana = hoje.getDay();
-    const diaSemana = hoje.getDay() === 0
-      ? 7
-      : hoje.getDay();
+    //const diaSemana = hoje.
+    // ;
+    const diaSemana = 2;
 
 
     const diaNaoTrabalhamos =
