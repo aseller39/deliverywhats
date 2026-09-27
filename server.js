@@ -1715,10 +1715,36 @@ app.put(
                 });
             }
 
+            const entregador = await pool.query(
+                `
+                SELECT nome, telefone
+                FROM entregadores
+                WHERE id = $1
+                AND restaurante_id = $2
+                `,
+                [
+                    entregadorId,
+                    req.restauranteId
+                ]
+            );
+
+            const dadosEntregador = entregador.rows[0];
+
+            if (!dadosEntregador) {
+                return res.status(400).json({
+                    sucesso: false,
+                    erro: "Entregador não encontrado."
+                });
+            }
+
             res.json({
                 sucesso: true,
                 mensagem: "Pedidos marcados como prontos.",
-                pedidos: resultado.rows
+                pedidos: resultado.rows,
+                entregador: {
+                    nome: dadosEntregador.nome,
+                    telefone: dadosEntregador.telefone
+                }
             });
 
         } catch (erro) {
@@ -1731,6 +1757,92 @@ app.put(
             res.status(500).json({
                 sucesso: false,
                 erro: "Erro ao marcar pedidos como prontos."
+            });
+        }
+    }
+);
+
+
+app.post(
+    "/api/entregadores/enviar-pedidos",
+    autenticarRestaurante,
+    async (req, res) => {
+        try {
+            const { entregadorId, pedidosIds } = req.body;
+
+            if (!entregadorId || !Array.isArray(pedidosIds) || pedidosIds.length === 0) {
+                return res.status(400).json({
+                    sucesso: false,
+                    erro: "Entregador ou pedidos não informados."
+                });
+            }
+
+            const entregador = await pool.query(
+                `
+                SELECT nome, telefone
+                FROM entregadores
+                WHERE id = $1
+                AND restaurante_id = $2
+                AND ativo = TRUE
+                `,
+                [
+                    entregadorId,
+                    req.restauranteId
+                ]
+            );
+
+            if (entregador.rows.length === 0) {
+                return res.status(404).json({
+                    sucesso: false,
+                    erro: "Entregador não encontrado."
+                });
+            }
+
+            const dadosEntregador = entregador.rows[0];
+
+            if (!dadosEntregador.telefone) {
+                return res.status(400).json({
+                    sucesso: false,
+                    erro: "O entregador não possui telefone cadastrado."
+                });
+            }
+
+            const listaPedidos = pedidosIds
+                .map(id => `📦 Pedido #${id}`)
+                .join("\n");
+
+            const mensagem =
+                `🛵 *Novas entregas!*\n\n` +
+                `Olá, ${dadosEntregador.nome}!\n\n` +
+                `Você recebeu ${pedidosIds.length} pedido(s) para entrega:\n\n` +
+                `${listaPedidos}\n\n` +
+                `Acesse o painel do entregador para visualizar os endereços e realizar as entregas.`;
+
+            const respostaWhatsApp = await enviarMensagemWhatsApp(
+                dadosEntregador.telefone,
+                mensagem
+            );
+
+            console.log(
+                "Mensagem enviada ao entregador:",
+                dadosEntregador.nome,
+                respostaWhatsApp
+            );
+
+            res.json({
+                sucesso: true,
+                mensagem: "Pedidos enviados para o entregador."
+            });
+
+        } catch (erro) {
+            console.error(
+                "Erro ao enviar pedidos para o entregador:",
+                erro
+            );
+
+            res.status(500).json({
+                sucesso: false,
+                erro: "Erro ao enviar mensagem para o entregador."
             });
         }
     }
