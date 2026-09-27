@@ -1676,6 +1676,68 @@ app.put(
 
 
 app.put(
+    "/api/pedidos/marcar-prontos",
+    autenticarRestaurante,
+    async (req, res) => {
+        try {
+
+            const { pedidosIds, entregadorId } = req.body;
+
+            if (!Array.isArray(pedidosIds) || pedidosIds.length === 0) {
+                return res.status(400).json({
+                    sucesso: false,
+                    erro: "Nenhum pedido selecionado."
+                });
+            }
+
+            const resultado = await pool.query(
+                `
+                UPDATE pedidos
+                SET
+                    status = 'pronto',
+                    entregador_id = $2
+                WHERE id = ANY($1::int[])
+                AND restaurante_id = $3
+                AND status = 'em_preparo'
+                RETURNING id, status, entregador_id
+                `,
+                [
+                    pedidosIds,
+                    entregadorId,
+                    req.restauranteId
+                ]
+            );
+
+            if (resultado.rows.length === 0) {
+                return res.status(400).json({
+                    sucesso: false,
+                    erro: "Nenhum dos pedidos selecionados está em preparo."
+                });
+            }
+
+            res.json({
+                sucesso: true,
+                mensagem: "Pedidos marcados como prontos.",
+                pedidos: resultado.rows
+            });
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao marcar pedidos como prontos:",
+                erro
+            );
+
+            res.status(500).json({
+                sucesso: false,
+                erro: "Erro ao marcar pedidos como prontos."
+            });
+        }
+    }
+);
+
+
+app.put(
     "/api/pedidos/:id/finalizar",
     autenticarRestaurante,
     async (req, res) => {

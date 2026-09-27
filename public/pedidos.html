@@ -1688,8 +1688,32 @@ async function confirmarPedidosEntrega() {
         return;
     }
 
-    console.log("Pedidos selecionados:", pedidosSelecionadosParaEntrega);
-    console.log("Entregador:", entregadorId);
+    const respostaPedidos = await fetch("/api/pedidos/marcar-prontos", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            pedidosIds: pedidosSelecionadosParaEntrega,
+            entregadorId: entregadorId
+        })
+    });
+
+    const resultadoPedidos = await respostaPedidos.json();
+
+    if (!respostaPedidos.ok || !resultadoPedidos.sucesso) {
+        alert(resultadoPedidos.erro || "Não foi possível marcar os pedidos como prontos.");
+        return;
+    }
+
+    alert("Pedidos marcados como prontos!");
+
+    pedidosSelecionadosParaEntrega = [];
+
+    document.getElementById("selecaoPedidosEntrega").style.display = "none";
+
+    carregarPedidos();
 }
 
 
