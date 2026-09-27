@@ -1603,6 +1603,14 @@ function abrirSelecaoPedidosEntrega(pedidoId) {
         pedidosSelecionadosParaEntrega.push(pedidoId);
     }
 
+    const card = document.querySelector(
+        `.card-pedido button[onclick*="abrirSelecaoPedidosEntrega(${pedidoId})"]`
+    )?.closest(".card-pedido");
+
+    if (card) {
+        card.remove();
+    }
+
     const pedidosEntrega = pedidosEmPreparoAtual.filter(
         pedido =>
             pedido.tipo_entrega === "entrega" &&
