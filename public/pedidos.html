@@ -765,9 +765,7 @@ async function carregarPedidos() {
             console.log("FILA:", pedidosFila);
 
         const pedidosEmPreparo = dados.pedidos.filter(
-            pedido =>
-                pedido.status === "em_preparo" &&
-                !pedidosSelecionadosParaEntrega.includes(pedido.id)
+            pedido => pedido.status === "em_preparo"
         );
 
         pedidosEmPreparoAtual = pedidosEmPreparo;
@@ -778,6 +776,10 @@ async function carregarPedidos() {
 
         const containerPreparo =
             document.getElementById("pedidosEmPreparo");
+
+        const pedidosVisiveisEmPreparo = pedidosEmPreparo.filter(
+            pedido => !pedidosSelecionadosParaEntrega.includes(pedido.id)
+        );
 
         if (pedidosEmPreparo.length === 0) {
 
@@ -791,7 +793,7 @@ async function carregarPedidos() {
         } else {
 
             containerPreparo.innerHTML =
-                pedidosEmPreparo.map(pedido => `
+                pedidosVisiveisEmPreparo.map(pedido => `
 
                     <div class="card-pedido">
 
@@ -1602,7 +1604,13 @@ function abrirSelecaoPedidosEntrega(pedidoId) {
     }
 
     const pedidosEntrega = pedidosEmPreparoAtual.filter(
-        pedido => pedido.tipo_entrega === "entrega"
+        pedido =>
+            pedido.tipo_entrega === "entrega" &&
+            (
+                !pedidosSelecionadosParaEntrega.length ||
+                pedidosSelecionadosParaEntrega.includes(pedido.id) ||
+                pedido.id === pedidoId
+            )
     );
 
     if (pedidosEntrega.length === 0) {
@@ -1620,7 +1628,7 @@ function abrirSelecaoPedidosEntrega(pedidoId) {
                 type="checkbox"
                 class="pedido-pronto-selecionado"
                 value="${pedido.id}"
-                ${pedido.id === pedidoId ? "checked" : ""}
+                ${pedidosSelecionadosParaEntrega.includes(pedido.id) ? "checked" : ""}
             >
             📦 Pedido #${pedido.id} - ${pedido.nome}
         </label>
