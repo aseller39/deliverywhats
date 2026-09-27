@@ -1731,32 +1731,6 @@ async function confirmarPedidosEntrega() {
         );
     }
 
-    const entregador = resultadoPedidos.entregador;
-
-    if (entregador?.telefone) {
-        const listaPedidos = resultadoPedidos.pedidos
-            .map(pedido => `📦 Pedido #${pedido.id}`)
-            .join("\n");
-
-        const mensagemEntregador =
-            `🛵 *Novas entregas!*\n\n` +
-            `Olá, ${entregador.nome}!\n\n` +
-            `Você recebeu ${resultadoPedidos.pedidos.length} pedido(s) para entrega:\n\n` +
-            `${listaPedidos}\n\n` +
-            `Acesse o painel para ver os endereços e realizar as entregas.`;
-
-        try {
-            await enviarMensagemWhatsApp(
-                entregador.telefone,
-                mensagemEntregador
-            );
-        } catch (erro) {
-            console.error(
-                "Erro ao enviar mensagem para o entregador:",
-                erro
-            );
-        }
-    }
 
     alert("Pedidos marcados como prontos!");
 
