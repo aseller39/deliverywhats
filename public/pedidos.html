@@ -717,6 +717,8 @@ async function carregarEstoqueCarnes() {
 
         let pedidosEmPreparoAtual = [];
 
+        let pedidosSelecionadosParaEntrega = [];
+
         
 
 async function carregarPedidos() {
@@ -763,7 +765,9 @@ async function carregarPedidos() {
             console.log("FILA:", pedidosFila);
 
         const pedidosEmPreparo = dados.pedidos.filter(
-            pedido => pedido.status === "em_preparo"
+            pedido =>
+                pedido.status === "em_preparo" &&
+                !pedidosSelecionadosParaEntrega.includes(pedido.id)
         );
 
         pedidosEmPreparoAtual = pedidosEmPreparo;
@@ -1593,16 +1597,8 @@ async function marcarComoPronto(pedidoId, tipoEntrega) {
 
 function abrirSelecaoPedidosEntrega(pedidoId) {
 
-    const containerPreparo =
-        document.getElementById("pedidosEmPreparo");
-
-    const cardSelecionado =
-        containerPreparo.querySelector(
-            `.card-pedido:has(button[onclick*="abrirSelecaoPedidosEntrega(${pedidoId})"])`
-        );
-
-    if (cardSelecionado) {
-        cardSelecionado.style.display = "none";
+    if (!pedidosSelecionadosParaEntrega.includes(pedidoId)) {
+        pedidosSelecionadosParaEntrega.push(pedidoId);
     }
 
     const pedidosEntrega = pedidosEmPreparoAtual.filter(
