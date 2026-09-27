@@ -1640,6 +1640,51 @@ function abrirSelecaoPedidosEntrega(pedidoId) {
 }
 
 
+async function confirmarPedidosEntrega() {
+    if (pedidosSelecionadosParaEntrega.length === 0) {
+        alert("Selecione pelo menos um pedido.");
+        return;
+    }
+
+    const resposta = await fetch("/api/entregadores", {
+        credentials: "include"
+    });
+
+    const dados = await resposta.json();
+
+    if (!dados.sucesso || dados.entregadores.length === 0) {
+        alert("Nenhum entregador cadastrado.");
+        return;
+    }
+
+    const opcoes = dados.entregadores
+        .map(e => `${e.id} - ${e.nome}`)
+        .join("\n");
+
+    const escolha = prompt(
+        "Escolha o entregador:\n\n" +
+        opcoes +
+        "\n\nDigite o ID do entregador:"
+    );
+
+    if (!escolha) return;
+
+    const entregadorId = Number(escolha);
+
+    const entregadorExiste = dados.entregadores.some(
+        e => e.id === entregadorId
+    );
+
+    if (!entregadorExiste) {
+        alert("Entregador inválido.");
+        return;
+    }
+
+    console.log("Pedidos selecionados:", pedidosSelecionadosParaEntrega);
+    console.log("Entregador:", entregadorId);
+}
+
+
 function fecharSelecaoPedidosEntrega() {
     document.getElementById(
         "selecaoPedidosEntrega"
