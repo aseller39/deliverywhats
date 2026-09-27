@@ -1812,11 +1812,12 @@ app.post(
                 .join("\n");
 
             const mensagem =
-                `🛵 *Novas entregas!*\n\n` +
-                `Olá, ${dadosEntregador.nome}!\n\n` +
-                `Você recebeu ${pedidosIds.length} pedido(s) para entrega:\n\n` +
-                `${listaPedidos}\n\n` +
-                `Acesse o painel do entregador para visualizar os endereços e realizar as entregas.`;
+              `🛵 *Novas entregas!*\n\n` +
+              `Olá, ${dadosEntregador.nome}!\n\n` +
+              `Você recebeu ${pedidosIds.length} pedido(s) para entrega:\n\n` +
+              `${listaPedidos}\n\n` +
+              `📍 Acesse o painel do entregador:\n` +
+              `https://deliverywhats.onrender.com/entregador.html`;
 
             const respostaWhatsApp = await enviarMensagemWhatsApp(
                 dadosEntregador.telefone,
