@@ -1249,6 +1249,13 @@ async function carregarEntregadores() {
                         📦 Pedidos de hoje
                     </button>
 
+                    <button
+                        class="botao-excluir"
+                        onclick="excluirEntregador(${entregador.id})"
+                    >
+                        🗑️ Excluir entregador
+                    </button>
+
                 </div>
 
             `).join("");
@@ -1265,6 +1272,54 @@ async function carregarEntregadores() {
 
     }
 
+}
+
+
+async function excluirEntregador(entregadorId) {
+
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir este entregador?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch(
+            `/api/entregadores/${entregadorId}`,
+            {
+                method: "DELETE",
+                credentials: "include"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+
+            alert(
+                dados.erro ||
+                "Não foi possível excluir o entregador."
+            );
+
+            return;
+        }
+
+        alert("Entregador excluído com sucesso.");
+
+        carregarEntregadores();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao excluir entregador:",
+            erro
+        );
+
+        alert("Erro de comunicação com o servidor.");
+    }
 }
 
 

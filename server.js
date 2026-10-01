@@ -3337,6 +3337,62 @@ app.get("/api/entregadores", autenticarRestaurante, async (req, res) => {
 });
 
 
+app.delete(
+    "/api/entregadores/:id",
+    autenticarRestaurante,
+    async (req, res) => {
+
+    try {
+
+        const entregadorId = req.params.id;
+        const restauranteId = req.restauranteId;
+
+        const resultado = await pool.query(
+            `
+            DELETE FROM entregadores
+            WHERE id = $1
+            AND restaurante_id = $2
+            RETURNING id, nome
+            `,
+            [
+                entregadorId,
+                restauranteId
+            ]
+        );
+
+        if (resultado.rows.length === 0) {
+
+            return res.status(404).json({
+                sucesso: false,
+                erro: "Entregador não encontrado."
+            });
+
+        }
+
+        res.json({
+            sucesso: true,
+            mensagem: "Entregador excluído com sucesso.",
+            entregador: resultado.rows[0]
+        });
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao excluir entregador:",
+            erro
+        );
+
+        res.status(500).json({
+            sucesso: false,
+            erro: "Erro ao excluir entregador."
+        });
+
+    }
+
+});
+
+
 app.get("/api/entregadores/:id/pedidos", autenticarRestaurante, async (req, res) => {
     try {
         const entregadorId = req.params.id;
