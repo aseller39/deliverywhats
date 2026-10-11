@@ -309,6 +309,7 @@ async function finalizarPedido(pedidoId) {
         alert("✅ Pedido finalizado!");
 
         await carregarPedidos();
+        await carregarResumo();
 
         const proximoPedido = pedidosEntregador[0];
 
