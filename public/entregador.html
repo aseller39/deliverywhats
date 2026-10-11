@@ -46,6 +46,10 @@ async function carregarEntregador() {
     }
 }
 
+setInterval(() => {
+    carregarEntregadores();
+}, 10000);
+
 let pedidosEntregador = [];
 
 async function carregarPedidos() {
@@ -69,7 +73,7 @@ async function carregarPedidos() {
         }
 
         if (dados.pedidos.length === 0) {
-            lista.innerHTML = "<p>Nenhum pedido para entrega hoje.</p>";
+            lista.innerHTML = "<p>Nenhum pedido para entrega no momento.</p>";
             return;
         }
 
@@ -180,6 +184,10 @@ async function carregarPedidos() {
             "<p>Erro de conexão com o servidor.</p>";
     }
 }
+
+setInterval(() => {
+    carregarPedidos();
+}, 5000);
 
 
 async function carregarResumo() {
